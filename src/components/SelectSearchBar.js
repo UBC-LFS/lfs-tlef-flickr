@@ -3,11 +3,11 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.scss';
 
 const SelectSearchBar = (props) => {
-    const options = [
-        { value: 'pug', label: 'pug' },
-        { value: 'panda', label: 'panda' },
-        { value: 'animal', label: 'animal' }
-    ];
+    // const options = [
+    //     { value: 'pug', label: 'pug' },
+    //     { value: 'panda', label: 'panda' },
+    //     { value: 'animal', label: 'animal' }
+    // ];
 
     const logChange = val => {
         let selectString = '';
@@ -31,7 +31,7 @@ const SelectSearchBar = (props) => {
         <div>
             <Select 
                 name="form-field-name"
-                options={options}
+                options={props.selectOptions}
                 onChange={logChange}
                 multi={true}
                 joinValues={false}

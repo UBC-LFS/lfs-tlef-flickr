@@ -17,6 +17,11 @@ export default class GalleryContainer extends React.Component {
             selectSearch: '',
             photos: [],
             visiblePhotos: [],
+            currentSelectOptions: [
+                { value: 'pug', label: 'pug' },
+                { value: 'panda', label: 'panda' },
+                { value: 'animal', label: 'animal' }
+            ],
             currentImage: 0,
             lightboxIsOpen: false
         };
@@ -37,13 +42,19 @@ export default class GalleryContainer extends React.Component {
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
         this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
+        this.setAllTags = this.setAllTags.bind(this);
     }
 
     callAPI() {
-        API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop 
-              ).then(result => this.setState({photos: result}));
+        API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
+            .then(result => this.setState({photos: result}))
+            .then(this.setAllTags);
         // const nextState = {...this.state, search: '', dropdownTop: '', dropdownBottom: ''};
         // this.setState(nextState);
+    }
+
+    setAllTags() {
+        
     }
 
     closeLightbox () {
@@ -168,7 +179,9 @@ export default class GalleryContainer extends React.Component {
         return (
         <div>
             {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
-            <SelectSearchBar currentSearch={this.state.selectSearch} onSelectChange={this.handleSelectChange}/>
+            <SelectSearchBar currentSearch={this.state.selectSearch} 
+                             onSelectChange={this.handleSelectChange}
+                             selectOptions={this.state.currentSelectOptions} />
             {/*<SearchBar onChange={this.handleKeyPress} _onButtonClick={this.filterPhotos} _onKeyPress={this.filterPhotos} />*/}
             <Photos _onClick={this.handleClick} images={this.state.visiblePhotos}/>
             <Lightbox
