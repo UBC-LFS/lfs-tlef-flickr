@@ -36,7 +36,6 @@ export default class GalleryContainer extends React.Component {
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
         this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
-        this.updateCurrentSearchOptions = this.updateCurrentSearchOptions.bind(this);
         this.updateSearchOptions = this.updateSearchOptions.bind(this);
         this.setAllTags = this.setAllTags.bind(this);
         this.setUniqueTags = this.setUniqueTags.bind(this);
@@ -48,9 +47,6 @@ export default class GalleryContainer extends React.Component {
             .then(this.setAllTags)
             // .then(function(test){console.log(test)})
             .then(uniqueTags => this.setUniqueTags(uniqueTags));
-            // .then(uniqueTags => uniqueTags.map);
-        // const nextState = {...this.state, search: '', dropdownTop: '', dropdownBottom: ''};
-        // this.setState(nextState);
     }
 
     setUniqueTags(uniqueTags)
@@ -87,7 +83,6 @@ export default class GalleryContainer extends React.Component {
 
     filterPhotos() {
         const matchedImages = this.state.photos.filter(this.isMatchingTag);
-        // this.setState({visiblePhotos: matchedImages, search: '', dropdownTop: '', dropdownBottom: ''});
         this.setState({visiblePhotos: matchedImages});
     }
 
@@ -116,56 +111,42 @@ export default class GalleryContainer extends React.Component {
     updateSearchOptions(){
         let otherSearchOptions = [];
         let searchTags = (() => (this.state.selectSearch === "") ? [] : this.state.selectSearch.split(","))();
-        // console.log("search tag")
-        // console.log(searchTags)
-        this.state.photos.map(
-            photo => {
-                let tagTest = true;
-                const photoTags = photo[3].split(" ");
-                // console.log(photoTags)
-                if(photoTags.length > searchTags.length)
-                {
-                    // console.log("here2")
-                    for(let i=0; i<searchTags.length; i++)
+        if (searchTags.length === 0)
+        {
+            otherSearchOptions = this.setAllTags();
+        }
+        else
+        {
+            this.state.photos.map(
+                photo => {
+                    let tagTest = true;
+                    const photoTags = photo[3].split(" ");
+                    if(photoTags.length > searchTags.length)
                     {
-                        if(!photoTags.includes(searchTags[i]))
+                        for(let i=0; i<searchTags.length; i++)
                         {
-                            tagTest = false;
-                            break;
-                        }
-                    }
-                    if (tagTest === true)
-                    {
-                        for(let i=0; i<photoTags.length; i++)
-                        {
-                            if(!searchTags.includes(photoTags[i]) && !otherSearchOptions.includes(photoTags[i]))
+                            if(!photoTags.includes(searchTags[i]))
                             {
-                                otherSearchOptions.push(photoTags[i]);
+                                tagTest = false;
+                                break;
+                            }
+                        }
+                        if (tagTest === true)
+                        {
+                            for(let i=0; i<photoTags.length; i++)
+                            {
+                                if(!searchTags.includes(photoTags[i]) && !otherSearchOptions.includes(photoTags[i]))
+                                {
+                                    otherSearchOptions.push(photoTags[i]);
+                                }
                             }
                         }
                     }
                 }
-            }
-        )
-        otherSearchOptions.push.apply(otherSearchOptions, searchTags)
-        console.log("other search")
-        console.log(otherSearchOptions)
+            )
+            otherSearchOptions.push.apply(otherSearchOptions, searchTags)
+        }
         return otherSearchOptions;
-    }
-
-    updateCurrentSearchOptions(tag) {
-        // console.log(tag["value"])
-        // console.log(this)
-        // return this.includes(tag["value"])
-        // console.log(this.state.selectSearch);
-        // console.log(tag);
-        // this.state.selectSearch.split(",").map(
-        //     selectTag => {
-        //         if(!selectTag === tag["value"]){
-        //             return false;
-        //         }
-        //     }
-        // )
     }
 
     getLightboxImages(photos) {
