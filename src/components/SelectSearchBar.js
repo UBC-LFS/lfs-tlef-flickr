@@ -1,13 +1,7 @@
 import React, { PropTypes } from 'react';
 import Select from 'react-select';
-import 'react-select/dist/react-select.scss';
 
 const SelectSearchBar = (props) => {
-    // const options = [
-    //     { value: 'pug', label: 'pug' },
-    //     { value: 'panda', label: 'panda' },
-    //     { value: 'animal', label: 'animal' }
-    // ];
 
     const logChange = val => {
         let selectString = '';
@@ -19,7 +13,6 @@ const SelectSearchBar = (props) => {
         else
         {
             for (var key in val) {
-                // console.log(val[key]);
                 selectString += val[key]["value"] + ',';
             }
             let returnString = selectString.substring(0, selectString.length-1);
