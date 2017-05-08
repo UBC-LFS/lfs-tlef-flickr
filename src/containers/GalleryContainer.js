@@ -17,11 +17,12 @@ export default class GalleryContainer extends React.Component {
             selectSearch: '',
             photos: [],
             visiblePhotos: [],
-            currentSelectOptions: [
-                { value: 'pug', label: 'pug' },
-                { value: 'panda', label: 'panda' },
-                { value: 'animal', label: 'animal' }
-            ],
+            currentSelectOptions:[],
+            // currentSelectOptions: [
+            //     { value: 'pug', label: 'pug' },
+            //     { value: 'panda', label: 'panda' },
+            //     { value: 'animal', label: 'animal' }
+            // ],
             currentImage: 0,
             lightboxIsOpen: false
         };
@@ -43,18 +44,45 @@ export default class GalleryContainer extends React.Component {
         this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
         this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
         this.setAllTags = this.setAllTags.bind(this);
+        this.setUniqueTags = this.setUniqueTags.bind(this);
     }
 
     callAPI() {
         API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
             .then(result => this.setState({photos: result}))
-            .then(this.setAllTags);
+            .then(this.setAllTags)
+            // .then(function(test){console.log(test)})
+            .then(uniqueTags => this.setUniqueTags(uniqueTags));
+            // .then(uniqueTags => uniqueTags.map);
         // const nextState = {...this.state, search: '', dropdownTop: '', dropdownBottom: ''};
         // this.setState(nextState);
     }
 
+    setUniqueTags(uniqueTags)
+    {
+        let currentSelectOptions = uniqueTags.map(
+            uniqueTag =>
+                {
+                    return { value: uniqueTag, label: uniqueTag }
+                }
+        )
+        this.setState({currentSelectOptions});
+    }
+
     setAllTags() {
-        
+        let uniqueTagArray = [];
+        this.state.photos.map(photoArray =>
+            photoArray[3].split(" ").map(photoTag => 
+                {
+                    if(!uniqueTagArray.includes(photoTag))
+                    {
+                        uniqueTagArray.push(photoTag);
+                    }
+                }
+            )
+        )
+        uniqueTagArray.sort();
+        return uniqueTagArray;
     }
 
     closeLightbox () {
