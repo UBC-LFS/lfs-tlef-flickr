@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import API from '../API/API';
+import DescriptionAPI from '../API/DescriptionAPI';
 import Lightbox from 'react-images';
 import Photos from '../components/Photos';
 import DropdownFilter from '../components/DropdownFilter';
@@ -20,7 +21,8 @@ export default class GalleryContainer extends React.Component {
             allSelectOptions: [],
             currentSelectOptions:[],
             currentImage: 0,
-            lightboxIsOpen: false
+            lightboxIsOpen: false,
+            test:[1,2]
         };
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.closeLightbox = this.closeLightbox.bind(this);
@@ -42,8 +44,13 @@ export default class GalleryContainer extends React.Component {
     }
 
     callAPI() {
-        API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
-            .then(result => this.setState({photos: result}))
+        // console.log("here",this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop);
+        // API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
+        API()
+            .then(result => {
+                // console.log("Result: ",result);
+                this.setState({photos: result}, function(){DescriptionAPI(this.state.photos)});
+            })
             .then(this.setAllTags)
             // .then(function(test){console.log(test)})
             .then(uniqueTags => this.setUniqueTags(uniqueTags));
