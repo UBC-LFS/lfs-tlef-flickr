@@ -1,31 +1,29 @@
 const PHOTOSET_ID = '72157678045313813';
 const API_KEY = '0564471d68ed3cc6268a0abbb76c7d2b';
-// const PHOTO_API_KEY = 'bbe7efc4bbe606cdb3353822e9776c7d';
-const PHOTO_API_KEY = '8d5d6ada90954a0020e5230e281f32c3';
+const PHOTO_API_KEY = '2c96c0998c85115fd50f75c5ca2aa4cc';
 // imagesArray holds an array of [URL, title, description]];
 
-const getDescription = json => {
-    console.log(json["photo"]["description"]["_content"]);
-    return json["photo"]["description"]["_content"];
-}
-
 const getPhotoDescription = (photo_API_Call) => {
-    // let descriptionTest = "";
     return fetch(photo_API_Call)
-        .then( response => response.json())
-        .then( json => getDescription(json))
-        // .then( json => {descriptionTest = json.photo.description._content})
-        // .then( () => descriptionTest)
-        // .then( () => console.log(descriptionTest))
-        // return descriptionTest
-    // return fetch(photo_API_call)
-    //        .then( response => response.json())
-    //        .then( json => json.photo.description._content)
+           .then( response => response.json())
+           .then( json => json.photo.description._content)
 }
 
-const mapAndPush = json => {
+const setPhotoDescriptions = (imagesArray, descriptionArray, setImageDescriptions) => {
+    Promise.all(descriptionArray)
+        .then(descriptions => {
+            for(let i=0; i<imagesArray.length; i++)
+            {
+                imagesArray[i].push(descriptions[i]);
+            }
+        })
+        .then(setImageDescriptions(imagesArray));
+}
+
+const mapAndPushPhotos = (json,setImageDescriptions) => {
     let imagesArray = [];
-    console.log(json);
+    let descriptionArray = [];
+    console.log("json: ", json);
     json.photoset.photo.map(({farm, server, id, secret, title, description, tags}) => {
         const PHOTO_API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${PHOTO_API_KEY}&photo_id=${id}&format=json&nojsoncallback=1`;
         const imageURL = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
@@ -33,22 +31,19 @@ const mapAndPush = json => {
         const imageContent = '';//description._content;
         const imageTags = tags;
         const imageID = id;
-        // getPhotoDescription(PHOTO_API_CALL)
-        //     .then(photoDescription => imagesArray.push([imageURL, imageTitle, imageContent, imageTags, photoDescription]));
 
-        // imagesArray.push([imageURL, imageTitle, imageContent, imageTags, getPhotoDescription(PHOTO_API_CALL)]);
-
+        descriptionArray.push(getPhotoDescription(PHOTO_API_CALL));
         imagesArray.push([imageURL, imageTitle, imageContent, imageTags, imageID]);
     });
-    return imagesArray;
+    setPhotoDescriptions(imagesArray, descriptionArray, setImageDescriptions);
 }
 
-const fetchImages = (searchTerm) => {
+const fetchImages = (setImageDescriptions) => {
     //const API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=${API_KEY}&tags=${searchTerm}&tag_mode=all&extras=description&format=json&nojsoncallback=1`;
     const API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${API_KEY}&photoset_id=${PHOTOSET_ID}&extras=tags&format=json&nojsoncallback=1`;
-    return fetch(API_CALL)
+    fetch(API_CALL)
         .then( response => response.json())
-        .then( json => mapAndPush(json))
+        .then( json => mapAndPushPhotos(json,setImageDescriptions));
 };
 
 export default fetchImages;

@@ -2,6 +2,7 @@ import React from 'react';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import API from '../API/API';
+// import API from '../API/APIPhoto';
 import DescriptionAPI from '../API/DescriptionAPI';
 import Lightbox from 'react-images';
 import Photos from '../components/Photos';
@@ -41,19 +42,29 @@ export default class GalleryContainer extends React.Component {
         this.updateSearchOptions = this.updateSearchOptions.bind(this);
         this.setAllTags = this.setAllTags.bind(this);
         this.setUniqueTags = this.setUniqueTags.bind(this);
+        this.setImageDescriptions = this.setImageDescriptions.bind(this);
     }
 
     callAPI() {
         // console.log("here",this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop);
         // API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
-        API()
-            .then(result => {
-                // console.log("Result: ",result);
-                this.setState({photos: result}, function(){DescriptionAPI(this.state.photos)});
-            })
-            .then(this.setAllTags)
-            // .then(function(test){console.log(test)})
-            .then(uniqueTags => this.setUniqueTags(uniqueTags));
+        API(this.setImageDescriptions);
+            // .then(result => {
+            //     // console.log("Result: ",result);
+            //     this.setState({photos: result}, function(){DescriptionAPI(this.state.photos, this.setImagesDescription)});
+            // })
+            // .then(this.setAllTags)
+            // // .then(function(test){console.log(test)})
+            // .then(uniqueTags => this.setUniqueTags(uniqueTags));
+    }
+
+    setImageDescriptions(photos)
+    {
+        console.log("imageDescription: ",photos);
+        let uniqueTags = this.setAllTags(photos);
+
+        let allSelectOptions = this.setUniqueTags(uniqueTags);
+        this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions})
     }
 
     setUniqueTags(uniqueTags)
@@ -64,12 +75,14 @@ export default class GalleryContainer extends React.Component {
                     return { value: uniqueTag, label: uniqueTag }
                 }
         )
-        this.setState({allSelectOptions, currentSelectOptions: allSelectOptions});
+        return allSelectOptions;
+        // this.setState({allSelectOptions, currentSelectOptions: allSelectOptions});
     }
 
-    setAllTags() {
+    setAllTags(photos) {
         let uniqueTagArray = [];
-        this.state.photos.map(photoArray =>
+        console.log("Photos: ", photos);
+        photos.map(photoArray =>
             photoArray[3].split(" ").map(photoTag => 
                 {
                     if(!uniqueTagArray.includes(photoTag))
@@ -120,7 +133,7 @@ export default class GalleryContainer extends React.Component {
         let searchTags = (() => (this.state.selectSearch === "") ? [] : this.state.selectSearch.split(","))();
         if (searchTags.length === 0)
         {
-            otherSearchOptions = this.setAllTags();
+            otherSearchOptions = this.setAllTags(this.state.photos);
         }
         else
         {
