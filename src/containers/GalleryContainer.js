@@ -34,7 +34,7 @@ export default class GalleryContainer extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.getLightboxImages = this.getLightboxImages.bind(this);
         this.callAPI = this.callAPI.bind(this)
-        this.filterPhotos = this.filterPhotos.bind(this);
+        // this.filterPhotos = this.filterPhotos.bind(this);
         this.isMatchingTag = this.isMatchingTag.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -46,8 +46,7 @@ export default class GalleryContainer extends React.Component {
     }
 
     callAPI() {
-        // console.log("here",this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop);
-        // API(this.state.search  + this.state.dropdownBottom  + this.state.dropdownTop)
+        
         API(this.setImageDescriptions);
             // .then(result => {
             //     // console.log("Result: ",result);
@@ -60,7 +59,6 @@ export default class GalleryContainer extends React.Component {
 
     setImageDescriptions(photos)
     {
-        console.log("imageDescription: ",photos);
         let uniqueTags = this.setAllTags(photos);
 
         let allSelectOptions = this.setUniqueTags(uniqueTags);
@@ -81,7 +79,6 @@ export default class GalleryContainer extends React.Component {
 
     setAllTags(photos) {
         let uniqueTagArray = [];
-        console.log("Photos: ", photos);
         photos.map(photoArray =>
             photoArray[3].split(" ").map(photoTag => 
                 {
@@ -172,10 +169,6 @@ export default class GalleryContainer extends React.Component {
     getLightboxImages(photos) {
         const images = photos.map(img => {
                 const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
-                console.log("Image: ", img);
-                // console.log("Image[0]: ", img[0]);
-                // console.log("Image[1]: ", img[1]);
-                // console.log("Image[2]: ", img[2]);
                 return ({src: largeImg, caption: img[5]})
         })
         return images;
