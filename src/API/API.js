@@ -1,6 +1,6 @@
 const PHOTOSET_ID = '72157678045313813';
 const API_KEY = '0564471d68ed3cc6268a0abbb76c7d2b';
-const PHOTO_API_KEY = '2c96c0998c85115fd50f75c5ca2aa4cc';
+const PHOTO_API_KEY = 'd2cf21438d6af0e9a8f6bc110ee79dc6';
 // imagesArray holds an array of [URL, title, description]];
 
 const getPhotoDescription = (photo_API_Call) => {

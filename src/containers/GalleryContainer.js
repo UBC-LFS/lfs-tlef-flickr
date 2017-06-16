@@ -172,7 +172,11 @@ export default class GalleryContainer extends React.Component {
     getLightboxImages(photos) {
         const images = photos.map(img => {
                 const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
-                return ({src: largeImg, caption: img[2]})
+                console.log("Image: ", img);
+                // console.log("Image[0]: ", img[0]);
+                // console.log("Image[1]: ", img[1]);
+                // console.log("Image[2]: ", img[2]);
+                return ({src: largeImg, caption: img[5]})
         })
         return images;
     }
