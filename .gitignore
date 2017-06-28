@@ -32,3 +32,6 @@ node_modules/react-dropdown/*
 
 # Ignore build files
 public
+
+# WebStorm IDE files
+.idea

@@ -1,6 +1,6 @@
 const PHOTOSET_ID = '72157678045313813';
 const API_KEY = '0564471d68ed3cc6268a0abbb76c7d2b';
-const PHOTO_API_KEY = 'd2cf21438d6af0e9a8f6bc110ee79dc6';
+//const PHOTO_API_KEY = 'd2cf21438d6af0e9a8f6bc110ee79dc6';
 // imagesArray holds an array of [URL, title, description]];
 
 const getPhotoDescription = (photo_API_Call) => {
@@ -25,7 +25,7 @@ const mapAndPushPhotos = (json,setImageDescriptions) => {
     let descriptionArray = [];
     console.log("json: ", json);
     json.photoset.photo.map(({farm, server, id, secret, title, description, tags}) => {
-        const PHOTO_API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${PHOTO_API_KEY}&photo_id=${id}&format=json&nojsoncallback=1`;
+        const PHOTO_API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${API_KEY}&photo_id=${id}&format=json&nojsoncallback=1`;
         const imageURL = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
         const imageTitle = title;
         const imageContent = '';//description._content;
