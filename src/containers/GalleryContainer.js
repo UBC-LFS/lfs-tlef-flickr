@@ -43,7 +43,6 @@ export default class GalleryContainer extends React.Component {
         this.setAllTags = this.setAllTags.bind(this);
         this.setUniqueTags = this.setUniqueTags.bind(this);
         this.setImageDescriptions = this.setImageDescriptions.bind(this);
-        this.openThumbnail = this.openThumbnail.bind(this);
     }
 
     callAPI() {
@@ -205,11 +204,6 @@ export default class GalleryContainer extends React.Component {
 		this.gotoNext();
 	}
 
-    openThumbnail(index) {
-        const nextState = {...this.state, currentImage: index};
-        this.setState(nextState);
-    }
-
     // handleSelectTop(selectedValue) {
     //     this.setState({dropdownTop: selectedValue});
     // }
@@ -269,8 +263,6 @@ export default class GalleryContainer extends React.Component {
                 isOpen={this.state.lightboxIsOpen}
                 onClickImage={this.handleClickImage}
                 onClickPrev={this.gotoPrevious}
-                onClickThumbnail={this.openThumbnail}
-                showThumbnails={true}
                 onClickNext={this.gotoNext}
                 onClose={this.closeLightbox}/>
         </div>
