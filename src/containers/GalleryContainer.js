@@ -43,6 +43,7 @@ export default class GalleryContainer extends React.Component {
         this.setAllTags = this.setAllTags.bind(this);
         this.setUniqueTags = this.setUniqueTags.bind(this);
         this.setImageDescriptions = this.setImageDescriptions.bind(this);
+        this.openThumbnail = this.openThumbnail.bind(this);
     }
 
     callAPI() {
@@ -80,7 +81,7 @@ export default class GalleryContainer extends React.Component {
     setAllTags(photos) {
         let uniqueTagArray = [];
         photos.map(photoArray =>
-            photoArray[3].split(" ").map(photoTag => 
+            photoArray[3].split(" ").map(photoTag =>
                 {
                     if(!uniqueTagArray.includes(photoTag))
                     {
@@ -189,7 +190,7 @@ export default class GalleryContainer extends React.Component {
         // console.log(this.state.selectSearch)
     }
 
-    handleKeyPress(searchTerm) { 
+    handleKeyPress(searchTerm) {
         // this.setState({search: searchTerm + this.state.dropdownBottom  + this.state.dropdownTop});
         this.setState({search: searchTerm});
     }
@@ -203,6 +204,11 @@ export default class GalleryContainer extends React.Component {
 		if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) return;
 		this.gotoNext();
 	}
+
+  openThumbnail(index) {
+        const nextState = {...this.state, currentImage: index};
+        this.setState(nextState);
+    }
 
     // handleSelectTop(selectedValue) {
     //     this.setState({dropdownTop: selectedValue});
@@ -252,7 +258,7 @@ export default class GalleryContainer extends React.Component {
         return (
         <div>
             {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
-            <SelectSearchBar currentSearch={this.state.selectSearch} 
+            <SelectSearchBar currentSearch={this.state.selectSearch}
                              onSelectChange={this.handleSelectChange}
                              selectOptions={this.state.currentSelectOptions} />
             {/*<SearchBar onChange={this.handleKeyPress} _onButtonClick={this.filterPhotos} _onKeyPress={this.filterPhotos} />*/}
@@ -263,6 +269,8 @@ export default class GalleryContainer extends React.Component {
                 isOpen={this.state.lightboxIsOpen}
                 onClickImage={this.handleClickImage}
                 onClickPrev={this.gotoPrevious}
+                onClickThumbnail={this.openThumbnail}
+                showThumbnails={true}
                 onClickNext={this.gotoNext}
                 onClose={this.closeLightbox}/>
         </div>
