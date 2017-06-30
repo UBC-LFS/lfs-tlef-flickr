@@ -1,42 +1,19 @@
 import React, { PropTypes } from 'react';
-import Select from 'react-select';
+import SearchInput, {createFilter} from 'react-search-input'
 
 const SearchBar = (props) => {
 
-    const handleClick = () => {
-        props._onButtonClick();
-    }
 
-    const handleChange = e => {
-        props.onChange(e.target.value);
-    }
 
-    const handleEnterKey = e => {
-        if (e.key === 'Enter') {
-            props._onButtonClick();
-        }
-    }
 
-    return (
+
+  return (
         <div>
-            <input 
-                className="searchBar" 
-                placeholder="Search by tags" 
-                onChange={handleChange}
-                onKeyPress={handleEnterKey}
-            />
-            <button 
-                id="searchButton"
-                onClick={handleClick} > Search 
-            </button> 
+          <SearchInput className='search-input'
+            onChange={props.onSearchChange}
+          />
         </div>
-    )
-}
-
-SearchBar.propTypes = {
-    onChange: PropTypes.func.isRequired,
-    _onButtonClick: PropTypes.func.isRequired,
-    _onKeyPress: PropTypes.func.isRequired
+      )
 }
 
 export default SearchBar
