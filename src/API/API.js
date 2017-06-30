@@ -14,6 +14,7 @@ const setPhotoDescriptions = (imagesArray, descriptionArray, setImageDescription
         .then(descriptions => {
             for(let i=0; i<imagesArray.length; i++)
             {
+                imagesArray[i][2] = descriptions[i];
                 imagesArray[i].push(descriptions[i]);
             }
         })

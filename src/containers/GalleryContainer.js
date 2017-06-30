@@ -15,8 +15,11 @@ export default class GalleryContainer extends React.Component {
         this.state = {
             dropdownTop: '',
             dropdownBottom: '',
+            //search by tags
             search: '',
             selectSearch: '',
+            //search by words
+            searchKey: '',
             photos: [],
             visiblePhotos: [],
             allSelectOptions: [],
@@ -27,10 +30,10 @@ export default class GalleryContainer extends React.Component {
         };
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.closeLightbox = this.closeLightbox.bind(this);
-		this.gotoNext = this.gotoNext.bind(this);
-		this.gotoPrevious = this.gotoPrevious.bind(this);
-		this.handleClickImage = this.handleClickImage.bind(this);
-		this.openLightbox = this.openLightbox.bind(this);
+		    this.gotoNext = this.gotoNext.bind(this);
+		    this.gotoPrevious = this.gotoPrevious.bind(this);
+		    this.handleClickImage = this.handleClickImage.bind(this);
+		    this.openLightbox = this.openLightbox.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.getLightboxImages = this.getLightboxImages.bind(this);
         this.callAPI = this.callAPI.bind(this)
@@ -44,10 +47,12 @@ export default class GalleryContainer extends React.Component {
         this.setUniqueTags = this.setUniqueTags.bind(this);
         this.setImageDescriptions = this.setImageDescriptions.bind(this);
         this.openThumbnail = this.openThumbnail.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.filterByTerm = this.filterByTerm.bind(this);
     }
 
     callAPI() {
-        
+
         API(this.setImageDescriptions);
             // .then(result => {
             //     // console.log("Result: ",result);
@@ -190,6 +195,14 @@ export default class GalleryContainer extends React.Component {
         // console.log(this.state.selectSearch)
     }
 
+    handleSearchChange (searchTerm) {
+      this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : this.filterByTerm(searchTerm))});
+    }
+
+    filterByTerm(searchTerm) {
+        return this.state.photos.filter(photo => photo[1].includes(searchTerm) || photo[5].includes(searchTerm))
+    }
+
     handleKeyPress(searchTerm) {
         // this.setState({search: searchTerm + this.state.dropdownBottom  + this.state.dropdownTop});
         this.setState({search: searchTerm});
@@ -257,6 +270,9 @@ export default class GalleryContainer extends React.Component {
         const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
         return (
         <div>
+          <SearchBar currentSearch={this.state.searchKey}
+                     onSearchChange={this.handleSearchChange}
+                     />
             {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
             <SelectSearchBar currentSearch={this.state.selectSearch}
                              onSelectChange={this.handleSelectChange}
