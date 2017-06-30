@@ -14,6 +14,7 @@ const SearchBar = (props) => {
     const handleEnterKey = e => {
         if (e.key === 'Enter') {
             props._onButtonClick();
+            console.log(e.key);
         }
     }
 
