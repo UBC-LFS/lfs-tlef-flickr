@@ -48,7 +48,6 @@ export default class GalleryContainer extends React.Component {
         this.setImageDescriptions = this.setImageDescriptions.bind(this);
         this.openThumbnail = this.openThumbnail.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
-        this.filterByTerm = this.filterByTerm.bind(this);
         this.imageHover = this.imageHover.bind(this);
         this.imageUnhover = this.imageUnhover.bind(this);
     }
@@ -200,11 +199,11 @@ export default class GalleryContainer extends React.Component {
     }
 
     handleSearchChange (searchTerm) {
-      this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : this.filterByTerm(searchTerm))});
-    }
+      const filterByTerm = (searchTerm) => {
+          return this.state.photos.filter(photo => photo[1].includes(searchTerm) || photo[5].includes(searchTerm));
+      }
 
-    filterByTerm(searchTerm) {
-        return this.state.photos.filter(photo => photo[1].includes(searchTerm) || photo[5].includes(searchTerm))
+      this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
     }
 
     handleKeyPress(searchTerm) {
@@ -259,9 +258,7 @@ export default class GalleryContainer extends React.Component {
         const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
         return (
         <div>
-          <SearchBar currentSearch={this.state.searchKey}
-                     onSearchChange={this.handleSearchChange}
-                     />
+          <SearchBar onSearchChange={this.handleSearchChange} />
             {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
             <SelectSearchBar currentSearch={this.state.selectSearch}
                              onSelectChange={this.handleSelectChange}
