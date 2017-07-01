@@ -49,6 +49,8 @@ export default class GalleryContainer extends React.Component {
         this.openThumbnail = this.openThumbnail.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.filterByTerm = this.filterByTerm.bind(this);
+        this.imageHover = this.imageHover.bind(this);
+        this.imageUnhover = this.imageUnhover.bind(this);
     }
 
     callAPI() {
@@ -106,11 +108,13 @@ export default class GalleryContainer extends React.Component {
 
     filterPhotos() {
         const matchedImages = this.state.photos.filter(this.isMatchingTag);
+        console.log("Matched Images:",matchedImages);
         this.setState({visiblePhotos: matchedImages});
     }
 
     filterSelectPhotos() {
         const matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
+        console.log(matchedImages);
         const updatedSearchOptions = this.updateSearchOptions();
         const updatedCurrentSearchOptions = this.state.allSelectOptions.filter((tag) => {
             return updatedSearchOptions.includes(tag["value"])
@@ -223,31 +227,9 @@ export default class GalleryContainer extends React.Component {
         this.setState(nextState);
     }
 
-    // handleSelectTop(selectedValue) {
-    //     this.setState({dropdownTop: selectedValue});
-    // }
-
-    // handleSelectBottom(selectedValue) {
-    //     this.setState({dropdownBottom: selectedValue});
-    // }
-
     isMatchingTag(image) {
         const tags = image[3].split(" ");
         return tags.includes(this.state.search)
-        // const searchString = this.state.search.split(",");
-        // console.log(tags);
-        // let tagCheck = true;
-        // for(let i = 0; i<searchString.length; i++)
-        // {
-        //     if (!searchString[i].includes(image)) {
-        //         tagCheck = false;
-        //         break;
-        //     }
-        // }
-        // return tagCheck;
-        // if(tags.includes(this.state.search || this.state.dropdownBottom || this.state.dropdownTop)) {
-        //     return true;
-        // }
     }
 
     openLightbox (index, event) {
@@ -257,10 +239,17 @@ export default class GalleryContainer extends React.Component {
         this.setState(nextState);
 	}
 
-    // updateSearchTerm() {
-    //     console.log(this.state.dropdownTop + this.state.dropdownBottom);
-    //     this.setState({search: this.state.dropdownTop + this.state.dropdownBottom });
-    // }
+    imageHover(index) {
+        var visiblePhotos = this.state.visiblePhotos;
+        visiblePhotos[index][6]="Hover";
+        this.setState({visiblePhotos});
+    }
+
+    imageUnhover(index) {
+        var visiblePhotos = this.state.visiblePhotos;
+        visiblePhotos[index][6]="Unhover";
+        this.setState({visiblePhotos});
+    }
 
     componentDidMount() {
         this.callAPI();
@@ -278,7 +267,10 @@ export default class GalleryContainer extends React.Component {
                              onSelectChange={this.handleSelectChange}
                              selectOptions={this.state.currentSelectOptions} />
             {/*<SearchBar onChange={this.handleKeyPress} _onButtonClick={this.filterPhotos} _onKeyPress={this.filterPhotos} />*/}
-            <Photos _onClick={this.handleClick} images={this.state.visiblePhotos}/>
+            <Photos _onClick={this.handleClick} 
+                    images={this.state.visiblePhotos}
+                    onMouseHover={this.imageHover}
+                    onMouseUnhover={this.imageUnhover} />
             <Lightbox
                 currentImage={this.state.currentImage}
                 images={lightboxPhotos}

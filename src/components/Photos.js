@@ -8,6 +8,14 @@ const Photos = (props) => {
         props._onClick(index);
     }
 
+    const mouseHover = (index) => {
+        props.onMouseHover(index);
+    }
+
+    const mouseUnhover = (index) => {
+        props.onMouseUnhover(index);
+    }
+
     const photos = props.images.map((image, index) => {
         if (image[0]) {
             const source = image[0];
@@ -20,7 +28,12 @@ const Photos = (props) => {
                     <div className="photoContainer">
                         <h1>{title}</h1>
 
-                        <img key={index} src={source} onClick={handleClick.bind(null, index)} className="image"/>        
+                        <img key={index} 
+                             src={source} 
+                             onMouseOver={mouseHover.bind(null,index)}
+                             onMouseOut={mouseUnhover.bind(null,index)}
+                             onClick={handleClick.bind(null, index)} 
+                             className="image"/>        
                     </div>    
                 </LazyLoad>
             );
