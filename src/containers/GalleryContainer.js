@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import R from 'ramda';
 import Lightbox from 'react-images';
 import API from '../API/API';
@@ -7,13 +7,12 @@ import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 
-export default class GalleryContainer extends React.Component {
+export default class GalleryContainer extends Component {
     constructor() {
         super();
         this.state = {
             selectSearch: '',
-            //search by words
-            searchBarKey: '',
+            wordSearch: '',
             photos: [],
             visiblePhotos: [],
             allSelectOptions: [],
@@ -21,16 +20,15 @@ export default class GalleryContainer extends React.Component {
             currentImage: 0,
             lightboxIsOpen: false,
         };
-        this.handleKeyPress = this.handleKeyPress.bind(this);
+        this.searchBarKeyPress = this.searchBarKeyPress.bind(this);
         this.closeLightbox = this.closeLightbox.bind(this);
-		    this.gotoNext = this.gotoNext.bind(this);
-		    this.gotoPrevious = this.gotoPrevious.bind(this);
-		    this.handleClickImage = this.handleClickImage.bind(this);
-		    this.openLightbox = this.openLightbox.bind(this);
+        this.gotoNext = this.gotoNext.bind(this);
+        this.gotoPrevious = this.gotoPrevious.bind(this);
+        this.handleClickImage = this.handleClickImage.bind(this);
+        this.openLightbox = this.openLightbox.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.getLightboxImages = this.getLightboxImages.bind(this);
-        this.callAPI = this.callAPI.bind(this)
-        // this.filterPhotos = this.filterPhotos.bind(this);
+        this.callAPI = this.callAPI.bind(this);
         this.isMatchingTag = this.isMatchingTag.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -46,35 +44,20 @@ export default class GalleryContainer extends React.Component {
     }
 
     callAPI() {
-
-        API(this.setImageDescriptions);
-            // .then(result => {
-            //     // console.log("Result: ",result);
-            //     this.setState({photos: result}, function(){DescriptionAPI(this.state.photos, this.setImagesDescription)});
-            // })
-            // .then(this.setAllTags)
-            // // .then(function(test){console.log(test)})
-            // .then(uniqueTags => this.setUniqueTags(uniqueTags));
+      API(this.setImageDescriptions);
     }
 
-    setImageDescriptions(photos)
-    {
-        let uniqueTags = this.setAllTags(photos);
-
-        let allSelectOptions = this.setUniqueTags(uniqueTags);
-        this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions})
+    setImageDescriptions(photos) {
+      let uniqueTags = this.setAllTags(photos);
+      let allSelectOptions = this.setUniqueTags(uniqueTags);
+      this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions})
     }
 
-    setUniqueTags(uniqueTags)
-    {
-        let allSelectOptions = uniqueTags.map(
-            uniqueTag =>
-                {
-                    return { value: uniqueTag, label: uniqueTag }
-                }
-        )
-        return allSelectOptions;
-        // this.setState({allSelectOptions, currentSelectOptions: allSelectOptions});
+    setUniqueTags(uniqueTags) {
+      let allSelectOptions = uniqueTags.map(uniqueTag => {
+        return { value: uniqueTag, label: uniqueTag }
+      })
+      return allSelectOptions;
     }
 
     setAllTags(photos) {
@@ -94,9 +77,9 @@ export default class GalleryContainer extends React.Component {
     }
 
     closeLightbox () {
-        const nextState = {...this.state, currentImage: 0, lightboxIsOpen: false};
-        this.setState(nextState);
-	}
+      const nextState = {...this.state, currentImage: 0, lightboxIsOpen: false};
+      this.setState(nextState);
+    }
 
     filterPhotos() {
         const matchedImages = this.state.photos.filter(this.isMatchingTag);
@@ -177,32 +160,17 @@ export default class GalleryContainer extends React.Component {
     }
 
     gotoPrevious () {
-        const nextState = {...this.state, currentImage: this.state.currentImage - 1}
-        this.setState(nextState);
-	}
+      const nextState = {...this.state, currentImage: this.state.currentImage - 1}
+      this.setState(nextState);
+    }
 
-	gotoNext () {
-        const nextState = {...this.state, currentImage: this.state.currentImage + 1};
-        this.setState(nextState);
-	}
+    gotoNext () {
+      const nextState = {...this.state, currentImage: this.state.currentImage + 1};
+      this.setState(nextState);
+    }
 
     handleSelectChange (searchTerm) {
         this.setState({selectSearch: searchTerm}, this.filterSelectPhotos);
-        // console.log(this.state.selectSearch)
-    }
-
-    handleSearchChange (searchTerm) {
-      const photoSet = (this.state.visiblePhotos.length === 0 ? this.state.photos : this.state.visiblePhotos);
-      const filterByTerm = searchTerm => (
-          photoSet.filter(photo => (
-          photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
-        )))
-    this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
-  }
-
-    handleKeyPress(searchTerm) {
-        // this.setState({search: searchTerm + this.state.dropdownBottom  + this.state.dropdownTop});
-        this.setState({search: searchTerm});
     }
 
     handleClick(index) {
@@ -211,11 +179,11 @@ export default class GalleryContainer extends React.Component {
     }
 
     handleClickImage() {
-		if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) return;
-		this.gotoNext();
-	}
+      if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) return;
+      this.gotoNext();
+    }
 
-  openThumbnail(index) {
+    openThumbnail(index) {
         const nextState = {...this.state, currentImage: index};
         this.setState(nextState);
     }
@@ -226,11 +194,10 @@ export default class GalleryContainer extends React.Component {
     }
 
     openLightbox (index, event) {
-		event.preventDefault();
-
-        const nextState = {...this.state, currentImage: index, lightboxIsOpen: true};
-        this.setState(nextState);
-	}
+      event.preventDefault();
+      const nextState = {...this.state, currentImage: index, lightboxIsOpen: true};
+      this.setState(nextState);
+    }
 
     imageHover(index) {
         var visiblePhotos = this.state.visiblePhotos;
@@ -248,39 +215,46 @@ export default class GalleryContainer extends React.Component {
         this.callAPI();
     }
 
-    searchBarKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      this.handleSearchChange(this.state.searchKey);
+    handleSearchChange (searchTerm) {
+      const photoSet = (this.state.visiblePhotos.length === 0 ? this.state.photos : this.state.visiblePhotos);
+      const filterByTerm = searchTerm => (
+          photoSet.filter(photo => (
+          photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
+        )))
+        this.setState({wordSearch: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
+      }
+
+    searchBarKeyPress = e => {
+        if (e.key === 'Enter') this.handleSearchChange(this.state.wordSearch);
     }
-  }
 
     render() {
-        const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-        return (
+      const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
+      return (
         <div>
           <SearchBar
             onKeyPress={this.searchBarKeyPress}
             onSearchChange={this.handleSearchChange} />
-            {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
-            <SelectSearchBar currentSearch={this.state.selectSearch}
-                             onSelectChange={this.handleSelectChange}
-                             selectOptions={this.state.currentSelectOptions} />
-            {/*<SearchBar onChange={this.handleKeyPress} _onButtonClick={this.filterPhotos} _onKeyPress={this.filterPhotos} />*/}
-            <Photos _onClick={this.handleClick}
-                    images={this.state.visiblePhotos}
-                    onMouseHover={this.imageHover}
-                    onMouseUnhover={this.imageUnhover} />
+            <SelectSearchBar
+              currentSearch={this.state.selectSearch}
+              onSelectChange={this.handleSelectChange}
+              selectOptions={this.state.currentSelectOptions} />
+            <Photos
+              _onClick={this.handleClick}
+              images={this.state.visiblePhotos}
+              onMouseHover={this.imageHover}
+              onMouseUnhover={this.imageUnhover} />
             <Lightbox
-                currentImage={this.state.currentImage}
-                images={lightboxPhotos}
-                isOpen={this.state.lightboxIsOpen}
-                onClickImage={this.handleClickImage}
-                onClickPrev={this.gotoPrevious}
-                onClickThumbnail={this.openThumbnail}
-                showThumbnails={true}
-                onClickNext={this.gotoNext}
-                onClose={this.closeLightbox}/>
-        </div>
-        )
-    }
-}
+              currentImage={this.state.currentImage}
+              images={lightboxPhotos}
+              isOpen={this.state.lightboxIsOpen}
+              onClickImage={this.handleClickImage}
+              onClickPrev={this.gotoPrevious}
+              onClickThumbnail={this.openThumbnail}
+              showThumbnails={true}
+              onClickNext={this.gotoNext}
+              onClose={this.closeLightbox}/>
+            </div>
+          )
+        }
+      }
