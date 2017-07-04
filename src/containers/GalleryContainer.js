@@ -216,7 +216,7 @@ export default class GalleryContainer extends Component {
     }
 
     handleSearchChange (searchTerm) {
-      const photoSet = (this.state.visiblePhotos.length === 0 ? this.state.photos : this.state.visiblePhotos);
+      const photoSet = (this.state.selectSearch === '' ? this.state.photos : this.state.visiblePhotos);
       const filterByTerm = searchTerm => (
           photoSet.filter(photo => (
           photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
