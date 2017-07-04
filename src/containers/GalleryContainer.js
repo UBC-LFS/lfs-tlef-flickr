@@ -1,32 +1,25 @@
 import React from 'react';
+import R from 'ramda';
+import Lightbox from 'react-images';
+import API from '../API/API';
+import DescriptionAPI from '../API/DescriptionAPI';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
-import API from '../API/API';
-// import API from '../API/APIPhoto';
-import DescriptionAPI from '../API/DescriptionAPI';
-import Lightbox from 'react-images';
 import Photos from '../components/Photos';
-import DropdownFilter from '../components/DropdownFilter';
-import R from 'ramda';
 
 export default class GalleryContainer extends React.Component {
     constructor() {
         super();
         this.state = {
-            dropdownTop: '',
-            dropdownBottom: '',
-            //search by tags
-            search: '',
             selectSearch: '',
             //search by words
-            searchKey: '',
+            searchBarKey: '',
             photos: [],
             visiblePhotos: [],
             allSelectOptions: [],
             currentSelectOptions:[],
             currentImage: 0,
             lightboxIsOpen: false,
-            test:[1,2]
         };
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.closeLightbox = this.closeLightbox.bind(this);
@@ -107,13 +100,13 @@ export default class GalleryContainer extends React.Component {
 
     filterPhotos() {
         const matchedImages = this.state.photos.filter(this.isMatchingTag);
-        console.log("Matched Images:",matchedImages);
+        //console.log("Matched Images:",matchedImages);
         this.setState({visiblePhotos: matchedImages});
     }
 
     filterSelectPhotos() {
         const matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-        console.log(matchedImages);
+        //console.log(matchedImages);
         const updatedSearchOptions = this.updateSearchOptions();
         const updatedCurrentSearchOptions = this.state.allSelectOptions.filter((tag) => {
             return updatedSearchOptions.includes(tag["value"])
@@ -199,12 +192,13 @@ export default class GalleryContainer extends React.Component {
     }
 
     handleSearchChange (searchTerm) {
-      const filterByTerm = (searchTerm) => {
-          return this.state.photos.filter(photo => photo[1].toLowerCase().includes(searchTerm.toLowerCase()) || photo[5].toLowerCase().includes(searchTerm.toLowerCase()));
-      }
-
-      this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
-    }
+      const photoSet = (this.state.visiblePhotos.length === 0 ? this.state.photos : this.state.visiblePhotos);
+      const filterByTerm = searchTerm => (
+          photoSet.filter(photo => (
+          photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
+        )))
+    this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
+  }
 
     handleKeyPress(searchTerm) {
         // this.setState({search: searchTerm + this.state.dropdownBottom  + this.state.dropdownTop});
@@ -254,11 +248,19 @@ export default class GalleryContainer extends React.Component {
         this.callAPI();
     }
 
+    searchBarKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.handleSearchChange(this.state.searchKey);
+    }
+  }
+
     render() {
         const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
         return (
         <div>
-          <SearchBar onSearchChange={this.handleSearchChange} />
+          <SearchBar
+            onKeyPress={this.searchBarKeyPress}
+            onSearchChange={this.handleSearchChange} />
             {/*<DropdownFilter onChange={this.updateSearchTerm} _onSelectTop={this.handleSelectTop} _onSelectBottom={this.handleSelectBottom}/>*/}
             <SelectSearchBar currentSearch={this.state.selectSearch}
                              onSelectChange={this.handleSelectChange}

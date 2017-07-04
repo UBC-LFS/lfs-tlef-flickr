@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import SearchInput from 'react-search-input';
 
-const SearchBar = (props) => {
-	return (
-		<div>
-			<SearchInput className='search-input' onChange={props.onSearchChange} />
-		</div>
-	);
-}
+const SearchBar = props => (
+  <div>
+    <SearchInput className="search-input"
+      onChange={props.onSearchChange}
+      onKeyPress={props.onKeyPress}
+    />
+  </div>
+);
 
-export default SearchBar
+SearchBar.propTypes = {
+  onSearchChange: PropTypes.func.isRequired,
+};
+
+export default SearchBar;
