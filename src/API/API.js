@@ -16,7 +16,7 @@ const setPhotoDescriptions = (imagesArray, descriptionArray, setImageDescription
             {
                 imagesArray[i][2] = descriptions[i];
                 imagesArray[i].push(descriptions[i]);
-                imagesArray[i].push("Unhover");
+                imagesArray[i].push(false);
             }
         })
         .then(setImageDescriptions(imagesArray));

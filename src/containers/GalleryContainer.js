@@ -240,13 +240,13 @@ export default class GalleryContainer extends React.Component {
 
     imageHover(index) {
         var visiblePhotos = this.state.visiblePhotos;
-        visiblePhotos[index][6]="Hover";
+        visiblePhotos[index][6]=true;
         this.setState({visiblePhotos});
     }
 
     imageUnhover(index) {
         var visiblePhotos = this.state.visiblePhotos;
-        visiblePhotos[index][6]="Unhover";
+        visiblePhotos[index][6]=false;
         this.setState({visiblePhotos});
     }
 

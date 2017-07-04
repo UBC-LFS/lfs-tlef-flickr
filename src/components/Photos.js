@@ -16,6 +16,10 @@ const Photos = (props) => {
         props.onMouseUnhover(index);
     }
 
+    // const hoverTitle = (hover) => {
+    //     return 
+    // }
+
     const photos = props.images.map((image, index) => {
         if (image[0]) {
             const source = image[0];
@@ -26,7 +30,8 @@ const Photos = (props) => {
             return (
                 <LazyLoad height={200} once key={index}>
                     <div className="photoContainer">
-                        <h1>{title}</h1>
+                        {/*<h1>{title}</h1>*/}
+                        <div className="imageTitle"><span>{title}</span></div>
 
                         <img key={index} 
                              src={source} 
