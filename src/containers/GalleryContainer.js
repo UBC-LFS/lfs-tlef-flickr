@@ -200,7 +200,7 @@ export default class GalleryContainer extends React.Component {
 
     handleSearchChange (searchTerm) {
       const filterByTerm = (searchTerm) => {
-          return this.state.photos.filter(photo => photo[1].includes(searchTerm) || photo[5].includes(searchTerm));
+          return this.state.photos.filter(photo => photo[1].toLowerCase().includes(searchTerm.toLowerCase()) || photo[5].toLowerCase().includes(searchTerm.toLowerCase()));
       }
 
       this.setState({searchKey: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
@@ -264,7 +264,7 @@ export default class GalleryContainer extends React.Component {
                              onSelectChange={this.handleSelectChange}
                              selectOptions={this.state.currentSelectOptions} />
             {/*<SearchBar onChange={this.handleKeyPress} _onButtonClick={this.filterPhotos} _onKeyPress={this.filterPhotos} />*/}
-            <Photos _onClick={this.handleClick} 
+            <Photos _onClick={this.handleClick}
                     images={this.state.visiblePhotos}
                     onMouseHover={this.imageHover}
                     onMouseUnhover={this.imageUnhover} />
