@@ -3,7 +3,7 @@ import LazyLoad from 'react-lazyload';
 import { createURL } from '../utils/utils';
 
 const Photos = (props) => {
-    
+
     const handleClick = (index) => {
         props._onClick(index);
     }
@@ -17,7 +17,7 @@ const Photos = (props) => {
     }
 
     // const hoverTitle = (hover) => {
-        
+
     // }
 
     const photos = props.images.map((image, index) => {
@@ -28,19 +28,19 @@ const Photos = (props) => {
             const description = image[2];
 
             return (
-                <LazyLoad height={200} once key={index}>
+                <LazyLoad height={200} offset={1000} once key={index}>
                     <div className="photoContainer">
                         {/*<h1>{title}</h1>*/}
                         <div className="imageTitle"><span>{title}</span></div>
                         <div className="imageInner">
-                            <img key={index} 
-                                src={source} 
+                            <img key={index}
+                                src={source}
                                 onMouseOver={mouseHover.bind(null,index)}
                                 onMouseOut={mouseUnhover.bind(null,index)}
-                                onClick={handleClick.bind(null, index)} 
-                                className="image"/>        
+                                onClick={handleClick.bind(null, index)}
+                                className="image"/>
                         </div>
-                    </div>    
+                    </div>
                 </LazyLoad>
             );
         }
