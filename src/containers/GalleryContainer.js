@@ -15,6 +15,7 @@ export default class GalleryContainer extends Component {
             wordSearch: '',
             photos: [],
             visiblePhotos: [],
+            tempPhotos: [],
             allSelectOptions: [],
             currentSelectOptions:[],
             currentImage: 0,
@@ -53,7 +54,7 @@ export default class GalleryContainer extends Component {
       let allSelectOptions = this.setUniqueTags(uniqueTags);
     //   let photoOrientation = this.getPhotoOrientation(photos);
     //   console.log(photoOrientation);
-      this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions})
+      this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photos})
     }
 
     setUniqueTags(uniqueTags) {
@@ -86,7 +87,7 @@ export default class GalleryContainer extends Component {
             // console.log("Photos: ", photo[0]);
             let img = new Image();
             img.onload = function() {
-            //   console.log("Image Width: ", img.width);  
+            //   console.log("Image Width: ", img.width);
                 return photo.push(img.width);
             };
             // setTimeout(function(){img.src = photo[0];},1000)
@@ -188,7 +189,11 @@ export default class GalleryContainer extends Component {
     }
 
     handleSelectChange (searchTerm) {
-        this.setState({selectSearch: searchTerm}, this.filterSelectPhotos);
+      if (searchTerm === "" && this.state.wordSearch !== "") {
+        //TODO - no tags, but search present 
+        //this.setState({selectSearch: searchTerm}, this.handleSearchChange);
+      }
+      this.setState({selectSearch: searchTerm}, this.filterSelectPhotos);
     }
 
     handleClick(index) {
@@ -234,13 +239,20 @@ export default class GalleryContainer extends Component {
     }
 
     handleSearchChange (searchTerm) {
-      const photoSet = (this.state.selectSearch === '' ? this.state.photos : this.state.visiblePhotos);
-      const filterByTerm = searchTerm => (
-          photoSet.filter(photo => (
-          photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
-        )))
-        this.setState({wordSearch: searchTerm, visiblePhotos: (searchTerm === ''? [] : filterByTerm(searchTerm))});
+      if (this.state.selectSearch !== "") {
+        this.handleSelectChange(this.state.selectSearch);
       }
+      const filterByTerm = searchTerm => {
+        //console.log(this.state.selectSearch);
+        const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
+        return (
+            photoSet.filter(photo => (
+              photo[1].toUpperCase().includes(searchTerm.toUpperCase()) || photo[5].toUpperCase().includes(searchTerm.toUpperCase())
+          ))
+        )
+      }
+      this.setState({wordSearch: searchTerm, visiblePhotos: filterByTerm(searchTerm)});
+    }
 
     searchBarKeyPress = e => {
         if (e.key === 'Enter') this.handleSearchChange(this.state.wordSearch);

@@ -25,7 +25,7 @@ const setPhotoDescriptions = (imagesArray, descriptionArray, setImageDescription
 const mapAndPushPhotos = (json,setImageDescriptions) => {
     let imagesArray = [];
     let descriptionArray = [];
-    console.log("json: ", json);
+    //console.log("json: ", json);
     json.photoset.photo.map(({farm, server, id, secret, title, description, tags}) => {
         const PHOTO_API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${API_KEY}&photo_id=${id}&format=json&nojsoncallback=1`;
         const imageURL = `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`;
