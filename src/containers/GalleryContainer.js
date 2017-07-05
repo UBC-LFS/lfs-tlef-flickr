@@ -36,6 +36,7 @@ export default class GalleryContainer extends Component {
         this.updateSearchOptions = this.updateSearchOptions.bind(this);
         this.setAllTags = this.setAllTags.bind(this);
         this.setUniqueTags = this.setUniqueTags.bind(this);
+        this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
         this.setImageDescriptions = this.setImageDescriptions.bind(this);
         this.openThumbnail = this.openThumbnail.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -50,6 +51,8 @@ export default class GalleryContainer extends Component {
     setImageDescriptions(photos) {
       let uniqueTags = this.setAllTags(photos);
       let allSelectOptions = this.setUniqueTags(uniqueTags);
+    //   let photoOrientation = this.getPhotoOrientation(photos);
+    //   console.log(photoOrientation);
       this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions})
     }
 
@@ -74,6 +77,21 @@ export default class GalleryContainer extends Component {
         )
         uniqueTagArray.sort();
         return uniqueTagArray;
+    }
+
+    getPhotoOrientation(photos) {
+        // let _URL = window.URL || window.webkitURL;
+        // let img;
+        photos.map(photo => {
+            // console.log("Photos: ", photo[0]);
+            let img = new Image();
+            img.onload = function() {
+            //   console.log("Image Width: ", img.width);  
+                return photo.push(img.width);
+            };
+            // setTimeout(function(){img.src = photo[0];},1000)
+            img.src = photo[0];
+        })
     }
 
     closeLightbox () {
