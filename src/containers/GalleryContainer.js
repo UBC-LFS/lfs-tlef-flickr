@@ -182,12 +182,12 @@ export default class GalleryContainer extends Component {
 
 	filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-		if ((this.state.wordSearch === "" && this.state.selectSearch === "")) {
+		if ((this.state.wordSearch === "" && this.state.selectSearch === "") || this.state.selectSearch === "") {
 			matchedImages = this.state.photos;
 		}
     const updatedSearchOptions = this.updateSearchTagOptions();
     const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
-    this.setState({visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions}, this.handleMultiSearch);
+    this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions }, this.handleMultiSearch);
 	}
 
 	filterByTerm() {
@@ -206,14 +206,11 @@ export default class GalleryContainer extends Component {
 	}
 
 	handleSelectChange(searchTerm) {
-			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
+		this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
 	}
 
 	handleSearchChange(searchTerm) {
-		if (this.state.selectSearch !== "") {
-			this.handleSelectChange(this.state.selectSearch);
-		}
-		this.setState({ wordSearch: searchTerm }, this.filterByTerm);
+		(this.state.selectSearch !== "") ? this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos) : this.setState({ wordSearch: searchTerm }, this.filterByTerm)
 	}
 
   searchBarKeyPress(e) {
