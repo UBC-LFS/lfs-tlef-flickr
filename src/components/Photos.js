@@ -16,6 +16,10 @@ const Photos = (props) => {
         props.onMouseUnhover(index);
     }
 
+    const divStyle = {
+        height: props.imageWidth
+    }
+
     // const hoverTitle = (hover) => {
 
     // }

@@ -10,6 +10,7 @@ export default class GalleryContainer extends Component {
 	constructor() {
 		super();
 		this.state = {
+			displayImageWidth: 0,
 			selectSearch: '',
 			wordSearch: '',
 			photos: [],
@@ -42,10 +43,18 @@ export default class GalleryContainer extends Component {
 		this.imageHover = this.imageHover.bind(this);
 		this.imageUnhover = this.imageUnhover.bind(this);
 		this.filterByTerm = this.filterByTerm.bind(this);
+		this.resizeBrowser = this.resizeBrowser.bind(this);
 	}
 
   componentDidMount() {
+		window.addEventListener("resize", this.resizeBrowser);
 		this.callAPI();
+	}
+
+// unclear why there is an initial offset which must be considered
+	resizeBrowser(initialOffset) {
+		let displayImageWidth = document.getElementById("images").clientWidth/3;
+		this.setState({displayImageWidth});
 	}
 
 	callAPI() {
@@ -55,7 +64,7 @@ export default class GalleryContainer extends Component {
 	setImageDescriptions(photos) {
 		const uniqueTags = this.setAllTags(photos);
 		const allSelectOptions = this.setUniqueTags(uniqueTags);
-    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photos});
+    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photos},this.resizeBrowser);
 	}
 
 	setUniqueTags(uniqueTags) {
@@ -220,6 +229,7 @@ export default class GalleryContainer extends Component {
 				<Photos
           _onClick={this.handleClick}
           images={this.state.visiblePhotos}
+					imageWidth={this.state.displayImageWidth}
           onMouseHover={this.imageHover}
           onMouseUnhover={this.imageUnhover}/>
 				<Lightbox

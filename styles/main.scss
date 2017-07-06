@@ -103,6 +103,7 @@ body {
 .photoContainer {
   display: inline-block;
   min-width: 300px;
+  padding-top: 33.3333333%;
   width: calc(33.3333333%);
   position: relative;
   overflow: hidden;
@@ -111,10 +112,11 @@ body {
 
 .photoContainer .imageTitle {
   position: absolute;
+  top: 0px;
   height: 50px;
   width: 100%;
   opacity: 0;
-  z-index: 1;
+  z-index: 0;
   background: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.6) 100%);
 // Safari 3.1 to 6.0
   -webkit-transition-property: opacity;
@@ -130,10 +132,14 @@ body {
 }
 
 .photoContainer .imageInner {
-  position: relative;
+  position: absolute;
   display: inline-block;
+  height: 100%;
+  width: 100%;
+  top: 0px;
   right: -50%;
   transform: translateY(50%);
+  z-index: -1;
 }
 
 .showTitle {
@@ -158,11 +164,13 @@ body {
   top: 10px;
 }
 
-.image {
+.photoContainer .image {
   position: relative;
-  left: -50%;
-  width: 100%;
-  transform: translateY(-50%);
+  // width: 100%;
+  height: 100%;
+  transform: translate(-50%,-50%);
+  // left: -50%;
+  // transform: translateY(-50%);
 }
 
 
