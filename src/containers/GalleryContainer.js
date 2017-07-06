@@ -10,7 +10,6 @@ export default class GalleryContainer extends Component {
 	constructor() {
 		super();
 		this.state = {
-            displayImageWidth: 0,
 			selectSearch: '',
 			wordSearch: '',
 			photos: [],
@@ -43,24 +42,11 @@ export default class GalleryContainer extends Component {
 		this.imageHover = this.imageHover.bind(this);
 		this.imageUnhover = this.imageUnhover.bind(this);
 		this.filterByTerm = this.filterByTerm.bind(this);
-        this.resizeBrowser = this.resizeBrowser.bind(this);
 	}
 
-    componentDidMount() {
-        this.resizeBrowser(17);
-        window.addEventListener("resize", this.resizeBrowser);
+  componentDidMount() {
 		this.callAPI();
 	}
-
-// unclear why there is an initial offset which must be considered
-    resizeBrowser(initialOffset) {
-        let displayImageWidth = document.getElementById("images").offsetWidth/3;
-        if (initialOffset !== undefined)
-        {
-            displayImageWidth = (document.getElementById("images").offsetWidth - initialOffset)/3;
-        }
-        this.setState({displayImageWidth})
-    }
 
 	callAPI() {
 		API(this.setImageDescriptions);
