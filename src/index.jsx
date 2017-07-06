@@ -1,8 +1,7 @@
 import React from 'react';
 import App from './App.jsx';
 import { render } from 'react-dom';
-import { Router, Route, Link, browserHistory } from 'react-router';
-import FlickrGallery from './containers/FlickrGallery';
+import { Router, Route, browserHistory } from 'react-router';
 
 // render( <App/>, document.querySelector("#app"));
 
