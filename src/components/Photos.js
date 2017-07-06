@@ -20,7 +20,11 @@ const Photos = (props) => {
         height: props.imageWidth
     }
 
-    // const hoverTitle = (hover) => {
+    const orientationMaxSize = () => {
+        // let orientation = props.imageOrientation;
+        
+    }
+    // const hoverTitle = (hover) => { 
 
     // }
 

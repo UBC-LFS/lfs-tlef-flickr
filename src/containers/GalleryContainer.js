@@ -37,6 +37,7 @@ export default class GalleryContainer extends Component {
 		this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
 		this.setAllTags = this.setAllTags.bind(this);
 		this.setUniqueTags = this.setUniqueTags.bind(this);
+		this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
 		this.setImageDescriptions = this.setImageDescriptions.bind(this);
 		this.openThumbnail = this.openThumbnail.bind(this);
 		this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -62,16 +63,21 @@ export default class GalleryContainer extends Component {
 		API(this.setImageDescriptions);
 	}
 
-	setImageDescriptions(photos) {
-		const uniqueTags = this.setAllTags(photos);
+	setImageDescriptions(photosArray) {
+		const uniqueTags = this.setAllTags(photosArray);
 		const allSelectOptions = this.setUniqueTags(uniqueTags);
-    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photos},this.resizeBrowser);
+		let photos = photosArray;
+    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photosArray},this.resizeBrowser);
 	}
 
 	setUniqueTags(uniqueTags) {
 		return uniqueTags.map(uniqueTag => {
 			return { value: uniqueTag, label: uniqueTag }
 		})
+	}
+
+	getPhotoOrientation() {
+		
 	}
 
 	setAllTags(photos) {
