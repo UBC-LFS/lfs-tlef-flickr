@@ -141,14 +141,6 @@ export default class GalleryContainer extends Component {
 		this.setState({currentImage: this.state.currentImage + 1});
 	}
 
-	handleSelectChange(searchTerm) {
-		if (searchTerm === "" && this.state.wordSearch !== "") {
-			//TODO - no tags, but search present
-			//this.setState({selectSearch: searchTerm}, this.handleSearchChange);
-		}
-		this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
-	}
-
 	handleClick(index) {
 		this.setState({ currentImage: index, lightboxIsOpen: true });
 	}
@@ -187,16 +179,26 @@ export default class GalleryContainer extends Component {
 
 	filterByTerm() {
 		const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
+		const currWord = this.state.wordSearch.toUpperCase();
 		const matchedImages = photoSet.filter(photo => (
-      photo[1].toUpperCase().includes(this.state.wordSearch.toUpperCase()) ||
-      photo[5].toUpperCase().includes(this.state.wordSearch.toUpperCase())))
+      photo[1].toUpperCase().includes(currWord) || photo[5].toUpperCase().includes(currWord)
+		));
+		console.log(matchedImages);
 		this.setState({ visiblePhotos: matchedImages });
 	}
 
-	handleSearchChange(searchTerm) {
-		if (this.state.selectSearch !== "") {
-			this.handleSelectChange(this.state.selectSearch);
+	handleSelectChange(searchTerm) {
+		if (searchTerm === "" && this.state.wordSearch !== "") {
+			console.log('mycall back');
+			this.setState({selectSearch: searchTerm}, this.handleSearchChange(this.state.wordSearch));
+		}else {
+			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
 		}
+	}
+
+	handleSearchChange(searchTerm) {
+		if (this.state.selectSearch !== "") this.handleSelectChange(this.state.selectSearch);
+		console.log(searchTerm);
 		this.setState({ wordSearch: searchTerm }, this.filterByTerm);
 	}
 
