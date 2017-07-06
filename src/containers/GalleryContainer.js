@@ -44,6 +44,7 @@ export default class GalleryContainer extends Component {
 		this.imageUnhover = this.imageUnhover.bind(this);
 		this.filterByTerm = this.filterByTerm.bind(this);
 		this.resizeBrowser = this.resizeBrowser.bind(this);
+		this.handleMultiSearch = this.handleMultiSearch.bind(this);
 	}
 
   componentDidMount() {
@@ -79,13 +80,6 @@ export default class GalleryContainer extends Component {
       !uniqueTagArray.includes(photoTag) ? uniqueTagArray.push(photoTag) : photoTag
     )));
     return uniqueTagArray.sort();
-	}
-
-	filterSelectPhotos() {
-    const matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-    const updatedSearchOptions = this.updateSearchTagOptions();
-    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
-    this.setState({visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions});
 	}
 
 	isSelectMatchingTag(image) {
@@ -186,28 +180,39 @@ export default class GalleryContainer extends Component {
 		this.setState({ visiblePhotos });
 	}
 
+	filterSelectPhotos() {
+    let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
+		if ((this.state.wordSearch === "" && this.state.selectSearch === "")) {
+			matchedImages = this.state.photos;
+		}
+    const updatedSearchOptions = this.updateSearchTagOptions();
+    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
+    this.setState({visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions}, this.handleMultiSearch);
+	}
+
 	filterByTerm() {
 		const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
 		const currWord = this.state.wordSearch.toUpperCase();
 		const matchedImages = photoSet.filter(photo => (
       photo[1].toUpperCase().includes(currWord) || photo[5].toUpperCase().includes(currWord)
 		));
-		console.log(matchedImages);
 		this.setState({ visiblePhotos: matchedImages });
 	}
 
-	handleSelectChange(searchTerm) {
-		if (searchTerm === "" && this.state.wordSearch !== "") {
-			console.log('mycall back');
-			this.setState({selectSearch: searchTerm}, this.handleSearchChange(this.state.wordSearch));
-		}else {
-			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
+	handleMultiSearch() {
+		if (this.state.selectSearch !== "" && this.state.wordSearch !== "") {
+			this.filterByTerm();
 		}
 	}
 
+	handleSelectChange(searchTerm) {
+			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
+	}
+
 	handleSearchChange(searchTerm) {
-		if (this.state.selectSearch !== "") this.handleSelectChange(this.state.selectSearch);
-		console.log(searchTerm);
+		if (this.state.selectSearch !== "") {
+			this.handleSelectChange(this.state.selectSearch);
+		}
 		this.setState({ wordSearch: searchTerm }, this.filterByTerm);
 	}
 
