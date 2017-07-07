@@ -77,7 +77,7 @@ export default class GalleryContainer extends Component {
 	}
 
 	getPhotoOrientation() {
-		
+
 	}
 
 	setAllTags(photos) {
@@ -199,10 +199,12 @@ export default class GalleryContainer extends Component {
 	filterByTerm() {
 		const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
 		const currWord = this.state.wordSearch.toUpperCase();
+		const updatedSearchOptions = this.updateSearchTagOptions();
+    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
 		const matchedImages = photoSet.filter(photo => (
       photo[1].toUpperCase().includes(currWord) || photo[5].toUpperCase().includes(currWord)
 		));
-		this.setState({ visiblePhotos: matchedImages });
+		this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
 	}
 
 	handleMultiSearch() {
@@ -212,7 +214,7 @@ export default class GalleryContainer extends Component {
 	}
 
 	handleSelectChange(searchTerm) {
-		this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
+		(searchTerm !== "") ? this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos) : this.setState({ selectSearch: searchTerm }, this.filterByTerm)
 	}
 
 	handleSearchChange(searchTerm) {
