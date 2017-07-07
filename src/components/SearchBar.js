@@ -3,7 +3,8 @@ import SearchInput from 'react-search-input';
 
 const SearchBar = props => (
   <div>
-    <SearchInput className="search-input"
+    <SearchInput
+      className="search-input"
       onChange={props.onSearchChange}
     />
   </div>

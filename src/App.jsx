@@ -1,12 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import GalleryContainer from './containers/GalleryContainer';
 
-export default class App extends Component {
-  render() {
-    return (
-      <div>
-        <GalleryContainer />
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div>
+    <GalleryContainer />
+  </div>
+);
+
+export default App;

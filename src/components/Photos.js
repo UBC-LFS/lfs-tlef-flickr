@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import LazyLoad from 'react-lazyload';
-import { createURL } from '../utils/utils';
+import createURL from '../utils/utils';
 
 const Photos = (props) => {
 
@@ -22,9 +22,9 @@ const Photos = (props) => {
 
     const orientationMaxSize = () => {
         // let orientation = props.imageOrientation;
-        
+
     }
-    // const hoverTitle = (hover) => { 
+    // const hoverTitle = (hover) => {
 
     // }
 
