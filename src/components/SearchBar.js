@@ -5,7 +5,6 @@ const SearchBar = props => (
   <div>
     <SearchInput className="search-input"
       onChange={props.onSearchChange}
-      onKeyPress={props.onKeyPress}
     />
   </div>
 );

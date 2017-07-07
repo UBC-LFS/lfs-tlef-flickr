@@ -22,7 +22,6 @@ export default class GalleryContainer extends Component {
 			lightboxIsOpen: false,
 		};
     this.callAPI = this.callAPI.bind(this);
-		this.searchBarKeyPress = this.searchBarKeyPress.bind(this);
 		this.closeLightbox = this.closeLightbox.bind(this);
 		this.gotoNext = this.gotoNext.bind(this);
 		this.gotoPrevious = this.gotoPrevious.bind(this);
@@ -55,7 +54,7 @@ export default class GalleryContainer extends Component {
 
 // unclear why there is an initial offset which must be considered
 	resizeBrowser(initialOffset) {
-		let displayImageWidth = document.getElementById("images").clientWidth/3;
+		let displayImageWidth = document.getElementById("images").clientWidth / 3;
 		this.setState({displayImageWidth});
 	}
 
@@ -67,7 +66,7 @@ export default class GalleryContainer extends Component {
 		const uniqueTags = this.setAllTags(photosArray);
 		const allSelectOptions = this.setUniqueTags(uniqueTags);
 		let photos = photosArray;
-    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photosArray},this.resizeBrowser);
+    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photosArray}, this.resizeBrowser);
 	}
 
 	setUniqueTags(uniqueTags) {
@@ -77,7 +76,7 @@ export default class GalleryContainer extends Component {
 	}
 
 	getPhotoOrientation() {
-		
+
 	}
 
 	setAllTags(photos) {
@@ -188,7 +187,7 @@ export default class GalleryContainer extends Component {
 
 	filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-		if ((this.state.wordSearch === "" && this.state.selectSearch === "") || this.state.selectSearch === "") {
+		if (((this.state.wordSearch === "" && this.state.selectSearch === "") || this.state.selectSearch === "")) {
 			matchedImages = this.state.photos;
 		}
     const updatedSearchOptions = this.updateSearchTagOptions();
@@ -198,38 +197,42 @@ export default class GalleryContainer extends Component {
 
 	filterByTerm() {
 		const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
-		const currWord = this.state.wordSearch.toUpperCase();
+		const searchKey = this.state.wordSearch.toUpperCase();
 		const matchedImages = photoSet.filter(photo => (
-      photo[1].toUpperCase().includes(currWord) || photo[5].toUpperCase().includes(currWord)
+      (photo[1].toUpperCase().includes(searchKey) || photo[5].toUpperCase().includes(searchKey))
 		));
-		this.setState({ visiblePhotos: matchedImages });
+		const updatedSearchOptions = this.updateSearchTagOptions();
+    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
+		this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
 	}
 
 	handleMultiSearch() {
-		if (this.state.selectSearch !== "" && this.state.wordSearch !== "") {
+		if ((this.state.selectSearch !== "" && this.state.wordSearch !== "")) {
 			this.filterByTerm();
 		}
 	}
 
 	handleSelectChange(searchTerm) {
-		this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos);
+		(searchTerm !== "") ? (
+			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos)
+		) : (
+			this.setState({ selectSearch: searchTerm }, this.filterByTerm)
+		);
 	}
 
 	handleSearchChange(searchTerm) {
-		(this.state.selectSearch !== "") ? this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos) : this.setState({ wordSearch: searchTerm }, this.filterByTerm)
+		(this.state.selectSearch !== "") ? (
+			this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos)
+		) : (
+			this.setState({ wordSearch: searchTerm }, this.filterByTerm)
+		);
 	}
-
-  searchBarKeyPress(e) {
-    if (e.key === 'Enter') this.handleSearchChange(this.state.wordSearch);
-  }
 
 	render() {
 		const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
 		return (
 			<div>
-				<SearchBar
-          onKeyPress={this.searchBarKeyPress}
-          onSearchChange={this.handleSearchChange}/>
+				<SearchBar onSearchChange={this.handleSearchChange}/>
 				<SelectSearchBar
           currentSearch={this.state.selectSearch}
           onSelectChange={this.handleSelectChange}
