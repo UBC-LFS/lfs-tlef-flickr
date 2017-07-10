@@ -251,6 +251,7 @@ export default class GalleryContainer extends Component {
           </div>
         </div>
       </div>
+    
       <Photos
         _onClick={this.handleClick}
         images={this.state.visiblePhotos}
@@ -258,6 +259,7 @@ export default class GalleryContainer extends Component {
         onMouseHover={this.imageHover}
         onMouseUnhover={this.imageUnhover}
       />
+
       <Lightbox
         currentImage={this.state.currentImage}
         images={lightboxPhotos}
