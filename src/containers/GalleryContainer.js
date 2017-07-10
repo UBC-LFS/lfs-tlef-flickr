@@ -45,6 +45,7 @@ export default class GalleryContainer extends Component {
 		this.filterByTerm = this.filterByTerm.bind(this);
 		this.resizeBrowser = this.resizeBrowser.bind(this);
 		this.handleMultiSearch = this.handleMultiSearch.bind(this);
+		this.addDimensionsToPhotos = this.addDimensionsToPhotos.bind(this);
 	}
 
   componentDidMount() {
@@ -52,7 +53,6 @@ export default class GalleryContainer extends Component {
 		this.callAPI();
 	}
 
-// unclear why there is an initial offset which must be considered
 	resizeBrowser(initialOffset) {
 		let displayImageWidth = document.getElementById("images").clientWidth / 3;
 		this.setState({displayImageWidth});
@@ -63,10 +63,25 @@ export default class GalleryContainer extends Component {
 	}
 
 	setImageDescriptions(photosArray) {
+		let photoDimensions = this.getPhotoOrientation(photosArray)
+		let test = Promise.all(photoDimensions).then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
 		const uniqueTags = this.setAllTags(photosArray);
 		const allSelectOptions = this.setUniqueTags(uniqueTags);
 		let photos = photosArray;
+		console.log("test", test)
     this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photosArray}, this.resizeBrowser);
+	}
+
+	addDimensionsToPhotos(photosArray, photoDimensions) {
+		const photos = [];
+		for (let i = 0; i < photoDimensions.length; i++)
+		{
+			// console.log("photo array",photosArray[i])
+			photos.push(photosArray[i].concat(photoDimensions[i]))
+			// photos[i].push(photoDimensions[i]);
+		}
+		console.log("photos: ", photos);
+		return photos;
 	}
 
 	setUniqueTags(uniqueTags) {
@@ -75,8 +90,46 @@ export default class GalleryContainer extends Component {
 		})
 	}
 
-	getPhotoOrientation() {
+	getPhotoOrientation(photosArray) {
 
+		const photos = [];
+		photosArray.map(photo => {
+			photos.push(getDimensions(photo));
+
+			function getDimensions(photoURL) {
+				return new Promise((resolve, reject) => {
+					let img = new Image();
+
+					img.onload = function() {
+						resolve([img.width, img.height]);
+					}
+
+					img.onerror = function() {
+						let message = "Could not get image dimension"
+						reject(new Error(message))
+					}
+
+					img.src = photo[0];
+				})
+			}
+		})
+		console.log(photos);
+		return photos;
+
+		// const photos = [];
+		// photoArray.map(photo => {
+		// 	console.log(photo);
+		// 	let temp = photo;
+		// 	img.onload = function() {
+		// 		// console.log("Image Name: ", photo[1],"Image Width: ", img.width,"Image Height: ", img.height);
+		// 		// temp.push(img.width);
+		// 		// temp.push(img.height);
+		// 		// console.log("temp: ", temp);
+		// 		// photos.push(temp);
+		// 		return 1;
+		// 	}
+		// })
+		// console.log("Photos: ", photos)
 	}
 
 	setAllTags(photos) {
