@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-//import R from 'ramda';
+// import R from 'ramda';
 import Lightbox from 'react-images';
 import API from '../utils/Api';
 import SearchBar from '../components/SearchBar';
@@ -7,153 +7,103 @@ import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 
 export default class GalleryContainer extends Component {
-	constructor() {
-		super();
-		this.state = {
-			displayImageWidth: 0,
-			selectSearch: '',
-			wordSearch: '',
-			photos: [],
-			visiblePhotos: [],
-			tempPhotos: [],
-			allSelectOptions: [],
-			currentSelectOptions: [],
-			currentImage: 0,
-			lightboxIsOpen: false,
-		};
+  constructor() {
+    super();
+    this.state = {
+      displayImageWidth: 0,
+      selectSearch: '',
+      wordSearch: '',
+      photos: [],
+      visiblePhotos: [],
+      tempPhotos: [],
+      allSelectOptions: [],
+      currentSelectOptions: [],
+      currentImage: 0,
+      lightboxIsOpen: false,
+    };
     this.callAPI = this.callAPI.bind(this);
-		this.closeLightbox = this.closeLightbox.bind(this);
-		this.gotoNext = this.gotoNext.bind(this);
-		this.gotoPrevious = this.gotoPrevious.bind(this);
-		this.handleClickImage = this.handleClickImage.bind(this);
-		this.openLightbox = this.openLightbox.bind(this);
-		this.handleClick = this.handleClick.bind(this);
-		this.getLightboxImages = this.getLightboxImages.bind(this);
-		this.isMatchingTag = this.isMatchingTag.bind(this);
-		this.handleSelectChange = this.handleSelectChange.bind(this);
-		this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
-		this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
-		this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
-		this.setAllTags = this.setAllTags.bind(this);
-		this.setUniqueTags = this.setUniqueTags.bind(this);
-		this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
-		this.setImageDescriptions = this.setImageDescriptions.bind(this);
-		this.openThumbnail = this.openThumbnail.bind(this);
-		this.handleSearchChange = this.handleSearchChange.bind(this);
-		this.imageHover = this.imageHover.bind(this);
-		this.imageUnhover = this.imageUnhover.bind(this);
-		this.filterByTerm = this.filterByTerm.bind(this);
-		this.resizeBrowser = this.resizeBrowser.bind(this);
-		this.handleMultiSearch = this.handleMultiSearch.bind(this);
-		this.addDimensionsToPhotos = this.addDimensionsToPhotos.bind(this);
-	}
+    this.closeLightbox = this.closeLightbox.bind(this);
+    this.gotoNext = this.gotoNext.bind(this);
+    this.gotoPrevious = this.gotoPrevious.bind(this);
+    this.handleClickImage = this.handleClickImage.bind(this);
+    this.openLightbox = this.openLightbox.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.getLightboxImages = this.getLightboxImages.bind(this);
+    this.isMatchingTag = this.isMatchingTag.bind(this);
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
+    this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
+    this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
+    this.setAllTags = this.setAllTags.bind(this);
+    this.setUniqueTags = this.setUniqueTags.bind(this);
+    this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
+    this.setImageDescriptions = this.setImageDescriptions.bind(this);
+    this.openThumbnail = this.openThumbnail.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.imageHover = this.imageHover.bind(this);
+    this.imageUnhover = this.imageUnhover.bind(this);
+    this.filterByTerm = this.filterByTerm.bind(this);
+    this.resizeBrowser = this.resizeBrowser.bind(this);
+    this.handleMultiSearch = this.handleMultiSearch.bind(this);
+  }
 
   componentDidMount() {
-		window.addEventListener("resize", this.resizeBrowser);
-		this.callAPI();
+    window.addEventListener('resize', this.resizeBrowser);
+    this.callAPI();
+  }
+
+  // unclear why there is an initial offset which must be considered
+  resizeBrowser(initialOffset) {
+    const displayImageWidth = document.getElementById('images').clientWidth / 3;
+    this.setState({ displayImageWidth });
+  }
+
+  callAPI() {
+    API(this.setImageDescriptions);
+  }
+
+  setImageDescriptions(photosArray) {
+    const uniqueTags = this.setAllTags(photosArray);
+    const allSelectOptions = this.setUniqueTags(uniqueTags);
+    const photos = photosArray;
+    this.setState({
+      photos,
+      allSelectOptions,
+      currentSelectOptions: allSelectOptions,
+      visiblePhotos: photosArray,
+    }, this.resizeBrowser);
+  }
+
+  setUniqueTags(uniqueTags) {
+    return uniqueTags.map(uniqueTag => ({ value: uniqueTag, label: uniqueTag }));
+  }
+
+  getPhotoOrientation() {
+
 	}
 
-	resizeBrowser(initialOffset) {
-		let displayImageWidth = document.getElementById("images").clientWidth / 3;
-		this.setState({displayImageWidth});
-	}
-
-	callAPI() {
-		API(this.setImageDescriptions);
-	}
-
-	setImageDescriptions(photosArray) {
-		let photoDimensions = this.getPhotoOrientation(photosArray)
-		let test = Promise.all(photoDimensions).then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
-		const uniqueTags = this.setAllTags(photosArray);
-		const allSelectOptions = this.setUniqueTags(uniqueTags);
-		let photos = photosArray;
-		console.log("test", test)
-    this.setState({photos, allSelectOptions, currentSelectOptions: allSelectOptions, visiblePhotos: photosArray}, this.resizeBrowser);
-	}
-
-	addDimensionsToPhotos(photosArray, photoDimensions) {
-		const photos = [];
-		for (let i = 0; i < photoDimensions.length; i++)
-		{
-			// console.log("photo array",photosArray[i])
-			photos.push(photosArray[i].concat(photoDimensions[i]))
-			// photos[i].push(photoDimensions[i]);
-		}
-		console.log("photos: ", photos);
-		return photos;
-	}
-
-	setUniqueTags(uniqueTags) {
-		return uniqueTags.map(uniqueTag => {
-			return { value: uniqueTag, label: uniqueTag }
-		})
-	}
-
-	getPhotoOrientation(photosArray) {
-
-		const photos = [];
-		photosArray.map(photo => {
-			photos.push(getDimensions(photo));
-
-			function getDimensions(photoURL) {
-				return new Promise((resolve, reject) => {
-					let img = new Image();
-
-					img.onload = function() {
-						resolve([img.width, img.height]);
-					}
-
-					img.onerror = function() {
-						let message = "Could not get image dimension"
-						reject(new Error(message))
-					}
-
-					img.src = photo[0];
-				})
-			}
-		})
-		console.log(photos);
-		return photos;
-
-		// const photos = [];
-		// photoArray.map(photo => {
-		// 	console.log(photo);
-		// 	let temp = photo;
-		// 	img.onload = function() {
-		// 		// console.log("Image Name: ", photo[1],"Image Width: ", img.width,"Image Height: ", img.height);
-		// 		// temp.push(img.width);
-		// 		// temp.push(img.height);
-		// 		// console.log("temp: ", temp);
-		// 		// photos.push(temp);
-		// 		return 1;
-		// 	}
-		// })
-		// console.log("Photos: ", photos)
-	}
-
-	setAllTags(photos) {
+  setAllTags(photos) {
     const uniqueTagArray = [];
-    photos.map(photoArray => photoArray[3].split(' ').map(photoTag => (
-      !uniqueTagArray.includes(photoTag) ? uniqueTagArray.push(photoTag) : photoTag
-    )));
+    photos.map(photoArray => photoArray[3].split(' ').map(photoTag => (!uniqueTagArray.includes(photoTag) ? uniqueTagArray.push(photoTag) : photoTag)));
     return uniqueTagArray.sort();
-	}
+  }
 
-	isSelectMatchingTag(image) {
-		const tags = image[3].split(' ');
-		const selectSearchSplit = this.state.selectSearch.split(',');
+  isSelectMatchingTag(image) {
+    const tags = image[3].split(' ');
+    const selectSearchSplit = this.state.selectSearch.split(',');
     for (let i = 0; i < selectSearchSplit.length; i += 1) {
       if (!tags.includes(selectSearchSplit[i])) {
         return false;
       }
     }
     return true;
-	}
+  }
 
-	updateSearchTagOptions() {
+  updateSearchTagOptions() {
     let otherSearchOptions = [];
-    const searchTags = ((this.state.selectSearch === '') ? [] : this.state.selectSearch.split(','));
+    const searchTags = ((this.state.selectSearch === '')
+      ? []
+      : this.state.selectSearch.split(','));
     if (searchTags.length === 0) {
       otherSearchOptions = this.setAllTags(this.state.photos);
     } else {
@@ -180,133 +130,146 @@ export default class GalleryContainer extends Component {
       otherSearchOptions.push(...searchTags);
     }
     return otherSearchOptions;
-	}
+  }
 
-	getLightboxImages(photos) {
-		const images = photos.map(img => {
-			const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
-			return ({src: largeImg, caption: img[5]})
-		})
-		return images;
-	}
+  getLightboxImages(photos) {
+    const images = photos.map((img) => {
+      const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
+      return ({ src: largeImg, caption: img[5] });
+    });
+    return images;
+  }
 
   closeLightbox() {
-		this.setState({ currentImage: 0, lightboxIsOpen: false });
-	}
+    this.setState({ currentImage: 0, lightboxIsOpen: false });
+  }
 
-	gotoPrevious() {
-		this.setState({currentImage: this.state.currentImage - 1});
-	}
+  gotoPrevious() {
+    this.setState({ currentImage: this.state.currentImage - 1 });
+  }
 
-	gotoNext() {
-		this.setState({currentImage: this.state.currentImage + 1});
-	}
+  gotoNext() {
+    this.setState({ currentImage: this.state.currentImage + 1 });
+  }
 
-	handleClick(index) {
-		this.setState({ currentImage: index, lightboxIsOpen: true });
-	}
+  handleClick(index) {
+    this.setState({ currentImage: index, lightboxIsOpen: true });
+  }
 
-	handleClickImage() {
-		if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1)
+  handleClickImage() {
+    if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) {
 			return;
-		this.gotoNext();
-	}
-
-	openThumbnail(index) {
-		this.setState({currentImage: index});
-	}
-
-	isMatchingTag(image) {
-		const tags = image[3].split(" ");
-		return tags.includes(this.state.search)
-	}
-
-	openLightbox(index, event) {
-		event.preventDefault();
-		this.setState({ currentImage: index, lightboxIsOpen: true });
-	}
-
-	imageHover(index) {
-		const visiblePhotos = this.state.visiblePhotos;
-		visiblePhotos[index][6] = true;
-		this.setState({ visiblePhotos });
-	}
-
-	imageUnhover(index) {
-		const visiblePhotos = this.state.visiblePhotos;
-		visiblePhotos[index][6] = false;
-		this.setState({ visiblePhotos });
-	}
-
-	filterSelectPhotos() {
-    let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-		if (((this.state.wordSearch === "" && this.state.selectSearch === "") || this.state.selectSearch === "")) {
-			matchedImages = this.state.photos;
 		}
+    this.gotoNext();
+  }
+
+  openThumbnail(index) {
+    this.setState({ currentImage: index });
+  }
+
+  isMatchingTag(image) {
+    const tags = image[3].split(' ');
+    return tags.includes(this.state.search);
+  }
+
+  openLightbox(index, event) {
+    event.preventDefault();
+    this.setState({ currentImage: index, lightboxIsOpen: true });
+  }
+
+  imageHover(index) {
+    const visiblePhotos = this.state.visiblePhotos;
+    visiblePhotos[index][6] = true;
+    this.setState({ visiblePhotos });
+  }
+
+  imageUnhover(index) {
+    const visiblePhotos = this.state.visiblePhotos;
+    visiblePhotos[index][6] = false;
+    this.setState({ visiblePhotos });
+  }
+
+  filterSelectPhotos() {
+    let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
+    if (((this.state.wordSearch === '' && this.state.selectSearch === '') || this.state.selectSearch === '')) {
+      matchedImages = this.state.photos;
+    }
     const updatedSearchOptions = this.updateSearchTagOptions();
     const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
     this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions }, this.handleMultiSearch);
-	}
+  }
 
-	filterByTerm() {
-		const photoSet = (this.state.selectSearch === "" ? this.state.photos : this.state.visiblePhotos);
-		const searchKey = this.state.wordSearch.toUpperCase();
-		const matchedImages = photoSet.filter(photo => (
-      (photo[1].toUpperCase().includes(searchKey) || photo[5].toUpperCase().includes(searchKey))
-		));
-		const updatedSearchOptions = this.updateSearchTagOptions();
+  filterByTerm() {
+    const photoSet = (this.state.selectSearch === ''
+      ? this.state.photos
+      : this.state.visiblePhotos);
+    const searchKey = this.state.wordSearch.toUpperCase();
+    const matchedImages = photoSet.filter(photo => ((photo[1].toUpperCase().includes(searchKey) || photo[5].toUpperCase().includes(searchKey))));
+    const updatedSearchOptions = this.updateSearchTagOptions();
     const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
-		this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
-	}
+    this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
+  }
 
-	handleMultiSearch() {
-		if ((this.state.selectSearch !== "" && this.state.wordSearch !== "")) {
-			this.filterByTerm();
-		}
-	}
+  handleMultiSearch() {
+    if ((this.state.selectSearch !== '' && this.state.wordSearch !== '')) {
+      this.filterByTerm();
+    }
+  }
 
-	handleSelectChange(searchTerm) {
-		(searchTerm !== "") ? (
-			this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos)
-		) : (
-			this.setState({ selectSearch: searchTerm }, this.filterByTerm)
-		);
-	}
+  handleSelectChange(searchTerm) {
+    (searchTerm !== '')
+      ? (this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos))
+      : (this.setState({ selectSearch: searchTerm }, this.filterByTerm));
+  }
 
-	handleSearchChange(searchTerm) {
-		(this.state.selectSearch !== "") ? (
-			this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos)
-		) : (
-			this.setState({ wordSearch: searchTerm }, this.filterByTerm)
-		);
-	}
+  handleSearchChange(searchTerm) {
+    (this.state.selectSearch !== '')
+      ? (this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos))
+      : (this.setState({ wordSearch: searchTerm }, this.filterByTerm));
+  }
 
-	render() {
-		const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-		return (
-			<div>
-				<SearchBar onSearchChange={this.handleSearchChange}/>
-				<SelectSearchBar
-          currentSearch={this.state.selectSearch}
-          onSelectChange={this.handleSelectChange}
-          selectOptions={this.state.currentSelectOptions}/>
-				<Photos
-          _onClick={this.handleClick}
-          images={this.state.visiblePhotos}
-					imageWidth={this.state.displayImageWidth}
-          onMouseHover={this.imageHover}
-          onMouseUnhover={this.imageUnhover}/>
-				<Lightbox
-          currentImage={this.state.currentImage}
-          images={lightboxPhotos}
-          isOpen={this.state.lightboxIsOpen}
-          onClickImage={this.handleClickImage}
-          onClickPrev={this.gotoPrevious}
-          onClickThumbnail={this.openThumbnail}
-          showThumbnails={true}
-          onClickNext={this.gotoNext}
-          onClose={this.closeLightbox}/>
-			</div>
-		)
-	}
+  render() {
+    const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
+    return (
+    <div>
+      <div className="search-container">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-6">
+              <SearchBar
+                className="search-input"
+                onSearchChange={this.handleSearchChange}
+              />
+            </div>
+            <div className="col-md-6">
+              <SelectSearchBar
+                currentSearch={this.state.selectSearch}
+                onSelectChange={this.handleSelectChange}
+                selectOptions={this.state.currentSelectOptions}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <Photos
+        _onClick={this.handleClick}
+        images={this.state.visiblePhotos}
+        imageWidth={this.state.displayImageWidth}
+        onMouseHover={this.imageHover}
+        onMouseUnhover={this.imageUnhover}
+      />
+      <Lightbox
+        currentImage={this.state.currentImage}
+        images={lightboxPhotos}
+        isOpen={this.state.lightboxIsOpen}
+        onClickImage={this.handleClickImage}
+        onClickPrev={this.gotoPrevious}
+        onClickThumbnail={this.openThumbnail}
+        showThumbnails={true}
+        onClickNext={this.gotoNext}
+        onClose={this.closeLightbox}
+      />
+    </div>
+  );
+}
 }

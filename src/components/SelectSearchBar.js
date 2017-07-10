@@ -19,6 +19,7 @@ const SelectSearchBar = (props) => {
   return (
     <div>
       <Select
+        className='select-search'
         name="form-field-name"
         options={props.selectOptions}
         onChange={logChange}
