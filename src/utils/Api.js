@@ -9,12 +9,18 @@ const getPhotoDescription = (photo_API_Call) => (
 
 const setPhotoDescriptions = (imagesArray, descriptionArray, setImageDescriptions) => {
   Promise.all(descriptionArray).then((descriptions) => {
+    const test = imagesArray;
     for (let i = 0; i < imagesArray.length; i += 1) {
-      imagesArray[i][2] = descriptions[i];
-      imagesArray[i].push(descriptions[i]);
-      imagesArray[i].push(false);
+      test[i][2] = descriptions[i];
+      test[i].push(descriptions[i]);
+      // imagesArray[i][2] = descriptions[i];
+      // imagesArray[i].push(descriptions[i]);
+      // imagesArray[i].push(false);
     }
-  }).then(setImageDescriptions(imagesArray));
+    return test;
+    // setImageDescriptions()
+  })
+  .then((trytest) => setImageDescriptions(trytest));
 };
 
 const mapAndPushPhotos = (json, setImageDescriptions) => {
