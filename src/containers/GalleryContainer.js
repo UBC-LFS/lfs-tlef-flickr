@@ -7,13 +7,16 @@ import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 
 export default class GalleryContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      imageContainerWidth: 0,
+      imagesContainerWidth: 0,
+			imageWidth: 0,
+			imagesPerRow: 0,
       selectSearch: '',
       wordSearch: '',
       photos: [],
+			test: [],
       visiblePhotos: [],
       tempPhotos: [],
       allSelectOptions: [],
@@ -36,12 +39,12 @@ export default class GalleryContainer extends Component {
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
     this.setAllTags = this.setAllTags.bind(this);
     this.setUniqueTags = this.setUniqueTags.bind(this);
-    this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
+    this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
     this.setImageDescriptions = this.setImageDescriptions.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.imageHover = this.imageHover.bind(this);
-    this.imageUnhover = this.imageUnhover.bind(this);
+    // this.imageHover = this.imageHover.bind(this);
+    // this.imageUnhover = this.imageUnhover.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
     this.resizeBrowser = this.resizeBrowser.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
@@ -54,8 +57,24 @@ export default class GalleryContainer extends Component {
 
   // unclear why there is an initial offset which must be considered
   resizeBrowser(initialOffset) {
-    const imageContainerWidth = document.getElementById('images').clientWidth;
-    this.setState({ imageContainerWidth });
+    const imagesContainerWidth = document.getElementById('images').clientWidth;
+		console.log(imagesContainerWidth);
+		let imagesPerRow = 0;
+		switch (true) {
+			case imagesContainerWidth < 768:
+				imagesPerRow = 1;
+				break;
+			case imagesContainerWidth < 992:
+				imagesPerRow = 2;
+				break;
+			case imagesContainerWidth < 1200:
+				imagesPerRow = 3;
+				break;
+			default:
+				imagesPerRow = 3;
+		}
+		const imageWidth = (imagesContainerWidth - (imagesPerRow - 1) * 10) / imagesPerRow;
+    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
   }
 
   callAPI() {
@@ -63,23 +82,83 @@ export default class GalleryContainer extends Component {
   }
 
   setImageDescriptions(photosArray) {
+
+		console.log(photosArray[0]);
     const uniqueTags = this.setAllTags(photosArray);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-    const photos = photosArray;
-    this.setState({
-      photos,
-      allSelectOptions,
-      currentSelectOptions: allSelectOptions,
-      visiblePhotos: photosArray,
-    }, this.resizeBrowser);
+		// const photoDimensions = this.getPhotoDimension
+		// const photos = photosArray;
+		const photoDimensions = this.getPhotoDimensions(photosArray)
+		const test = Promise.all(photoDimensions)
+			.then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
+			.then((photos) => {
+				console.log("photos:", photos)
+				// console.log("photosArray", photosArray)
+				this.setState({
+				  photos,
+				  allSelectOptions,
+				  currentSelectOptions: allSelectOptions,
+				  visiblePhotos: photos,
+				}, this.resizeBrowser);
+			})
+			// .then()
+    // const photos = photosArray;
+    // this.setState({
+    //   photos,
+    //   allSelectOptions,
+    //   currentSelectOptions: allSelectOptions,
+    //   visiblePhotos: photosArray,
+    // }, this.resizeBrowser);
   }
+
+	addDimensionsToPhotos(photosArray, photoDimensions) {
+		const photos = [];
+		const tempPhotosArray = photosArray;
+		console.log("temp", tempPhotosArray)
+		for (let i = 0; i < photoDimensions.length; i++)
+		{
+			// console.log("photo array",photosArray[i])
+			const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? "landscape" : "portrait");
+			// console.log(photosArray[i])
+			// console.log(photosArray[i].concat(photoDimensions[i]))
+			
+			photos.push(tempPhotosArray[i].concat(photoDimensions[i],imageOrientation));
+			// photos.push(imageOrientation);
+			// photos[i].push(photoDimensions[i]);
+		}
+		// console.log("photos: ", photos);
+		return photos;
+	}
 
   setUniqueTags(uniqueTags) {
     return uniqueTags.map(uniqueTag => ({ value: uniqueTag, label: uniqueTag }));
   }
 
-  getPhotoOrientation() {
+	getPhotoDimensions(photosArray) {
 
+		const photos = [];
+		photosArray.map(photo => {
+			photos.push(getDimensions(photo));
+
+			function getDimensions(photoURL) {
+				return new Promise((resolve, reject) => {
+					let img = new Image();
+
+					img.onload = function() {
+						resolve([img.width, img.height]);
+					}
+
+					img.onerror = function() {
+						let message = "Could not get image dimension"
+						reject(new Error(message))
+					}
+
+					img.src = photo[0];
+				})
+			}
+		})
+		// console.log(photos);
+		return photos;
 	}
 
   setAllTags(photos) {
@@ -177,17 +256,17 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index, lightboxIsOpen: true });
   }
 
-  imageHover(index) {
-    const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index][6] = true;
-    this.setState({ visiblePhotos });
-  }
+  // imageHover(index) {
+  //   const visiblePhotos = this.state.visiblePhotos;
+  //   visiblePhotos[index][6] = true;
+  //   this.setState({ visiblePhotos });
+  // }
 
-  imageUnhover(index) {
-    const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index][6] = false;
-    this.setState({ visiblePhotos });
-  }
+  // imageUnhover(index) {
+  //   const visiblePhotos = this.state.visiblePhotos;
+  //   visiblePhotos[index][6] = false;
+  //   this.setState({ visiblePhotos });
+  // }
 
   filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
@@ -255,10 +334,10 @@ export default class GalleryContainer extends Component {
       <Photos
         _onClick={this.handleClick}
         images={this.state.visiblePhotos}
-        imageWidth={this.state.imageContainerWidth}
-        onMouseHover={this.imageHover}
-        onMouseUnhover={this.imageUnhover}
+        imageWidth={this.state.imageWidth}
       />
+        {/*onMouseHover={this.imageHover}
+        onMouseUnhover={this.imageUnhover}*/}
 
       <Lightbox
         currentImage={this.state.currentImage}
