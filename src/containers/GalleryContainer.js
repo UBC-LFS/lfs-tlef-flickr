@@ -10,7 +10,7 @@ export default class GalleryContainer extends Component {
   constructor() {
     super();
     this.state = {
-      displayImageWidth: 0,
+      imageContainerWidth: 0,
       selectSearch: '',
       wordSearch: '',
       photos: [],
@@ -54,8 +54,8 @@ export default class GalleryContainer extends Component {
 
   // unclear why there is an initial offset which must be considered
   resizeBrowser(initialOffset) {
-    const displayImageWidth = document.getElementById('images').clientWidth / 3;
-    this.setState({ displayImageWidth });
+    const imageContainerWidth = document.getElementById('images').clientWidth;
+    this.setState({ imageContainerWidth });
   }
 
   callAPI() {
@@ -255,7 +255,7 @@ export default class GalleryContainer extends Component {
       <Photos
         _onClick={this.handleClick}
         images={this.state.visiblePhotos}
-        imageWidth={this.state.displayImageWidth}
+        imageWidth={this.state.imageContainerWidth}
         onMouseHover={this.imageHover}
         onMouseUnhover={this.imageUnhover}
       />
