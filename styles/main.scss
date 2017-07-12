@@ -132,6 +132,13 @@ body {
 	opacity: 1;
 }
 
+.photoContainer .imageTitle span {
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .photoContainer .imageInner {
 	position: absolute;
 	display: inline-block;
