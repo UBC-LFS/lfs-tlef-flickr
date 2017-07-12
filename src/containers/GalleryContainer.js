@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import R from 'ramda';
 import Lightbox from 'react-images';
 import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
@@ -29,14 +28,12 @@ export default class GalleryContainer extends Component {
     this.openLightbox = this.openLightbox.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.getLightboxImages = this.getLightboxImages.bind(this);
-    this.isMatchingTag = this.isMatchingTag.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
     this.setAllTags = this.setAllTags.bind(this);
     this.setUniqueTags = this.setUniqueTags.bind(this);
-    this.getPhotoOrientation = this.getPhotoOrientation.bind(this);
     this.setImageDescriptions = this.setImageDescriptions.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -76,9 +73,6 @@ export default class GalleryContainer extends Component {
   setUniqueTags(uniqueTags) {
     return uniqueTags.map(tag => ({ value: tag, label: tag }));
   }
-
-  getPhotoOrientation() {
-	}
 
   setAllTags(photoSet) {
     const uniqueTags = new Set();
@@ -157,18 +151,13 @@ export default class GalleryContainer extends Component {
 
   handleClickImage() {
     if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) {
-			return;
-		}
+      return;
+    }
     this.gotoNext();
   }
 
   openThumbnail(index) {
     this.setState({ currentImage: index });
-  }
-
-  isMatchingTag(image) {
-    const tags = image[3].split(' ');
-    return tags.includes(this.state.search);
   }
 
   openLightbox(index, event) {
@@ -178,13 +167,13 @@ export default class GalleryContainer extends Component {
 
   imageHover(index) {
     const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index][6] = true;
+    visiblePhotos[index].hover = true;
     this.setState({ visiblePhotos });
   }
 
   imageUnhover(index) {
     const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index][6] = false;
+    visiblePhotos[index].hover = false;
     this.setState({ visiblePhotos });
   }
 
