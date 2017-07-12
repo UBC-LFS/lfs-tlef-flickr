@@ -18,7 +18,6 @@
   "license": "MIT",
   "homepage": "https://github.com/alicoding/react-webpack-babel#readme",
   "dependencies": {
-    "axios": "^0.16.2",
     "bootstrap": "^3.3.7",
     "node-sass": "^4.3.0",
     "ramda": "^0.23.0",
