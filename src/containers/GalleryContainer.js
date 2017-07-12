@@ -43,8 +43,6 @@ export default class GalleryContainer extends Component {
     this.setImageDescriptions = this.setImageDescriptions.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    // this.imageHover = this.imageHover.bind(this);
-    // this.imageUnhover = this.imageUnhover.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
     this.resizeBrowser = this.resizeBrowser.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
@@ -55,15 +53,11 @@ export default class GalleryContainer extends Component {
     this.callAPI();
   }
 
-  // unclear why there is an initial offset which must be considered
   resizeBrowser(initialOffset) {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
 		console.log(imagesContainerWidth);
 		let imagesPerRow = 0;
 		switch (true) {
-			// case imagesContainerWidth < 768:
-			// 	imagesPerRow = 1;
-			// 	break;
 			case imagesContainerWidth < 992:
 				imagesPerRow = 2;
 				break;
@@ -74,8 +68,6 @@ export default class GalleryContainer extends Component {
 				imagesPerRow = 3;
 		}
 		const imageWidth = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
-    // const test = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
-    console.log("test:", imageWidth)
     this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
   }
 
@@ -84,15 +76,12 @@ export default class GalleryContainer extends Component {
   }
 
   setImageDescriptions(photosArray) {
-
-		console.log(photosArray[0]);
     const uniqueTags = this.setAllTags(photosArray);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
 		const photoDimensions = this.getPhotoDimensions(photosArray)
 		const test = Promise.all(photoDimensions)
 			.then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
 			.then((photos) => {
-				console.log("photos:", photos)
 				this.setState({
 				  photos,
 				  allSelectOptions,
