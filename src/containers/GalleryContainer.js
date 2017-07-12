@@ -61,9 +61,9 @@ export default class GalleryContainer extends Component {
 		console.log(imagesContainerWidth);
 		let imagesPerRow = 0;
 		switch (true) {
-			case imagesContainerWidth < 768:
-				imagesPerRow = 1;
-				break;
+			// case imagesContainerWidth < 768:
+			// 	imagesPerRow = 1;
+			// 	break;
 			case imagesContainerWidth < 992:
 				imagesPerRow = 2;
 				break;
@@ -73,7 +73,9 @@ export default class GalleryContainer extends Component {
 			default:
 				imagesPerRow = 3;
 		}
-		const imageWidth = Math.floor((imagesContainerWidth - imagesPerRow * 5) / imagesPerRow);
+		const imageWidth = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
+    // const test = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
+    console.log("test:", imageWidth)
     this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
   }
 
