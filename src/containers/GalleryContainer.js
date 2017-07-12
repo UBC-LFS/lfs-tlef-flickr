@@ -59,7 +59,7 @@ export default class GalleryContainer extends Component {
   }
 
   callAPI() {
-    fetchImages().then(photoset => this.setImageDescriptions(photoset))
+    fetchImages().then(photoset => this.setImageDescriptions(photoset));
   }
 
   setImageDescriptions(photoSet) {
@@ -83,12 +83,11 @@ export default class GalleryContainer extends Component {
 
   setAllTags(photoSet) {
     const uniqueTags = new Set();
-    R.map(photo => {
-      const newPhoto = Object.assign({}, photo);
-      for(let item of newPhoto.tags.split(' ')) {
-        uniqueTags.add(item);
-      }
-    }, photoSet)
+    photoSet.forEach((photoObj) => {
+      photoObj.tags.split(' ').forEach(tag => (
+        uniqueTags.add(tag)));
+    });
+    console.log(photoSet)
     return [...(uniqueTags)].sort();
   }
 
