@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-// import R from 'ramda';
+import R from 'ramda';
 import Lightbox from 'react-images';
-import API from '../utils/Api';
+import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
@@ -59,18 +59,18 @@ export default class GalleryContainer extends Component {
   }
 
   callAPI() {
-    API(this.setImageDescriptions);
+    fetchImages().then(photoset => this.setImageDescriptions(photoset))
   }
 
-  setImageDescriptions(photosArray) {
-    const uniqueTags = this.setAllTags(photosArray);
+  setImageDescriptions(photoSet) {
+    const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-    const photos = photosArray;
+    const photos = photoSet;
     this.setState({
       photos,
       allSelectOptions,
       currentSelectOptions: allSelectOptions,
-      visiblePhotos: photosArray,
+      visiblePhotos: photoSet,
     }, this.resizeBrowser);
   }
 
@@ -79,13 +79,17 @@ export default class GalleryContainer extends Component {
   }
 
   getPhotoOrientation() {
-
 	}
 
-  setAllTags(photos) {
-    const uniqueTagArray = [];
-    photos.map(photoArray => photoArray[3].split(' ').map(photoTag => (!uniqueTagArray.includes(photoTag) ? uniqueTagArray.push(photoTag) : photoTag)));
-    return uniqueTagArray.sort();
+  setAllTags(photoSet) {
+    const uniqueTags = new Set();
+    R.map(photo => {
+      const newPhoto = Object.assign({}, photo);
+      for(let item of newPhoto.tags.split(' ')) {
+        uniqueTags.add(item);
+      }
+    }, photoSet)
+    return [...(uniqueTags)].sort();
   }
 
   isSelectMatchingTag(image) {
@@ -132,12 +136,13 @@ export default class GalleryContainer extends Component {
     return otherSearchOptions;
   }
 
-  getLightboxImages(photos) {
-    const images = photos.map((img) => {
-      const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: img[5] });
+  getLightboxImages(photoSet) {
+    const visiblePhotos = photoSet.map(photo => {
+      const newPhoto = Object.assign({}, photo);
+      const largeImg = newPhoto.imageURL.split('.jpg')[0].concat('_b.jpg');
+      return ({ src: largeImg, caption: newPhoto.description});
     });
-    return images;
+    return visiblePhotos
   }
 
   closeLightbox() {
@@ -251,7 +256,7 @@ export default class GalleryContainer extends Component {
           </div>
         </div>
       </div>
-    
+
       <Photos
         _onClick={this.handleClick}
         images={this.state.visiblePhotos}

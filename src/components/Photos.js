@@ -29,11 +29,11 @@ const Photos = (props) => {
     // }
 
     const photos = props.images.map((image, index) => {
-        if (image[0]) {
-            const source = image[0];
+        if (image.imageURL) {
+            const source = image.imageURL;
             const sourceWithSize = createURL('large', source);
-            const title = image[1];
-            const description = image[2];
+            const title = image.title;
+            const description = image.description;
 
             return (
                 <LazyLoad height={200} offset={1000} once key={index}>
