@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-// import R from 'ramda';
 import Lightbox from 'react-images';
-import API from '../utils/Api';
+import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
@@ -11,12 +10,12 @@ export default class GalleryContainer extends Component {
     super(props);
     this.state = {
       imagesContainerWidth: 0,
-			imageWidth: 0,
-			imagesPerRow: 0,
+      imageWidth: 0,
+      imagesPerRow: 0,
       selectSearch: '',
       wordSearch: '',
       photos: [],
-			test: [],
+      test: [],
       visiblePhotos: [],
       tempPhotos: [],
       allSelectOptions: [],
@@ -32,7 +31,6 @@ export default class GalleryContainer extends Component {
     this.openLightbox = this.openLightbox.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.getLightboxImages = this.getLightboxImages.bind(this);
-    this.isMatchingTag = this.isMatchingTag.bind(this);
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
@@ -72,15 +70,15 @@ export default class GalleryContainer extends Component {
   }
 
   callAPI() {
-    API(this.setImageDescriptions);
+    fetchImages().then(photoset => this.setImageDescriptions(photoset));
   }
 
-  setImageDescriptions(photosArray) {
-    const uniqueTags = this.setAllTags(photosArray);
+  setImageDescriptions(photoSet) {
+    const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-		const photoDimensions = this.getPhotoDimensions(photosArray)
+		const photoDimensions = this.getPhotoDimensions(photoSet);
 		const test = Promise.all(photoDimensions)
-			.then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
+			.then((photoDimensions) => this.addDimensionsToPhotos(photoSet, photoDimensions))
 			.then((photos) => {
 				this.setState({
 				  photos,
@@ -89,58 +87,55 @@ export default class GalleryContainer extends Component {
 				  visiblePhotos: photos,
 				}, this.resizeBrowser);
 			})
-  }
+    }
 
-	addDimensionsToPhotos(photosArray, photoDimensions) {
-		const photos = [];
-		const tempPhotosArray = photosArray;
-		for (let i = 0; i < photoDimensions.length; i++)
-		{
-			const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? "landscape" : "portrait");
-			
-			photos.push(tempPhotosArray[i].concat(photoDimensions[i],imageOrientation));
-		}
-		return photos;
-	}
+  addDimensionsToPhotos(photosArray, photoDimensions) {
+    const tempPhotosArray = photosArray;
+    for (let i = 0; i < photoDimensions.length; i += 1) {
+      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait');
+      tempPhotosArray[i].width = photoDimensions[i][0];
+      tempPhotosArray[i].height = photoDimensions[i][1];
+      tempPhotosArray[i].orientation = imageOrientation;
+    }
+    return tempPhotosArray;
+  }
 
   setUniqueTags(uniqueTags) {
-    return uniqueTags.map(uniqueTag => ({ value: uniqueTag, label: uniqueTag }));
+    return uniqueTags.map(tag => ({ value: tag, label: tag }));
   }
 
-	getPhotoDimensions(photosArray) {
+  setAllTags(photoSet) {
+    const uniqueTags = new Set();
+    photoSet.forEach((photoObj) => {
+      photoObj.tags.split(' ').forEach(tag => (
+        uniqueTags.add(tag)));
+    });
+    return [...(uniqueTags)].sort();
+  }
 
-		const photos = [];
+  getPhotoDimensions(photosArray) {
+    const photos = [];
 		photosArray.map(photo => {
-			photos.push(getDimensions(photo));
-
-			function getDimensions(photoURL) {
-				return new Promise((resolve, reject) => {
+      photos.push(getDimensions(photo));
+      function getDimensions(photoURL) {
+        return new Promise((resolve, reject) => {
 					let img = new Image();
-
 					img.onload = function() {
 						resolve([img.width, img.height]);
 					}
-
 					img.onerror = function() {
 						let message = "Could not get image dimension"
 						reject(new Error(message))
 					}
-
-					img.src = photo[0];
+					img.src = photo.imageURL;
 				})
 			}
 		})
 		return photos;
 	}
 
-  setAllTags(photos) {
-    const uniqueTagArray = [];
-    photos.map(photoArray => photoArray[3].split(' ').map(photoTag => (!uniqueTagArray.includes(photoTag) ? uniqueTagArray.push(photoTag) : photoTag)));
-    return uniqueTagArray.sort();
-  }
-
   isSelectMatchingTag(image) {
-    const tags = image[3].split(' ');
+    const tags = image.tags.split(' ');
     const selectSearchSplit = this.state.selectSearch.split(',');
     for (let i = 0; i < selectSearchSplit.length; i += 1) {
       if (!tags.includes(selectSearchSplit[i])) {
@@ -152,15 +147,13 @@ export default class GalleryContainer extends Component {
 
   updateSearchTagOptions() {
     let otherSearchOptions = [];
-    const searchTags = ((this.state.selectSearch === '')
-      ? []
-      : this.state.selectSearch.split(','));
+    const searchTags = ((this.state.selectSearch === '') ? [] : this.state.selectSearch.split(','));
     if (searchTags.length === 0) {
       otherSearchOptions = this.setAllTags(this.state.photos);
     } else {
       this.state.photos.map((photo) => {
         let tagTest = true;
-        const photoTags = photo[3].split(' ');
+        const photoTags = photo.tags.split(' ');
         if (photoTags.length > searchTags.length) {
           for (let i = 0; i < searchTags.length; i += 1) {
             if (!photoTags.includes(searchTags[i])) {
@@ -183,12 +176,12 @@ export default class GalleryContainer extends Component {
     return otherSearchOptions;
   }
 
-  getLightboxImages(photos) {
-    const images = photos.map((img) => {
-      const largeImg = img[0].split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: img[5] });
+  getLightboxImages(photoSet) {
+    const visiblePhotos = photoSet.map((photo) => {
+      const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
+      return ({ src: largeImg, caption: photo.description });
     });
-    return images;
+    return visiblePhotos;
   }
 
   closeLightbox() {
@@ -209,18 +202,13 @@ export default class GalleryContainer extends Component {
 
   handleClickImage() {
     if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) {
-			return;
-		}
+      return;
+    }
     this.gotoNext();
   }
 
   openThumbnail(index) {
     this.setState({ currentImage: index });
-  }
-
-  isMatchingTag(image) {
-    const tags = image[3].split(' ');
-    return tags.includes(this.state.search);
   }
 
   openLightbox(index, event) {
@@ -239,11 +227,9 @@ export default class GalleryContainer extends Component {
   }
 
   filterByTerm() {
-    const photoSet = (this.state.selectSearch === ''
-      ? this.state.photos
-      : this.state.visiblePhotos);
+    const photoSet = (this.state.selectSearch === '' ? this.state.photos : this.state.visiblePhotos);
     const searchKey = this.state.wordSearch.toUpperCase();
-    const matchedImages = photoSet.filter(photo => ((photo[1].toUpperCase().includes(searchKey) || photo[5].toUpperCase().includes(searchKey))));
+    const matchedImages = photoSet.filter(photo => ((photo.title.toUpperCase().includes(searchKey) || photo.description.toUpperCase().includes(searchKey))));
     const updatedSearchOptions = this.updateSearchTagOptions();
     const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
     this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
@@ -270,47 +256,45 @@ export default class GalleryContainer extends Component {
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     return (
-    <div>
-      <div className="search-container">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <SearchBar
-                className="search-input"
-                onSearchChange={this.handleSearchChange}
-              />
-            </div>
-            <div className="col-md-6">
-              <SelectSearchBar
-                currentSearch={this.state.selectSearch}
-                onSelectChange={this.handleSelectChange}
-                selectOptions={this.state.currentSelectOptions}
-              />
+      <div>
+        <div className="search-container">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-6">
+                <SearchBar
+                  className="search-input"
+                  onSearchChange={this.handleSearchChange}
+                />
+              </div>
+              <div className="col-md-6">
+                <SelectSearchBar
+                  currentSearch={this.state.selectSearch}
+                  onSelectChange={this.handleSelectChange}
+                  selectOptions={this.state.currentSelectOptions}
+                />
+              </div>
             </div>
           </div>
         </div>
+        <Photos
+          _onClick={this.handleClick}
+          images={this.state.visiblePhotos}
+          imageWidth={this.state.imageWidth}
+          imagesPerRow={this.state.imagesPerRow}
+          imagesContainerWidth={this.state.imagesContainerWidth}
+        />
+        <Lightbox
+          currentImage={this.state.currentImage}
+          images={lightboxPhotos}
+          isOpen={this.state.lightboxIsOpen}
+          onClickImage={this.handleClickImage}
+          onClickPrev={this.gotoPrevious}
+          onClickThumbnail={this.openThumbnail}
+          showThumbnails={true}
+          onClickNext={this.gotoNext}
+          onClose={this.closeLightbox}
+        />
       </div>
-    
-      <Photos
-        _onClick={this.handleClick}
-        images={this.state.visiblePhotos}
-        imageWidth={this.state.imageWidth}
-        imagesPerRow={this.state.imagesPerRow}
-        imagesContainerWidth={this.state.imagesContainerWidth}
-      />
-
-      <Lightbox
-        currentImage={this.state.currentImage}
-        images={lightboxPhotos}
-        isOpen={this.state.lightboxIsOpen}
-        onClickImage={this.handleClickImage}
-        onClickPrev={this.gotoPrevious}
-        onClickThumbnail={this.openThumbnail}
-        showThumbnails={true}
-        onClickNext={this.gotoNext}
-        onClose={this.closeLightbox}
-      />
-    </div>
-  );
-}
+    );
+  }
 }

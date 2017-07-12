@@ -8,7 +8,7 @@ const SelectSearchBar = (props) => {
     if (val.length === 0) {
       props.onSelectChange('');
     } else {
-      for (let key in val) {
+      for (const key in val) {
         selectString += val[key]["value"] + ',';
       }
       returnString = selectString.substring(0, selectString.length - 1);
@@ -19,7 +19,7 @@ const SelectSearchBar = (props) => {
   return (
     <div>
       <Select
-        className='select-search'
+        className="select-search"
         name="form-field-name"
         options={props.selectOptions}
         onChange={logChange}
