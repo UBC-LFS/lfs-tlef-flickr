@@ -73,7 +73,7 @@ export default class GalleryContainer extends Component {
 			default:
 				imagesPerRow = 3;
 		}
-		const imageWidth = (imagesContainerWidth - (imagesPerRow - 1) * 10) / imagesPerRow;
+		const imageWidth = Math.floor((imagesContainerWidth - imagesPerRow * 5) / imagesPerRow);
     this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
   }
 
@@ -86,14 +86,11 @@ export default class GalleryContainer extends Component {
 		console.log(photosArray[0]);
     const uniqueTags = this.setAllTags(photosArray);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-		// const photoDimensions = this.getPhotoDimension
-		// const photos = photosArray;
 		const photoDimensions = this.getPhotoDimensions(photosArray)
 		const test = Promise.all(photoDimensions)
 			.then((photoDimensions) => this.addDimensionsToPhotos(photosArray, photoDimensions))
 			.then((photos) => {
 				console.log("photos:", photos)
-				// console.log("photosArray", photosArray)
 				this.setState({
 				  photos,
 				  allSelectOptions,
@@ -101,32 +98,17 @@ export default class GalleryContainer extends Component {
 				  visiblePhotos: photos,
 				}, this.resizeBrowser);
 			})
-			// .then()
-    // const photos = photosArray;
-    // this.setState({
-    //   photos,
-    //   allSelectOptions,
-    //   currentSelectOptions: allSelectOptions,
-    //   visiblePhotos: photosArray,
-    // }, this.resizeBrowser);
   }
 
 	addDimensionsToPhotos(photosArray, photoDimensions) {
 		const photos = [];
 		const tempPhotosArray = photosArray;
-		console.log("temp", tempPhotosArray)
 		for (let i = 0; i < photoDimensions.length; i++)
 		{
-			// console.log("photo array",photosArray[i])
 			const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? "landscape" : "portrait");
-			// console.log(photosArray[i])
-			// console.log(photosArray[i].concat(photoDimensions[i]))
 			
 			photos.push(tempPhotosArray[i].concat(photoDimensions[i],imageOrientation));
-			// photos.push(imageOrientation);
-			// photos[i].push(photoDimensions[i]);
 		}
-		// console.log("photos: ", photos);
 		return photos;
 	}
 
@@ -157,7 +139,6 @@ export default class GalleryContainer extends Component {
 				})
 			}
 		})
-		// console.log(photos);
 		return photos;
 	}
 
@@ -256,18 +237,6 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index, lightboxIsOpen: true });
   }
 
-  // imageHover(index) {
-  //   const visiblePhotos = this.state.visiblePhotos;
-  //   visiblePhotos[index][6] = true;
-  //   this.setState({ visiblePhotos });
-  // }
-
-  // imageUnhover(index) {
-  //   const visiblePhotos = this.state.visiblePhotos;
-  //   visiblePhotos[index][6] = false;
-  //   this.setState({ visiblePhotos });
-  // }
-
   filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
     if (((this.state.wordSearch === '' && this.state.selectSearch === '') || this.state.selectSearch === '')) {
@@ -335,9 +304,9 @@ export default class GalleryContainer extends Component {
         _onClick={this.handleClick}
         images={this.state.visiblePhotos}
         imageWidth={this.state.imageWidth}
+        imagesPerRow={this.state.imagesPerRow}
+        imagesContainerWidth={this.state.imagesContainerWidth}
       />
-        {/*onMouseHover={this.imageHover}
-        onMouseUnhover={this.imageUnhover}*/}
 
       <Lightbox
         currentImage={this.state.currentImage}
