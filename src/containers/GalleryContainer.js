@@ -53,6 +53,7 @@ export default class GalleryContainer extends Component {
 
   resizeBrowser(initialOffset) {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
+		console.log(imagesContainerWidth);
 		let imagesPerRow = 0;
 		switch (true) {
 			case imagesContainerWidth < 992:
@@ -86,7 +87,7 @@ export default class GalleryContainer extends Component {
 				  visiblePhotos: photos,
 				}, this.resizeBrowser);
 			})
-  }
+    }
 
   addDimensionsToPhotos(photosArray, photoDimensions) {
     const tempPhotosArray = photosArray;
