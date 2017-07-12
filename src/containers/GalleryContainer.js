@@ -6,13 +6,16 @@ import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 
 export default class GalleryContainer extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      displayImageWidth: 0,
+      imagesContainerWidth: 0,
+      imageWidth: 0,
+      imagesPerRow: 0,
       selectSearch: '',
       wordSearch: '',
       photos: [],
+      test: [],
       visiblePhotos: [],
       tempPhotos: [],
       allSelectOptions: [],
@@ -34,11 +37,10 @@ export default class GalleryContainer extends Component {
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
     this.setAllTags = this.setAllTags.bind(this);
     this.setUniqueTags = this.setUniqueTags.bind(this);
+    this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
     this.setImageDescriptions = this.setImageDescriptions.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.imageHover = this.imageHover.bind(this);
-    this.imageUnhover = this.imageUnhover.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
     this.resizeBrowser = this.resizeBrowser.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
@@ -49,10 +51,21 @@ export default class GalleryContainer extends Component {
     this.callAPI();
   }
 
-  // unclear why there is an initial offset which must be considered
   resizeBrowser(initialOffset) {
-    const displayImageWidth = document.getElementById('images').clientWidth / 3;
-    this.setState({ displayImageWidth });
+    const imagesContainerWidth = document.getElementById('images').clientWidth;
+		let imagesPerRow = 0;
+		switch (true) {
+			case imagesContainerWidth < 992:
+				imagesPerRow = 2;
+				break;
+			case imagesContainerWidth < 1200:
+				imagesPerRow = 3;
+				break;
+			default:
+				imagesPerRow = 3;
+		}
+		const imageWidth = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
+    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
   }
 
   callAPI() {
@@ -62,12 +75,28 @@ export default class GalleryContainer extends Component {
   setImageDescriptions(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-    this.setState({
-      photos: photoSet,
-      allSelectOptions,
-      currentSelectOptions: allSelectOptions,
-      visiblePhotos: photoSet,
-    }, this.resizeBrowser);
+		const photoDimensions = this.getPhotoDimensions(photoSet);
+		const test = Promise.all(photoDimensions)
+			.then((photoDimensions) => this.addDimensionsToPhotos(photoSet, photoDimensions))
+			.then((photos) => {
+				this.setState({
+				  photos,
+				  allSelectOptions,
+				  currentSelectOptions: allSelectOptions,
+				  visiblePhotos: photos,
+				}, this.resizeBrowser);
+			})
+  }
+
+  addDimensionsToPhotos(photosArray, photoDimensions) {
+    const tempPhotosArray = photosArray;
+    for (let i = 0; i < photoDimensions.length; i += 1) {
+      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait');
+      tempPhotosArray[i].width = photoDimensions[i][0];
+      tempPhotosArray[i].height = photoDimensions[i][1];
+      tempPhotosArray[i].orientation = imageOrientation;
+    }
+    return tempPhotosArray;
   }
 
   setUniqueTags(uniqueTags) {
@@ -82,6 +111,27 @@ export default class GalleryContainer extends Component {
     });
     return [...(uniqueTags)].sort();
   }
+
+  getPhotoDimensions(photosArray) {
+    const photos = [];
+		photosArray.map(photo => {
+      photos.push(getDimensions(photo));
+      function getDimensions(photoURL) {
+        return new Promise((resolve, reject) => {
+					let img = new Image();
+					img.onload = function() {
+						resolve([img.width, img.height]);
+					}
+					img.onerror = function() {
+						let message = "Could not get image dimension"
+						reject(new Error(message))
+					}
+					img.src = photo.imageURL;
+				})
+			}
+		})
+		return photos;
+	}
 
   isSelectMatchingTag(image) {
     const tags = image.tags.split(' ');
@@ -165,18 +215,6 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index, lightboxIsOpen: true });
   }
 
-  imageHover(index) {
-    const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index].hover = true;
-    this.setState({ visiblePhotos });
-  }
-
-  imageUnhover(index) {
-    const visiblePhotos = this.state.visiblePhotos;
-    visiblePhotos[index].hover = false;
-    this.setState({ visiblePhotos });
-  }
-
   filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
     if (((this.state.wordSearch === '' && this.state.selectSearch === '') || this.state.selectSearch === '')) {
@@ -240,9 +278,9 @@ export default class GalleryContainer extends Component {
         <Photos
           _onClick={this.handleClick}
           images={this.state.visiblePhotos}
-          imageWidth={this.state.displayImageWidth}
-          onMouseHover={this.imageHover}
-          onMouseUnhover={this.imageUnhover}
+          imageWidth={this.state.imageWidth}
+          imagesPerRow={this.state.imagesPerRow}
+          imagesContainerWidth={this.state.imagesContainerWidth}
         />
         <Lightbox
           currentImage={this.state.currentImage}

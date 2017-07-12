@@ -8,25 +8,11 @@ const Photos = (props) => {
         props._onClick(index);
     }
 
-    const mouseHover = (index) => {
-        props.onMouseHover(index);
+    const photoContainerStyle = {
+        width: props.imageWidth + 'px',
+        height: props.imageWidth + 'px',
+        marginRight: 5 + 'px'
     }
-
-    const mouseUnhover = (index) => {
-        props.onMouseUnhover(index);
-    }
-
-    const divStyle = {
-        height: props.imageWidth
-    }
-
-    const orientationMaxSize = () => {
-        // let orientation = props.imageOrientation;
-
-    }
-    // const hoverTitle = (hover) => {
-
-    // }
 
     const photos = props.images.map((image, index) => {
         if (image.imageURL) {
@@ -34,26 +20,23 @@ const Photos = (props) => {
             const sourceWithSize = createURL('large', source);
             const title = image.title;
             const description = image.description;
-
+            const orientation = image.orientation;
             return (
                 <LazyLoad height={200} offset={1000} once key={index}>
-                    <div className="photoContainer">
-                        {/*<h1>{title}</h1>*/}
+                    <div className="photoContainer" style={photoContainerStyle}>
                         <div className="imageTitle"><span>{title}</span></div>
                         <div className="imageInner">
                             <img key={index}
                                 src={source}
-                                onMouseOver={mouseHover.bind(null,index)}
-                                onMouseOut={mouseUnhover.bind(null,index)}
                                 onClick={handleClick.bind(null, index)}
-                                className="image"/>
+                                className={"image" + (orientation === "landscape" ? " fullHeight" : " fullWidth")}
+                            />
                         </div>
                     </div>
                 </LazyLoad>
             );
         }
     });
-
 
     return (
       <div id="container">
