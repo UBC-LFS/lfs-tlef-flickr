@@ -46,7 +46,7 @@ export default class GalleryContainer extends Component {
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
     this.callAPI();
   }
