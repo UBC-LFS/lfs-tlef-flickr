@@ -24,7 +24,16 @@ const Photos = (props) => {
             return (
                 <LazyLoad height={200} offset={1000} once key={index}>
                     <div className="photoContainer" style={photoContainerStyle}>
-                        <div className="imageTitle"><span>{title}</span></div>
+                        <div className="imageTitle">
+                            <span>
+                                {title}
+                            </span>
+                        </div>
+                        <div className="imageDescription">
+                            <span>
+                                {description}
+                            </span>
+                        </div>
                         <div className="imageInner">
                             <img key={index}
                                 src={source}
