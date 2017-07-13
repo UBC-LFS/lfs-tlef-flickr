@@ -112,6 +112,21 @@ body {
 	//float: left;
 }
 
+.photoContainer .imageInner {
+	position: absolute;
+	display: inline-block;
+	height: 100%;
+	width: 100%;
+	top: 0;
+	right: -50%;
+	transform: translateY(50%);
+	// z-index: -1;
+}
+
+.showTitle {
+	top: 10px;
+}
+
 .photoContainer .imageTitle {
 	position: absolute;
 	top: 0;
@@ -133,32 +148,15 @@ body {
 }
 
 .photoContainer .imageTitle span {
-	width: 100%;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
-}
-
-.photoContainer .imageInner {
-	position: absolute;
-	display: inline-block;
-	height: 100%;
-	width: 100%;
-	top: 0;
-	right: -50%;
-	transform: translateY(50%);
-	// z-index: -1;
-}
-
-.showTitle {
-	top: 10px;
-}
-
-.photoContainer .imageTitle span {
 	position: absolute;
 	font-size: 24px;
 	color: white;
 	top: 0;
+
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
 	// Safari 3.1 to 6.0
 	-webkit-transition-property: top;
 	-webkit-transition-duration: 0.2s;
@@ -169,6 +167,48 @@ body {
 
 .photoContainer:hover .imageTitle span {
 	top: 10px;
+}
+
+.photoContainer .imageDescription {
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+	opacity: 0;
+	z-index: 1;
+	pointer-events: none;
+	background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%); // Safari 3.1 to 6.0
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: opacity;
+	transition-duration: 0.2s;
+}
+
+.photoContainer:hover .imageDescription {
+	opacity: 1;
+}
+
+.photoContainer .imageDescription span {
+	position: absolute;
+	font-size: 24px;
+	color: white;
+	bottom: 0;
+
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	// Safari 3.1 to 6.0
+	-webkit-transition-property: bottom;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: bottom;
+	transition-duration: 0.2s;
+}
+
+.photoContainer:hover .imageDescription span {
+	bottom: 10px;
 }
 
 .photoContainer .image {
