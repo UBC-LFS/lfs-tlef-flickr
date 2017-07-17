@@ -53,7 +53,6 @@ export default class GalleryContainer extends Component {
 
   resizeBrowser(initialOffset) {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
-		console.log(imagesContainerWidth);
 		let imagesPerRow = 0;
 		switch (true) {
 			case imagesContainerWidth < 992:
@@ -179,6 +178,7 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
+      //console.log(photo.description)
       return ({ src: largeImg, caption: photo.description });
     });
     return visiblePhotos;
