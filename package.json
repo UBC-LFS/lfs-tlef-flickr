@@ -18,9 +18,9 @@
   "license": "MIT",
   "homepage": "https://github.com/alicoding/react-webpack-babel#readme",
   "dependencies": {
-    "bootstrap": "^3.3.7",
     "node-sass": "^4.3.0",
     "react": "15.4.2",
+    "react-bootstrap": "^0.31.1",
     "react-dom": "15.4.2",
     "react-images": "github:patricklinpl/react-images",
     "react-lazyload": "^2.2.4",
