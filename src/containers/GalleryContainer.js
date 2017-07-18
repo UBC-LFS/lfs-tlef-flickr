@@ -51,7 +51,7 @@ export default class GalleryContainer extends Component {
     this.callAPI();
   }
 
-  resizeBrowser(initialOffset) {
+  resizeBrowser() {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
 		let imagesPerRow = 0;
 		switch (true) {
