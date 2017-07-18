@@ -82,17 +82,19 @@ export default class GalleryContainer extends Component {
     const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
     const photosLineBreak = this.addLineBreak(photoSet);
     const photoFinal = this.getPhotoDimensions(photosLineBreak);
-		Promise.all(photoFinal)
-			.then((photoDimensions) => this.addDimensionsToPhotos(photoSet, photoDimensions))
-			.then((photos) => {
-				this.setState({
-				  photos,
-				  allSelectOptions,
-				  currentSelectOptions: allSelectOptions,
-				  visiblePhotos: photos,
-				}, this.resizeBrowser);
-			})
-    }
+    Promise.all(photoFinal)
+    .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
+    .then((photos) => {
+      const sortImg = R.sortWith([R.ascend(R.prop('title'))]);
+      const sortedPhotos = sortImg(photos);
+      this.setState({
+        photos: sortedPhotos,
+        allSelectOptions,
+        currentSelectOptions: allSelectOptions,
+        visiblePhotos: sortedPhotos,
+      }, this.resizeBrowser);
+    });
+  }
 
   addDimensionsToPhotos(photosArray, photoDimensions) {
     const tempPhotosArray = photosArray;
