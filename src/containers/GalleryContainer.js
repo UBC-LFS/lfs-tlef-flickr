@@ -78,8 +78,7 @@ export default class GalleryContainer extends Component {
 
   setImageDescriptions(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
-<<<<<<< Updated upstream
-    const allSelectOptions = this.setUniqueTags(uniqueTags);
+    const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
 		const photoDimensions = this.getPhotoDimensions(photoSet);
 		Promise.all(photoDimensions)
 			.then((dimensions) => this.addDimensionsToPhotos(photoSet, dimensions))
@@ -92,21 +91,6 @@ export default class GalleryContainer extends Component {
 				}, this.resizeBrowser);
 			})
     }
-=======
-    const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
-    const photosDimensions = this.getPhotoDimensions(photoSet);
-    Promise.all(photosDimensions)
-      .then(photoDimension => this.addDimensionsToPhotos(photoSet, photoDimension))
-      .then((photos) => {
-        this.setState({
-          photos,
-          allSelectOptions,
-          currentSelectOptions: allSelectOptions,
-          visiblePhotos: photos,
-        }, this.resizeBrowser);
-      });
-  }
->>>>>>> Stashed changes
 
   addDimensionsToPhotos(photosArray, photoDimensions) {
     const tempPhotosArray = photosArray;
@@ -150,7 +134,6 @@ export default class GalleryContainer extends Component {
 
   getPhotoDimensions(photosArray) {
     const photos = [];
-<<<<<<< Updated upstream
     function getDimensions(photoImage) {
       return new Promise((resolve, reject) => {
         let img = new Image();
@@ -165,9 +148,6 @@ export default class GalleryContainer extends Component {
       })
     }
 		photosArray.map(photo => {
-=======
-    photosArray.map((photo) => {
->>>>>>> Stashed changes
       photos.push(getDimensions(photo));
 		})
 		return photos;
