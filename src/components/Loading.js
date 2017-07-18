@@ -3,16 +3,9 @@ import PropTypes from 'prop-types';
 
 const styles = {
   content: {
-    textAlign: 'center',
-    fontSize: '50px',
-    width: '100px',
-    height: '100px',
     position: 'absolute',
-    top: '0',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    margin: 'auto',
+    left: '50%',
+    top: '50%',
   },
 };
 

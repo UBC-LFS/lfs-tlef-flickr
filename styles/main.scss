@@ -185,7 +185,7 @@ body {
 	opacity: 0;
 	z-index: 1;
 	pointer-events: none;
-	background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%); 
+	background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%);
 	-moz-transition-property: opacity;
 	-moz-transition-duration: 0.2s;
 	// Safari 3.1 to 6.0
@@ -749,4 +749,25 @@ body {
 
 .search-input > input:focus {
 	outline: none;
+}
+
+.footerBackground {
+	color: black;
+	position: relative;
+	font-size: 20px;
+	background-color: white;
+	width: 100%;
+	padding: 15px;
+	margin: 5px;
+	height: 10vh;
+  border-radius: 2px;
+  display: inline-block;
+	overflow: auto;
+  margin: 1rem;
+}
+
+.footerBackground:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
 }
