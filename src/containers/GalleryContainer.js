@@ -5,6 +5,7 @@ import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
+import Loading from '../components/Loading';
 
 export default class GalleryContainer extends Component {
   constructor(props) {
@@ -308,13 +309,14 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        <Photos
+        {this.state.photos.length === 0 ? <Loading /> : <Photos
           _onClick={this.handleClick}
           images={this.state.visiblePhotos}
           imageWidth={this.state.imageWidth}
           imagesPerRow={this.state.imagesPerRow}
           imagesContainerWidth={this.state.imagesContainerWidth}
         />
+        }
         <Lightbox
           currentImage={this.state.currentImage}
           images={lightboxPhotos}
