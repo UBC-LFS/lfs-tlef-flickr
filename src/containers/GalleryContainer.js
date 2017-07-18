@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-images';
+import R from 'ramda';
 import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
@@ -48,24 +49,27 @@ export default class GalleryContainer extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
+  }
+
+  componentDidMount() {
     this.callAPI();
   }
 
   resizeBrowser(initialOffset) {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
-		let imagesPerRow = 0;
-		switch (true) {
-			case imagesContainerWidth < 992:
-				imagesPerRow = 2;
-				break;
-			case imagesContainerWidth < 1200:
-				imagesPerRow = 3;
-				break;
-			default:
-				imagesPerRow = 3;
-		}
-		const imageWidth = (imagesContainerWidth - imagesPerRow * 5) / imagesPerRow;
-    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth});
+    let imagesPerRow = 0;
+    switch (true) {
+      case imagesContainerWidth < 992:
+        imagesPerRow = 2;
+        break;
+      case imagesContainerWidth < 1200:
+        imagesPerRow = 3;
+        break;
+      default:
+        imagesPerRow = 3;
+    }
+    const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
+    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
   }
 
   callAPI() {
@@ -74,6 +78,7 @@ export default class GalleryContainer extends Component {
 
   setImageDescriptions(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
+<<<<<<< Updated upstream
     const allSelectOptions = this.setUniqueTags(uniqueTags);
 		const photoDimensions = this.getPhotoDimensions(photoSet);
 		Promise.all(photoDimensions)
@@ -87,6 +92,21 @@ export default class GalleryContainer extends Component {
 				}, this.resizeBrowser);
 			})
     }
+=======
+    const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
+    const photosDimensions = this.getPhotoDimensions(photoSet);
+    Promise.all(photosDimensions)
+      .then(photoDimension => this.addDimensionsToPhotos(photoSet, photoDimension))
+      .then((photos) => {
+        this.setState({
+          photos,
+          allSelectOptions,
+          currentSelectOptions: allSelectOptions,
+          visiblePhotos: photos,
+        }, this.resizeBrowser);
+      });
+  }
+>>>>>>> Stashed changes
 
   addDimensionsToPhotos(photosArray, photoDimensions) {
     const tempPhotosArray = photosArray;
@@ -99,8 +119,24 @@ export default class GalleryContainer extends Component {
     return tempPhotosArray;
   }
 
-  setUniqueTags(uniqueTags) {
-    return uniqueTags.map(tag => ({ value: tag, label: tag }));
+  setUniqueTags(photoSet, uniqueTags) {
+    const tags = uniqueTags.map(tag => ({ value: tag, label: tag, count: 0 }));
+    const duplicateTags = [];
+    photoSet.forEach((photoObj) => {
+      photoObj.tags.split(' ').forEach(tag => (
+        duplicateTags.push(tag)
+      ));
+    });
+    tags.forEach((uniqueTag) => {
+      uniqueTag.count = duplicateTags.reduce((acc, tag) => {
+        if (tag === uniqueTag.value) {
+          acc++;
+        }
+        return acc;
+      }, 0);
+    });
+    const sortTags = R.sortWith([R.descend(R.prop('count'))]);
+    return sortTags(tags);
   }
 
   setAllTags(photoSet) {
@@ -114,6 +150,7 @@ export default class GalleryContainer extends Component {
 
   getPhotoDimensions(photosArray) {
     const photos = [];
+<<<<<<< Updated upstream
     function getDimensions(photoImage) {
       return new Promise((resolve, reject) => {
         let img = new Image();
@@ -128,6 +165,9 @@ export default class GalleryContainer extends Component {
       })
     }
 		photosArray.map(photo => {
+=======
+    photosArray.map((photo) => {
+>>>>>>> Stashed changes
       photos.push(getDimensions(photo));
 		})
 		return photos;
@@ -178,7 +218,6 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      //console.log(photo.description)
       return ({ src: largeImg, caption: photo.description });
     });
     return visiblePhotos;
