@@ -44,6 +44,7 @@ export default class GalleryContainer extends Component {
     this.filterByTerm = this.filterByTerm.bind(this);
     this.resizeBrowser = this.resizeBrowser.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
+    this.addLineBreak = this.addLineBreak.bind(this);
   }
 
   componentWillMount() {
@@ -75,8 +76,9 @@ export default class GalleryContainer extends Component {
   setImageDescriptions(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
-		const photoDimensions = this.getPhotoDimensions(photoSet);
-		Promise.all(photoDimensions)
+    const photosLineBreak = this.addLineBreak(photoSet);
+    const photoFinal = this.getPhotoDimensions(photosLineBreak);
+		Promise.all(photoFinal)
 			.then((dimensions) => this.addDimensionsToPhotos(photoSet, dimensions))
 			.then((photos) => {
 				this.setState({
@@ -132,6 +134,15 @@ export default class GalleryContainer extends Component {
 		})
 		return photos;
 	}
+
+  addLineBreak(photosImages) {
+    const tempPhotosImages = photosImages.map(image => {
+      let tempImage = image;
+      tempImage.description = tempImage.description.replace(/\n/g, "<br>");
+      return tempImage
+    })
+    return tempPhotosImages;
+  }
 
   isSelectMatchingTag(image) {
     const tags = image.tags.split(' ');
