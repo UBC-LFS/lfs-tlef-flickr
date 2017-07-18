@@ -85,7 +85,7 @@ export default class GalleryContainer extends Component {
     Promise.all(photoFinal)
     .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
     .then((photos) => {
-      const sortImg = R.sortWith([R.ascend(R.prop('title'))]);
+      const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
       const sortedPhotos = sortImg(photos);
       this.setState({
         photos: sortedPhotos,
