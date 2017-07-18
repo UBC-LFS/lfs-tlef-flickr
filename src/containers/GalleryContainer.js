@@ -325,7 +325,6 @@ export default class GalleryContainer extends Component {
           onClickPrev={this.gotoPrevious}
           onClickThumbnail={this.openThumbnail}
           showThumbnails={true}
-          backdropClosesModal={true}
           width={720}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
