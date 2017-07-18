@@ -79,18 +79,18 @@ export default class GalleryContainer extends Component {
   setImageDescriptions(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
-		const photoDimensions = this.getPhotoDimensions(photoSet);
-		Promise.all(photoDimensions)
-			.then((dimensions) => this.addDimensionsToPhotos(photoSet, dimensions))
-			.then((photos) => {
-				this.setState({
-				  photos,
-				  allSelectOptions,
-				  currentSelectOptions: allSelectOptions,
-				  visiblePhotos: photos,
-				}, this.resizeBrowser);
-			})
-    }
+    const photoDimensions = this.getPhotoDimensions(photoSet);
+    Promise.all(photoDimensions)
+    .then(dimensions => this.addDimensionsToPhotos(photoSet, dimensions))
+    .then((photos) => {
+      this.setState({
+        photos,
+        allSelectOptions,
+        currentSelectOptions: allSelectOptions,
+        visiblePhotos: photos,
+      }, this.resizeBrowser);
+    });
+  }
 
   addDimensionsToPhotos(photosArray, photoDimensions) {
     const tempPhotosArray = photosArray;
@@ -136,22 +136,22 @@ export default class GalleryContainer extends Component {
     const photos = [];
     function getDimensions(photoImage) {
       return new Promise((resolve, reject) => {
-        let img = new Image();
-        img.onload = function() {
+        const img = new Image();
+        img.onload = () => {
           resolve([img.width, img.height]);
-        }
-        img.onerror = function() {
-          let message = "Could not get image dimension"
-          reject(new Error(message))
-        }
+        };
+        img.onerror = () => {
+          const message = 'Could not get image dimension';
+          reject(new Error(message));
+        };
         img.src = photoImage.imageURL;
       })
     }
-		photosArray.map(photo => {
+    photosArray.forEach((photo) => {
       photos.push(getDimensions(photo));
-		})
-		return photos;
-	}
+    });
+    return photos;
+  }
 
   isSelectMatchingTag(image) {
     const tags = image.tags.split(' ');
