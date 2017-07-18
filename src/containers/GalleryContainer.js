@@ -76,8 +76,8 @@ export default class GalleryContainer extends Component {
     const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(uniqueTags);
 		const photoDimensions = this.getPhotoDimensions(photoSet);
-		const test = Promise.all(photoDimensions)
-			.then((photoDimensions) => this.addDimensionsToPhotos(photoSet, photoDimensions))
+		Promise.all(photoDimensions)
+			.then((dimensions) => this.addDimensionsToPhotos(photoSet, dimensions))
 			.then((photos) => {
 				this.setState({
 				  photos,
@@ -114,21 +114,21 @@ export default class GalleryContainer extends Component {
 
   getPhotoDimensions(photosArray) {
     const photos = [];
+    function getDimensions(photoImage) {
+      return new Promise((resolve, reject) => {
+        let img = new Image();
+        img.onload = function() {
+          resolve([img.width, img.height]);
+        }
+        img.onerror = function() {
+          let message = "Could not get image dimension"
+          reject(new Error(message))
+        }
+        img.src = photoImage.imageURL;
+      })
+    }
 		photosArray.map(photo => {
       photos.push(getDimensions(photo));
-      function getDimensions(photoURL) {
-        return new Promise((resolve, reject) => {
-					let img = new Image();
-					img.onload = function() {
-						resolve([img.width, img.height]);
-					}
-					img.onerror = function() {
-						let message = "Could not get image dimension"
-						reject(new Error(message))
-					}
-					img.src = photo.imageURL;
-				})
-			}
 		})
 		return photos;
 	}
