@@ -9,8 +9,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = process.env.PORT || "8888";
 
-loaders.push({ 
-	test: /\.scss$/, 
+loaders.push({
+	test: /\.scss$/,
 	loader: ExtractTextPlugin.extract('style', 'css?sourceMap&localIdentName=[local]___[hash:base64:5]!sass?outputStyle=expanded'),
 	exclude: ['node_modules']
 });
@@ -52,6 +52,9 @@ module.exports = {
 	    new ExtractTextPlugin("style.css", {
 		      allChunks: true
 		}),
+		new webpack.ProvidePlugin({
+    Promise: 'es6-promise-promise', // works as expected
+	}),
 		new DashboardPlugin(),
 		new HtmlWebpackPlugin({
 			template: './src/template.html',
