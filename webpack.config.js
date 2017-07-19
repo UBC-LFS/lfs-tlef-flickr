@@ -52,6 +52,9 @@ module.exports = {
 	    new ExtractTextPlugin("style.css", {
 		      allChunks: true
 		}),
+		new webpack.ProvidePlugin({
+    Promise: 'es6-promise-promise', // works as expected
+	}),
 		new DashboardPlugin(),
 		new HtmlWebpackPlugin({
 			template: './src/template.html',
