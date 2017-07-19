@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-fetch';
-import { Promise } from 'es6-promise';
+import Promise from 'es6-promise-promise';
 
 const PHOTOSET_ID = '72157678045313813';
 const API_KEY = '0564471d68ed3cc6268a0abbb76c7d2b';
