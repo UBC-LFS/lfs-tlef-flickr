@@ -23,6 +23,7 @@ export default class GalleryContainer extends Component {
       currentImage: 0,
       lightboxIsOpen: false,
     };
+    this.resizeBrowser = this.resizeBrowser.bind(this);
     this.callAPI = this.callAPI.bind(this);
     this.closeLightbox = this.closeLightbox.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
@@ -38,11 +39,10 @@ export default class GalleryContainer extends Component {
     this.setAllTags = this.setAllTags.bind(this);
     this.setUniqueTags = this.setUniqueTags.bind(this);
     this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
-    this.setImageDescriptions = this.setImageDescriptions.bind(this);
+    this.imageController = this.imageController.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
-    this.resizeBrowser = this.resizeBrowser.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
     this.addLineBreak = this.addLineBreak.bind(this);
   }
@@ -55,6 +55,9 @@ export default class GalleryContainer extends Component {
     this.callAPI();
   }
 
+  /**
+  * resizeBrowser
+  */
   resizeBrowser() {
     const imagesContainerWidth = document.getElementById('images').clientWidth;
     let imagesPerRow = 0;
@@ -72,11 +75,19 @@ export default class GalleryContainer extends Component {
     this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
   }
 
+  /**
+  * entry point for Flickr API
+  */
   callAPI() {
-    fetchImages().then(photoset => this.setImageDescriptions(photoset));
+    fetchImages().then(photoset => this.imageController(photoset));
   }
 
-  setImageDescriptions(photoSet) {
+  /**
+  * fetches the tags from all existing photos and sets the state for select options
+  * sorts the images by their title
+  * @param {array} photoSet
+  */
+  imageController(photoSet) {
     const uniqueTags = this.setAllTags(photoSet);
     const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
     const photosLineBreak = this.addLineBreak(photoSet);
@@ -207,12 +218,22 @@ export default class GalleryContainer extends Component {
     return otherSearchOptions;
   }
 
+  /**
+   * React-Images Functions
+   * ============
+  */
+
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
       return ({ src: largeImg, caption: photo.description });
     });
     return visiblePhotos;
+  }
+
+  openLightbox(index, event) {
+    event.preventDefault();
+    this.setState({ currentImage: index, lightboxIsOpen: true });
   }
 
   closeLightbox() {
@@ -240,11 +261,6 @@ export default class GalleryContainer extends Component {
 
   openThumbnail(index) {
     this.setState({ currentImage: index });
-  }
-
-  openLightbox(index, event) {
-    event.preventDefault();
-    this.setState({ currentImage: index, lightboxIsOpen: true });
   }
 
   filterSelectPhotos() {
