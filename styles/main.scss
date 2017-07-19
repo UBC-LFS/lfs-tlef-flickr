@@ -787,3 +787,10 @@ body {
     -webkit-transform: translate(-50%, 50%); /* Safari */
     transform: translate(-50%, 50%);
 } 
+
+.photoThumbnails {
+	left: 50%;
+	-ms-transform: translateX(-50%); /* IE 9 */
+    -webkit-transform: translateX(-50%); /* Safari */
+    transform: translateX(-50%);
+}
