@@ -19,6 +19,7 @@
   "homepage": "https://github.com/justin0022/lfs-tlef-flickr",
   "dependencies": {
     "es6-promise": "^4.1.1",
+    "es6-promise-promise": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
     "node-sass": "^4.3.0",
     "prop-types": "^15.5.10",
