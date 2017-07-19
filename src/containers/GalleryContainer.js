@@ -17,9 +17,7 @@ export default class GalleryContainer extends Component {
       selectSearch: '',
       wordSearch: '',
       photos: [],
-      test: [],
       visiblePhotos: [],
-      tempPhotos: [],
       allSelectOptions: [],
       currentSelectOptions: [],
       currentImage: 0,
@@ -309,13 +307,16 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        {this.state.photos.length === 0 ? <Loading /> : <Photos
-          _onClick={this.handleClick}
-          images={this.state.visiblePhotos}
-          imageWidth={this.state.imageWidth}
-          imagesPerRow={this.state.imagesPerRow}
-          imagesContainerWidth={this.state.imagesContainerWidth}
-        />
+        {this.state.photos.length === 0 ? (
+          <Loading />
+        ) : (
+          <Photos
+            _onClick={this.handleClick}
+            images={this.state.visiblePhotos}
+            imageWidth={this.state.imageWidth}
+            imagesPerRow={this.state.imagesPerRow}
+            imagesContainerWidth={this.state.imagesContainerWidth}
+          />)
         }
         <Lightbox
           currentImage={this.state.currentImage}
