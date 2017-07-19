@@ -36,7 +36,7 @@ export default class GalleryContainer extends Component {
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
-    this.setAllTags = this.setAllTags.bind(this);
+    this.fetchTags = this.fetchTags.bind(this);
     this.setUniqueTags = this.setUniqueTags.bind(this);
     this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
     this.imageController = this.imageController.bind(this);
@@ -83,12 +83,12 @@ export default class GalleryContainer extends Component {
   }
 
   /**
-  * fetches the tags from all existing photos and sets the state for select options
-  * sorts the images by their title
+  * fetches the necessary data to set the state of the application
+  *
   * @param {array} photoSet
   */
   imageController(photoSet) {
-    const uniqueTags = this.setAllTags(photoSet);
+    const uniqueTags = this.fetchTags(photoSet);
     const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
     const photosLineBreak = this.addLineBreak(photoSet);
     const photoFinal = this.getPhotoDimensions(photosLineBreak);
@@ -106,17 +106,28 @@ export default class GalleryContainer extends Component {
     });
   }
 
-  addDimensionsToPhotos(photosArray, photoDimensions) {
-    const tempPhotosArray = photosArray;
-    for (let i = 0; i < photoDimensions.length; i += 1) {
-      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait');
-      tempPhotosArray[i].width = photoDimensions[i][0];
-      tempPhotosArray[i].height = photoDimensions[i][1];
-      tempPhotosArray[i].orientation = imageOrientation;
-    }
-    return tempPhotosArray;
+  /**
+  * NOTE: Flickr API returns tags as an appended string
+  * Fetch all unique tags from the photo set
+  *
+  * @param {array} photoSet
+  */
+  fetchTags(photoSet) {
+    const uniqueTags = new Set();
+    photoSet.forEach((photoObj) => {
+      photoObj.tags.split(' ').forEach(tag => (
+        uniqueTags.add(tag)));
+    });
+    return [...(uniqueTags)].sort();
   }
 
+  /**
+  * NOTE: Flickr API returns tags as an appended string
+  * Grab all unique tags from the photo set
+  *
+  * @param {array} photoSet
+  * @param {array} uniqueTags
+  */
   setUniqueTags(photoSet, uniqueTags) {
     const tags = uniqueTags.map(tag => ({ value: tag, label: tag, count: 0 }));
     const duplicateTags = [];
@@ -137,13 +148,15 @@ export default class GalleryContainer extends Component {
     return sortTags(tags);
   }
 
-  setAllTags(photoSet) {
-    const uniqueTags = new Set();
-    photoSet.forEach((photoObj) => {
-      photoObj.tags.split(' ').forEach(tag => (
-        uniqueTags.add(tag)));
-    });
-    return [...(uniqueTags)].sort();
+  addDimensionsToPhotos(photosArray, photoDimensions) {
+    const tempPhotosArray = photosArray;
+    for (let i = 0; i < photoDimensions.length; i += 1) {
+      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait');
+      tempPhotosArray[i].width = photoDimensions[i][0];
+      tempPhotosArray[i].height = photoDimensions[i][1];
+      tempPhotosArray[i].orientation = imageOrientation;
+    }
+    return tempPhotosArray;
   }
 
   getPhotoDimensions(photosArray) {
@@ -159,7 +172,7 @@ export default class GalleryContainer extends Component {
           reject(new Error(message));
         };
         img.src = photoImage.imageURL;
-      })
+      });
     }
     photosArray.forEach((photo) => {
       photos.push(getDimensions(photo));
@@ -168,54 +181,12 @@ export default class GalleryContainer extends Component {
   }
 
   addLineBreak(photosImages) {
-    const tempPhotosImages = photosImages.map(image => {
-      let tempImage = image;
-      tempImage.description = tempImage.description.replace(/\n/g, "<br>");
-      return tempImage
-    })
+    const tempPhotosImages = photosImages.map((image) => {
+      const tempImage = image;
+      tempImage.description = tempImage.description.replace(/\n/g, '<br>');
+      return tempImage;
+    });
     return tempPhotosImages;
-  }
-
-  isSelectMatchingTag(image) {
-    const tags = image.tags.split(' ');
-    const selectSearchSplit = this.state.selectSearch.split(',');
-    for (let i = 0; i < selectSearchSplit.length; i += 1) {
-      if (!tags.includes(selectSearchSplit[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  updateSearchTagOptions() {
-    let otherSearchOptions = [];
-    const searchTags = ((this.state.selectSearch === '') ? [] : this.state.selectSearch.split(','));
-    if (searchTags.length === 0) {
-      otherSearchOptions = this.setAllTags(this.state.photos);
-    } else {
-      this.state.photos.map((photo) => {
-        let tagTest = true;
-        const photoTags = photo.tags.split(' ');
-        if (photoTags.length > searchTags.length) {
-          for (let i = 0; i < searchTags.length; i += 1) {
-            if (!photoTags.includes(searchTags[i])) {
-              tagTest = false;
-              break;
-            }
-          }
-          if (tagTest === true) {
-            for (let i = 0; i < photoTags.length; i += 1) {
-              if (!searchTags.includes(photoTags[i]) && !otherSearchOptions.includes(photoTags[i])) {
-                otherSearchOptions.push(photoTags[i]);
-              }
-            }
-          }
-        }
-        return photo;
-      });
-      otherSearchOptions.push(...searchTags);
-    }
-    return otherSearchOptions;
   }
 
   /**
@@ -263,6 +234,18 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index });
   }
 
+  /** ============ */
+
+  /**
+   * React-Select Functions
+   * ============
+  */
+  handleSelectChange(searchTerm) {
+    (searchTerm !== '')
+      ? (this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos))
+      : (this.setState({ selectSearch: searchTerm }, this.filterByTerm));
+  }
+
   filterSelectPhotos() {
     let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
     if (((this.state.wordSearch === '' && this.state.selectSearch === '') || this.state.selectSearch === '')) {
@@ -272,6 +255,55 @@ export default class GalleryContainer extends Component {
     const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
     this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions }, this.handleMultiSearch);
   }
+
+  isSelectMatchingTag(image) {
+    const tags = image.tags.split(' ');
+    const selectSearchSplit = this.state.selectSearch.split(',');
+    for (let i = 0; i < selectSearchSplit.length; i += 1) {
+      if (!tags.includes(selectSearchSplit[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  updateSearchTagOptions() {
+    let otherSearchOptions = [];
+    const searchTags = ((this.state.selectSearch === '') ? [] : this.state.selectSearch.split(','));
+    if (searchTags.length === 0) {
+      otherSearchOptions = this.fetchTags(this.state.photos);
+    } else {
+      this.state.photos.map((photo) => {
+        let tagTest = true;
+        const photoTags = photo.tags.split(' ');
+        if (photoTags.length > searchTags.length) {
+          for (let i = 0; i < searchTags.length; i += 1) {
+            if (!photoTags.includes(searchTags[i])) {
+              tagTest = false;
+              break;
+            }
+          }
+          if (tagTest === true) {
+            for (let i = 0; i < photoTags.length; i += 1) {
+              if (!searchTags.includes(photoTags[i]) && !otherSearchOptions.includes(photoTags[i])) {
+                otherSearchOptions.push(photoTags[i]);
+              }
+            }
+          }
+        }
+        return photo;
+      });
+      otherSearchOptions.push(...searchTags);
+    }
+    return otherSearchOptions;
+  }
+
+  /** ============ */
+
+  /**
+   * React-Search-Input Functions
+   * ============
+  */
 
   filterByTerm() {
     const photoSet = (this.state.selectSearch === '' ? this.state.photos : this.state.visiblePhotos);
@@ -288,17 +320,13 @@ export default class GalleryContainer extends Component {
     }
   }
 
-  handleSelectChange(searchTerm) {
-    (searchTerm !== '')
-      ? (this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos))
-      : (this.setState({ selectSearch: searchTerm }, this.filterByTerm));
-  }
-
   handleSearchChange(searchTerm) {
     (this.state.selectSearch !== '')
       ? (this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos))
       : (this.setState({ wordSearch: searchTerm }, this.filterByTerm));
   }
+
+  /** ============ */
 
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
