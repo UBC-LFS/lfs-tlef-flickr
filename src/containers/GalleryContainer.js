@@ -23,6 +23,7 @@ export default class GalleryContainer extends Component {
       currentSelectOptions: [],
       currentImage: 0,
       lightboxIsOpen: false,
+      thumbnails: true,
     };
     this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -42,6 +43,7 @@ export default class GalleryContainer extends Component {
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
+    this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -57,7 +59,7 @@ export default class GalleryContainer extends Component {
     window.addEventListener('resize', this.resizeBrowser);
     let browserHeight = document.documentElement.clientHeight;
     this.setState({browserHeight});
-  } 
+  }
 
   componentDidMount() {
     this.callAPI();
@@ -239,6 +241,13 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index });
   }
 
+  thumbnailSwitcher() {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+      return false;
+    }
+    return true;
+  }
+
   /** ============ */
 
   /**
@@ -335,6 +344,7 @@ export default class GalleryContainer extends Component {
 
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
+    const thumbnails = this.thumbnailSwitcher();
     return (
       <div>
         <div className="search-container">
@@ -356,17 +366,19 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        {this.state.photos.length === 0 ? 
-        <Loading 
-          browserHeight={this.state.browserHeight}/> : 
-        <Photos
-          _onClick={this.handleClick}
-          images={this.state.visiblePhotos}
-          imageWidth={this.state.imageWidth}
-          imagesPerRow={this.state.imagesPerRow}
-          imagesContainerWidth={this.state.imagesContainerWidth}
-        />
-        }
+        {this.state.photos.length === 0 ? (
+          <Loading
+            browserHeight={this.state.browserHeight}
+          />
+        ) : (
+          <Photos
+            _onClick={this.handleClick}
+            images={this.state.visiblePhotos}
+            imageWidth={this.state.imageWidth}
+            imagesPerRow={this.state.imagesPerRow}
+            imagesContainerWidth={this.state.imagesContainerWidth}
+          />
+        )}
         <Lightbox
           currentImage={this.state.currentImage}
           images={lightboxPhotos}
@@ -374,7 +386,7 @@ export default class GalleryContainer extends Component {
           onClickImage={this.handleClickImage}
           onClickPrev={this.gotoPrevious}
           onClickThumbnail={this.openThumbnail}
-          showThumbnails={true}
+          showThumbnails={thumbnails}
           width={720}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
