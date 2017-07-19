@@ -1,56 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
+import ReactLoading from 'react-loading';
 
-const styles = {
-  content: {
-    position: 'absolute',
-    left: '50%',
-    top: '50%',
-  },
-};
+const Loading = () => (
+  <div className="loading">
+    <ReactLoading type="spin" color="#444" />
+  </div>
+);
 
-export default class Loading extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      text: props.text,
-    };
-  }
-
-  componentDidMount() {
-    const stopper = this.props.text + '...';
-    this.interval = window.setInterval(() => {
-      if (this.state.text === stopper) {
-        this.setState(() => (
-          { text: this.props.text }
-        ));
-      } else {
-        this.setState(prevState => (
-          { text: prevState.text + '.' }
-        ));
-      }
-    }, this.props.speed);
-  }
-
-  componentWillUnmount() {
-    window.clearInterval(this.interval);
-  }
-
-  render() {
-    return (
-      <p style={styles.content}>
-        {this.state.text}
-      </p>
-    );
-  }
-}
-
-Loading.defaultProps = {
-  text: 'Loading',
-  speed: 300,
-};
-
-Loading.propTypes = {
-  text: PropTypes.string.isRequired,
-  speed: PropTypes.number.isRequired,
-};
+export default Loading;
