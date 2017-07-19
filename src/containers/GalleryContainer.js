@@ -11,6 +11,7 @@ export default class GalleryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      browserHeight: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
       imagesPerRow: 0,
@@ -51,6 +52,8 @@ export default class GalleryContainer extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
+    let browserHeight = document.documentElement.clientHeight;
+    this.setState({browserHeight});
   }
 
   componentDidMount() {
@@ -309,7 +312,10 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        {this.state.photos.length === 0 ? <Loading /> : <Photos
+        {this.state.photos.length === 0 ? 
+        <Loading 
+          browserHeight={this.state.browserHeight}/> : 
+        <Photos
           _onClick={this.handleClick}
           images={this.state.visiblePhotos}
           imageWidth={this.state.imageWidth}

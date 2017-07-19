@@ -773,7 +773,17 @@ body {
 }
 
 .center {
-	margin: auto;
-	width: 800px;
-	text-align: center;
+	fill: rgb(98, 98, 98);
+	position: relative
+}
+
+.center svg {
+	width: 64px;
+	height: 64px;
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	-ms-transform: translate(-50%, 50%); /* IE 9 */
+    -webkit-transform: translate(-50%, 50%); /* Safari */
+    transform: translate(-50%, 50%);
 }
