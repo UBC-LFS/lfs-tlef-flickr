@@ -6,7 +6,7 @@ const Loading = () => (
     className="center"
     type="spin"
     color="#444"
-    delay="0"
+    delay={0}
   />
 );
 

@@ -24,27 +24,32 @@ export default class GalleryContainer extends Component {
       lightboxIsOpen: false,
     };
     this.resizeBrowser = this.resizeBrowser.bind(this);
+
     this.callAPI = this.callAPI.bind(this);
+
+    this.imageController = this.imageController.bind(this);
+    this.fetchTags = this.fetchTags.bind(this);
+    this.setUniqueTags = this.setUniqueTags.bind(this);
+    this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
+    this.addLineBreak = this.addLineBreak.bind(this);
+
+    this.getLightboxImages = this.getLightboxImages.bind(this);
+    this.openLightbox = this.openLightbox.bind(this);
     this.closeLightbox = this.closeLightbox.bind(this);
     this.gotoNext = this.gotoNext.bind(this);
     this.gotoPrevious = this.gotoPrevious.bind(this);
     this.handleClickImage = this.handleClickImage.bind(this);
-    this.openLightbox = this.openLightbox.bind(this);
     this.handleClick = this.handleClick.bind(this);
-    this.getLightboxImages = this.getLightboxImages.bind(this);
+    this.openThumbnail = this.openThumbnail.bind(this);
+
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
-    this.fetchTags = this.fetchTags.bind(this);
-    this.setUniqueTags = this.setUniqueTags.bind(this);
-    this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
-    this.imageController = this.imageController.bind(this);
-    this.openThumbnail = this.openThumbnail.bind(this);
+
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
-    this.addLineBreak = this.addLineBreak.bind(this);
   }
 
   componentWillMount() {
@@ -84,8 +89,7 @@ export default class GalleryContainer extends Component {
 
   /**
   * fetches the necessary data to set the state of the application
-  *
-  * @param {array} photoSet
+  * @param {array} photoSet - array of photo objects
   */
   imageController(photoSet) {
     const uniqueTags = this.fetchTags(photoSet);
@@ -109,8 +113,7 @@ export default class GalleryContainer extends Component {
   /**
   * NOTE: Flickr API returns tags as an appended string
   * Fetch all unique tags from the photo set
-  *
-  * @param {array} photoSet
+  * @param {array} photoSet - array of photo objects
   */
   fetchTags(photoSet) {
     const uniqueTags = new Set();
@@ -122,11 +125,10 @@ export default class GalleryContainer extends Component {
   }
 
   /**
-  * NOTE: Flickr API returns tags as an appended string
-  * Grab all unique tags from the photo set
-  *
-  * @param {array} photoSet
-  * @param {array} uniqueTags
+  * Creates an array of unique tag objects, sorted in descending order
+  * @param {array} photoSet - array of photo objects
+  * @param {array} uniqueTags - array of tags that are string
+  * @return {array} - array of tag objects
   */
   setUniqueTags(photoSet, uniqueTags) {
     const tags = uniqueTags.map(tag => ({ value: tag, label: tag, count: 0 }));
@@ -139,7 +141,7 @@ export default class GalleryContainer extends Component {
     tags.forEach((uniqueTag) => {
       uniqueTag.count = duplicateTags.reduce((acc, tag) => {
         if (tag === uniqueTag.value) {
-          acc++;
+          acc += 1;
         }
         return acc;
       }, 0);
