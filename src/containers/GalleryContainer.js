@@ -54,7 +54,7 @@ export default class GalleryContainer extends Component {
     window.addEventListener('resize', this.resizeBrowser);
     let browserHeight = document.documentElement.clientHeight;
     this.setState({browserHeight});
-  }
+  } 
 
   componentDidMount() {
     this.callAPI();

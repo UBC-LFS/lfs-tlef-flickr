@@ -16,6 +16,6 @@ const Loading = (props) => {
       style={loadStyle}
     />
   );
-}
+} 
 
 export default Loading;
