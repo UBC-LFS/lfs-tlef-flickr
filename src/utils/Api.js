@@ -10,15 +10,15 @@ const getDescription = URL => (
     .then(response => response.json())
     .then(json => json.photo.description._content)
     .then(description => description)
-  );
+);
 
 const setDescription = photoset => (
   photoset.map(img => (
     getDescription(img.descriptionURL)
-    .then((description) => {
-      img.description = description;
-      return img;
-    })
+      .then((description) => {
+        img.description = description;
+        return img;
+      })
   ))
 );
 
@@ -44,7 +44,7 @@ const fetchImages = () => (
     .then(json => photoParser(json.photoset.photo))
     .then(photoset => (
       Promise.all(setDescription(photoset))
-      .then(completePhotoSet => completePhotoSet)))
-  );
+        .then(completePhotoSet => completePhotoSet)))
+);
 
 export default fetchImages;

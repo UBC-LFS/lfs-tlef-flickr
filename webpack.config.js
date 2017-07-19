@@ -49,11 +49,11 @@ module.exports = {
 	plugins: [
 		new webpack.NoErrorsPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
-	    new ExtractTextPlugin("style.css", {
+	  new ExtractTextPlugin("style.css", {
 		      allChunks: true
 		}),
 		new webpack.ProvidePlugin({
-    Promise: 'es6-promise-promise', // works as expected
+    Promise: 'es6-promise-promise',
 	}),
 		new DashboardPlugin(),
 		new HtmlWebpackPlugin({
