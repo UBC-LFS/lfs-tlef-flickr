@@ -769,7 +769,6 @@ body {
 .footerBackground:after {
   content: "";
   display: block;
-  padding-bottom: 100%;
 }
 
 .center {
@@ -786,4 +785,4 @@ body {
 	-ms-transform: translate(-50%, 50%); /* IE 9 */
     -webkit-transform: translate(-50%, 50%); /* Safari */
     transform: translate(-50%, 50%);
-} 
+}
