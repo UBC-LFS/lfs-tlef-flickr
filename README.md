@@ -1,6 +1,6 @@
 # lfs-tlef-flickr
 
-[Demo](http://lfs-sbcollab.sites.olt.ubc.ca/flick-tlef-prototype/)
+[Demo](http://lfs-sbcollab.sites.olt.ubc.ca/flickr-tlef-prototype/)
 
 ### To run
 
