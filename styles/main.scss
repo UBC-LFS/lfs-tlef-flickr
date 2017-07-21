@@ -193,14 +193,13 @@ body {
 
 .Select-control {
 	background-color: #fff;
-	border-color: #d9d9d9 #ccc #b3b3b3;
-	border: 1px solid #ccc;
+	border-style: inset;
 	color: #333;
 	cursor: default;
 	display: table;
 	border-spacing: 0;
 	border-collapse: separate;
-	height: 36px;
+	height: 43px;
 	outline: none;
 	overflow: hidden;
 	position: relative;
@@ -590,27 +589,16 @@ body {
 	}
 }
 
-.search-container {
-	float: left;
-	width: 100%;
-	height: 110px;
-	background: rgb(63,81,181);
-	padding: 20px;
-	display: flex;
-	align-items: center;
-	box-shadow: 0 2px 0 0 rgba(#000,.1);
-}
-
 .select-search {
 	float: right;
 	width: 100%;
-	height: 50px;
+	height: 60px;
 	display: flex;
 	align-items: center;
 }
 //react-search-inputs
 .search-input {
-	padding: 10px 10px;
+	padding: 10px 1px;
   position: relative;
 	float: left;
 	width: 100%;
@@ -620,7 +608,7 @@ body {
 }
 
 .search-input::before {
-	content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAQJJREFUKBWVkr2uQUEUhf3ET6GRaC5aFRoJKrf1BKpb8SwqovYGXkCj00k0QnRKEYkILYobvpUYmeMMyVnJl7P3mjN7Zu9zwiGv2qRFyMMSRrAFp6JPN8XzBj+wgDkUYAg7WINTYdwpDECxrRLJHeq2accdkgm8bzTvNAg2EDOGeUYI1KNO1gkuzTA1g8T7ojbn4ONQWPuHPWgeHmnzCqoe15tkSNPgPEAn68oVcOmA2XMtGK9FoE/VhOTTVNExqLCGZnxCv2pYauEC6lF0oQxX6IOvb7yX9NPEQafan+aPXDdQC18LsO6Tip5BBY6gIQaSbnMCFRCBZRcIvFkbsvCr4AFGOCxQy+JdGQAAAABJRU5ErkJggg==');
+	//content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAAXNSR0IArs4c6QAAAQJJREFUKBWVkr2uQUEUhf3ET6GRaC5aFRoJKrf1BKpb8SwqovYGXkCj00k0QnRKEYkILYobvpUYmeMMyVnJl7P3mjN7Zu9zwiGv2qRFyMMSRrAFp6JPN8XzBj+wgDkUYAg7WINTYdwpDECxrRLJHeq2accdkgm8bzTvNAg2EDOGeUYI1KNO1gkuzTA1g8T7ojbn4ONQWPuHPWgeHmnzCqoe15tkSNPgPEAn68oVcOmA2XMtGK9FoE/VhOTTVNExqLCGZnxCv2pYauEC6lF0oQxX6IOvb7yX9NPEQafan+aPXDdQC18LsO6Tip5BBY6gIQaSbnMCFRCBZRcIvFkbsvCr4AFGOCxQy+JdGQAAAABJRU5ErkJggg==');
   display: block;
   position: absolute;
   width: 15px;
@@ -684,7 +672,7 @@ body {
 	-ms-transform: translate(-50%, 50%); /* IE 9 */
     -webkit-transform: translate(-50%, 50%); /* Safari */
     transform: translate(-50%, 50%);
-} 
+}
 
 .photoThumbnails {
 	left: 50%;
@@ -692,4 +680,3 @@ body {
     -webkit-transform: translateX(-50%); /* Safari */
     transform: translateX(-50%);
 }
-

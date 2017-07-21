@@ -347,21 +347,23 @@ export default class GalleryContainer extends Component {
     const thumbnails = this.thumbnailSwitcher();
     return (
       <div>
-        <div className="search-container">
-          <div className="container">
-            <div className="row">
-              <div className="span6">
-                <SearchBar
-                  className="search-input"
-                  onSearchChange={this.handleSearchChange}
-                />
-              </div>
-              <div className="span6">
-                <SelectSearchBar
-                  currentSearch={this.state.selectSearch}
-                  onSelectChange={this.handleSelectChange}
-                  selectOptions={this.state.currentSelectOptions}
-                />
+        <div className="navbar">
+          <div className="navbar-inner">
+            <div className="container">
+              <div className="row-fluid">
+                <div className="span6">
+                  <SearchBar
+                    className="search-input"
+                    onSearchChange={this.handleSearchChange}
+                  />
+                </div>
+                <div className="span6">
+                  <SelectSearchBar
+                    currentSearch={this.state.selectSearch}
+                    onSelectChange={this.handleSelectChange}
+                    selectOptions={this.state.currentSelectOptions}
+                  />
+                </div>
               </div>
             </div>
           </div>
