@@ -350,13 +350,13 @@ export default class GalleryContainer extends Component {
         <div className="search-container">
           <div className="container">
             <div className="row">
-              <div className="col-md-6">
+              <div className="span6">
                 <SearchBar
                   className="search-input"
                   onSearchChange={this.handleSearchChange}
                 />
               </div>
-              <div className="col-md-6">
+              <div className="span6">
                 <SelectSearchBar
                   currentSearch={this.state.selectSearch}
                   onSelectChange={this.handleSelectChange}
