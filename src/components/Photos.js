@@ -4,15 +4,16 @@ import LazyLoad from 'react-lazyload';
 import createURL from '../utils/utils';
 
 const Photos = (props) => {
+  const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
     const handleClick = (index) => {
         props._onClick(index);
     }
 
     const photoContainerStyle = {
-        width: props.imageWidth + 'px',
-        height: props.imageWidth + 'px',
-        marginRight: 5 + 'px'
+        width: (props.imageWidth - (w/6) + 5) + 'px',
+        height: (props.imageWidth - (w/6) + 5) + 'px'
     }
 
     const photos = props.images.map((image, index) => {
@@ -22,8 +23,9 @@ const Photos = (props) => {
             const title = image.title;
             const description = image.description;
             const orientation = image.orientation;
+
             return (
-                <LazyLoad height={200} offset={1000} once key={index}>
+                <LazyLoad height={200} offset={2000} once key={index}>
                     <div className="photoContainer" style={photoContainerStyle}>
                         <div className="imageTitle">
                             <span>

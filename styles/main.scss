@@ -5,7 +5,9 @@ body {
 
 #images {
 	margin-top: 10px;
-	margin-right: -5px;
+	margin-left: calc(-50vw + 50%);
+	position: relative;
+	width: 100vw;
 }
 
 .photoContainer {
@@ -647,10 +649,10 @@ body {
 	width: 100%;
 	padding: 15px;
 	max-height: 10vh;
-  	border-radius: 2px;
-  	display: inline-block;
+	border-radius: 2px;
+	display: inline-block;
 	overflow: auto;
-  	margin: 1rem;
+	margin: 1rem;
 }
 
 .footerBackground:after {
