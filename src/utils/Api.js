@@ -56,10 +56,13 @@ const setPhotos = albumID => {
 const setAlbum = photoset => {
   var variab = photoset.map(album => {
     console.log("albumid", album)
-    setPhotos(album.id)
-      .then(result => {console.log("res: ", result)});
+    return setPhotos(album.id)
+      .then(result => {
+        console.log("res: ", result)
+        return {albumName: album.title._content, photos: result}
+    });
     // console.log("temp: ", temp);
-    return {albumName: album.title._content};
+    // return {albumName: album.title._content};
       // console.log("Set: ", setPhotos(album.id))
       // setPhotos(album.id)
       //   .then(descrip => {
@@ -85,7 +88,11 @@ const fetchImages = () => (
   fetch(API_CALL_PHOTOSETS_GETLIST)
     .then(response => response.json())
     .then(json => setAlbum(json.photosets.photoset))
-    // .then(result => console.log("Result: ", result))
+    .then(result => {
+      console.log("Result: ", result)
+      Promise.all(result)
+        .then(re => console.log("re", re))
+    })
     // .then(photoset => (
     //   Promise.all(setDescription(photoset))
     //     .then(completePhotoSet => completePhotoSet)))
