@@ -42,57 +42,76 @@ const photoParser = photoset => (
   })
 );
 
-const setPhotos = albumID => {
-  const API_CALL_PHOTOSETS_GETINFO = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${API_KEY}&photoset_id=${albumID}&extras=tags&format=json&nojsoncallback=1`;
-  var resu = fetch(API_CALL_PHOTOSETS_GETINFO)
+const getPhotos = albumID => {
+  const API_CALL_PHOTOSETS_GETPHOTO = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${API_KEY}&photoset_id=${albumID}&extras=tags&format=json&nojsoncallback=1`;
+  return fetch(API_CALL_PHOTOSETS_GETPHOTO)
     .then(response => response.json())
-    .then(json => {
-      console.log("json: ", json.photoset.photo)
-      return json.photoset.photo})
-  return resu;
-
+    .then(json => {return json.photoset.photo})
 };
 
-const setAlbum = photoset => {
-  var variab = photoset.map(album => {
-    console.log("albumid", album)
-    return setPhotos(album.id)
+const setAlbum = photoset => (
+  photoset.map(album => {
+    return getPhotos(album.id)
       .then(result => {
-        console.log("res: ", result)
+        console.log("res", result)
         return {albumName: album.title._content, photos: result}
-    });
-    // console.log("temp: ", temp);
-    // return {albumName: album.title._content};
-      // console.log("Set: ", setPhotos(album.id))
-      // setPhotos(album.id)
-      //   .then(descrip => {
-      //     console.log("des: ", descrip)
-      //     return descrip
-      //   })
-      // var test1 = setPhotos(album.id);
-      // console.log("test1: ", test1)
-      // Promise.all(test1)
-      //   .then(result => {console.log("rere: ", result)})
-      
-      // return setPhotos(album.id).then(photos => ({albumName: album.title._content, photos}))
-        // .then(result => console.log("Result: ", result));
-      // return {albumName: album.title._content}
-      // return {albumName: album.title._content, photos: setPhotos(album.id)}
-    }
-  )
-  console.log("variabl: ", variab);
-  return variab
-};
+      });
+    })
+);
+
+const getPhotosDescription = photoInfoURL => (
+  fetch(photoInfoURL)
+    .then(response => response.json())
+    .then(json => json.photo.description._content)
+)
+
+const setPhotosDescription = albumSet => {
+  console.log("albumSet: ", albumSet);
+  albumSet.photos.map(photo => {
+    const descriptionURL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${API_KEY}&photo_id=${photo.id}&format=json&nojsoncallback=1`;
+    // console.log("photo: ", photo)
+    const tempPhoto = Object.assign({}, photo);
+    tempPhoto.imageURL = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
+    delete tempPhoto.isfamily;
+    delete tempPhoto.isfriend;
+    delete tempPhoto.isprimary;
+    delete tempPhoto.server;
+    delete tempPhoto.farm;
+    delete tempPhoto.ispublic;
+    delete tempPhoto.secret;
+    return getPhotosDescription(descriptionURL)
+      .then(description => {
+        tempPhoto.description = description;
+        return tempPhoto;
+      })
+  })
+}
 
 const fetchImages = () => (
   fetch(API_CALL_PHOTOSETS_GETLIST)
     .then(response => response.json())
     .then(json => setAlbum(json.photosets.photoset))
     .then(result => {
-      console.log("Result: ", result)
+      // return Promise.all(result)
+      // console.log("Result: ", result)
       Promise.all(result)
-        .then(re => console.log("re", re))
+        .then(albumNoDescription => {
+          console.log("Album: ", albumNoDescription);
+          return albumNoDescription.map(albumSet => {
+            return setPhotosDescription(albumSet);
+          });
+        })
+        // .then(test => console.log("tes: ", test))
+
     })
+    // .then(albumNoDescription => {
+    //   return albumNoDescription.map(albumSet => {
+    //     return setPhotosDescription(albumSet);
+    //   })
+    // })
+    // .then(albumFinal => {
+    //   console.log("here: ", albumFinal)
+    // })
     // .then(photoset => (
     //   Promise.all(setDescription(photoset))
     //     .then(completePhotoSet => completePhotoSet)))
