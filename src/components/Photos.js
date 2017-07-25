@@ -6,14 +6,29 @@ import createURL from '../utils/utils';
 const Photos = (props) => {
   const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
   const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+  const imgDiv = document.getElementById("images");
+  let imgFactor = 8
+  if (w > 1280) {
+    imgFactor = 20
+  }
 
-    const handleClick = (index) => {
+  const thumbDim = (props.imageWidth - (w / imgFactor))
+  let offSet = 0
+
+  if (imgDiv !== null) {
+    const width = imgDiv.offsetWidth;
+    const imagesOnScreen = Math.floor((w / thumbDim));
+    const space = width - (imagesOnScreen * thumbDim);
+    offSet = (space / imagesOnScreen)
+  }
+
+  const handleClick = (index) => {
         props._onClick(index);
     }
 
     const photoContainerStyle = {
-        width: (props.imageWidth - (w/6) + 5) + 'px',
-        height: (props.imageWidth - (w/6) + 5) + 'px'
+        width: (thumbDim + offSet) + 'px',
+        height: (thumbDim + offSet) + 'px'
     }
 
     const photos = props.images.map((image, index) => {
@@ -25,7 +40,7 @@ const Photos = (props) => {
             const orientation = image.orientation;
 
             return (
-                <LazyLoad height={200} offset={2000} once key={index}>
+                <LazyLoad height={200} offset={h * h} once key={index}>
                     <div className="photoContainer" style={photoContainerStyle}>
                         <div className="imageTitle">
                             <span>
@@ -51,7 +66,7 @@ const Photos = (props) => {
     });
 
     return (
-      <div id="container">
+      <div id="row-fluid">
           <div id="images">
               {photos}
           </div>
