@@ -4,16 +4,18 @@ body {
 }
 
 #images {
-	margin-top: 10px;
-	margin-left: calc(-50vw + 50%);
-	position: relative;
-	width: 100vw;
+	//margin-top: 10px;
+	//margin-left: calc(-50vw + 50%);
+	//position: relative;
+	//width: 100vw;
 }
 
 .photoContainer {
 	display: inline-block;
 	position: relative;
 	overflow: hidden;
+	min-width: 25%;
+	min-height: 25%;
 }
 
 .photoContainer .imageInner {
