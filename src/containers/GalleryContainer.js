@@ -194,13 +194,7 @@ export default class GalleryContainer extends Component {
     const thumbnails = this.thumbnailSwitcher();
     return (
       <div>
-        <div className="navbar">
-          <div className="navbar-inner">
-            <div className="container">
-              <h1>UBC LFS</h1>
-            </div>
-          </div>
-        </div>
+
         {this.state.photos.length === 0 ? (
           <Loading
             browserHeight={this.state.browserHeight}
@@ -222,7 +216,6 @@ export default class GalleryContainer extends Component {
           onClickPrev={this.gotoPrevious}
           onClickThumbnail={this.openThumbnail}
           showThumbnails={thumbnails}
-          width={720}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
         />
