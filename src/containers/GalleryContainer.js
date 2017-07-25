@@ -123,8 +123,11 @@ export default class GalleryContainer extends Component {
   fetchTags(photoSet) {
     const uniqueTags = new Set();
     photoSet.forEach((photoObj) => {
-      photoObj.tags.split(' ').forEach(tag => (
-        uniqueTags.add(tag)));
+      photoObj.tags.split(' ').forEach(tag => {
+        if(tag !== '') {
+          uniqueTags.add(tag);
+        }
+      })
     });
     return [...(uniqueTags)].sort();
   }
