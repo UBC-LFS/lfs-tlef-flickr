@@ -9,7 +9,7 @@ const Photos = (props) => {
   const imgDiv = document.getElementById("images");
   let imgFactor = 8
   if (w > 1280) {
-    imgFactor = 20
+    imgFactor = 0
   }
 
   const thumbDim = (props.imageWidth - (w / imgFactor))
