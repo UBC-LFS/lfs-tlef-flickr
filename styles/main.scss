@@ -11,6 +11,10 @@ body {
 	min-height: 25%;
 }
 
+.photoContainer .image {
+	object-fit: cover;
+}
+
 .photoContainer .imageInner {
 	position: absolute;
 	display: inline-block;
