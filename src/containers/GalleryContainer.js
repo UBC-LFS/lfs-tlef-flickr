@@ -245,10 +245,11 @@ export default class GalleryContainer extends Component {
   }
 
   thumbnailSwitcher() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-      return false;
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    if (w > 1800) {
+      return true;
     }
-    return true;
+    return false;
   }
 
   /** ============ */
