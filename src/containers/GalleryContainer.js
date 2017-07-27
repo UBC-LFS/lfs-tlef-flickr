@@ -69,7 +69,7 @@ export default class GalleryContainer extends Component {
   * resizeBrowser
   */
   resizeBrowser() {
-    const imagesContainerWidth = document.getElementById('images').clientWidth;
+    const imagesContainerWidth = document.getElementById('app').clientWidth;
     let imagesPerRow = 0;
     switch (true) {
       case imagesContainerWidth < 992:
@@ -96,23 +96,38 @@ export default class GalleryContainer extends Component {
   * fetches the necessary data to set the state of the application
   * @param {array} photoSet - array of photo objects
   */
-  imageController(photoSet) {
-    const uniqueTags = this.fetchTags(photoSet);
-    const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
-    const photosLineBreak = this.addLineBreak(photoSet);
-    const photoFinal = this.getPhotoDimensions(photosLineBreak);
-    Promise.all(photoFinal)
-    .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
-    .then((photos) => {
-      const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
-      const sortedPhotos = sortImg(photos);
-      this.setState({
-        photos: sortedPhotos,
-        allSelectOptions,
-        currentSelectOptions: allSelectOptions,
-        visiblePhotos: sortedPhotos,
-      }, this.resizeBrowser);
-    });
+  imageController(photoSets) {
+    console.log("controller: ", photoSets)
+    Promise.all(
+      photoSets.map(photoSet => {
+        const uniqueTags = this.fetchTags(photoSet.albumPhotos);
+        const allSelectOptions = this.setUniqueTags(photoSet.albumPhotos, uniqueTags);
+        const photosLineBreak = this.addLineBreak(photoSet.albumPhotos);
+        const photoFinal = this.getPhotoDimensions(photosLineBreak);
+        return Promise.all(photoFinal)
+        .then(photoDimensions => this.addDimensionsToPhotos(photoSet.albumPhotos, photoDimensions))
+        .then((photos) => {
+          const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
+          const sortedPhotos = sortImg(photos);
+          return {
+                  albumName: photoSet.albumName,
+                  albumDetails: {
+                    photo: sortedPhotos,
+                    allSelectOptions,
+                    currentSelectOptions: allSelectOptions,
+                    visiblePhotos: sortedPhotos,
+                  }
+                 }
+          // this.setState({
+          //   photos: sortedPhotos,
+          //   allSelectOptions,
+          //   currentSelectOptions: allSelectOptions,
+          //   visiblePhotos: sortedPhotos,
+          // }, this.resizeBrowser);
+        });
+      })
+    )
+      .then(albumSet => this.setState({albumSet}, this.resizeBrowser));
   }
 
   /**
