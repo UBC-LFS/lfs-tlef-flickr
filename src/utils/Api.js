@@ -60,7 +60,7 @@ const fetchImages = () => (
     .then(albumsPhotosNoDescription => (
       albumsPhotosNoDescription.map(albumPhotos => {
         return Promise.all(setPhotosDescription(albumPhotos))
-          .then(albumOfPhotosPromise => ({albumName: albumPhotos.albumName, albumOfPhotosPromise}))
+          .then(albumOfPhotosPromise => ({albumName: albumPhotos.albumName, albumPhotos: albumOfPhotosPromise}))
       })
     ))
     .then(albumsPhotosWithDescription => (
