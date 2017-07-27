@@ -48,7 +48,7 @@ const setPhotosDescription = albumSet => (
       })
   })
 )
-
+// https://stackoverflow.com/questions/36094865/how-to-do-promise-all-for-array-of-array-of-promises
 const fetchImages = () => (
   fetch(API_CALL_PHOTOSETS_GETLIST)
     .then(response => response.json())
@@ -60,12 +60,14 @@ const fetchImages = () => (
     .then(albumsPhotosNoDescription => (
       albumsPhotosNoDescription.map(albumPhotos => {
         return Promise.all(setPhotosDescription(albumPhotos))
-          .then(albumOfPhotosPromise => albumOfPhotosPromise)
+          .then(albumOfPhotosPromise => ({albumName: albumPhotos.albumName, albumOfPhotosPromise}))
       })
     ))
     .then(albumsPhotosWithDescription => (
       Promise.all(albumsPhotosWithDescription)
-        .then(albumFinal => albumFinal)
+        .then(albumFinal => {
+          return albumFinal
+        })
     ))
 );
 
