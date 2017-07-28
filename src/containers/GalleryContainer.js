@@ -48,6 +48,7 @@ export default class GalleryContainer extends Component {
     this.openThumbnail = this.openThumbnail.bind(this);
     this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
     this.scrollController = this.scrollController.bind(this);
+    this.imageSizer = this.imageSizer.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -62,7 +63,6 @@ export default class GalleryContainer extends Component {
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
     let browserHeight = document.documentElement.clientHeight - 400;
-    console.log(browserHeight)
     this.setState({browserHeight});
   }
 
@@ -266,16 +266,37 @@ export default class GalleryContainer extends Component {
 
   thumbnailSwitcher() {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    if (w >= 1680) {
-      return true;
-    }
-    return false;
+    return w >= 1680 ? true : false
   }
 
   scrollController() {
     (this.state.lightboxIsOpen === true)
       ? (document.body.style.overflowY = "hidden")
       : (document.body.style.overflowY = "visible")
+  }
+
+  imageSizer() {
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    if (w > 1600) {
+      return 1024
+    }
+
+    if ((w > 1300) && (h > 1000)) {
+      return 1024
+    }
+
+    if ((w > 700) && (h > 1000)) {
+      return 720
+    }
+
+    if ((w > 800) && (h < 1000)) {
+      return 700
+    }
+
+    if (w <= 1000) {
+      return 250
+    }
   }
 
   /** ============ */
@@ -375,6 +396,8 @@ export default class GalleryContainer extends Component {
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     const thumbnails = this.thumbnailSwitcher();
+    const imgSize = this.imageSizer();
+    console.log(imgSize)
     this.scrollController();
     return (
       <div>
@@ -434,6 +457,7 @@ export default class GalleryContainer extends Component {
                   showThumbnails={thumbnails}
                   onClickNext={this.gotoNext}
                   onClose={this.closeLightbox}
+                  width={imgSize}
                 />
                 <div>{this.state.photos.length !== 0 &&
                     <div className="footer">
