@@ -1,6 +1,6 @@
 {
   "name": "lfs-tlef-flickr",
-  "version": "1.0.0",
+  "version": "4.0",
   "description": "A custom gallery that pulls in Flickr images and displays them with descriptions. Designed to support pedagogy. Created using React.",
   "main": "''",
   "scripts": {
