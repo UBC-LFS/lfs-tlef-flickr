@@ -200,7 +200,7 @@ export default class GalleryContainer extends Component {
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     const thumbnails = this.thumbnailSwitcher();
-    const documentScroll = this.scrollController();
+    this.scrollController();
     return (
       <div>
 

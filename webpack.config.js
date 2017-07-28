@@ -11,15 +11,15 @@ const PORT = process.env.PORT || "8888";
 
 loaders.push({
 	test: /\.scss$/,
-	loader: ExtractTextPlugin.extract('style', 'css?sourceMap&localIdentName=[local]___[hash:base64:5]!sass?outputStyle=expanded'),
-	exclude: ['node_modules']
+	loaders: ['style-loader', 'css-loader?importLoaders=1', 'sass-loader'],
+  exclude: ['node_modules']
 });
 
 module.exports = {
 	entry: [
 		'react-hot-loader/patch',
-		'./src/index.jsx', // your app's entry point
-		'./styles/index.scss'
+		'./src/index.jsx',
+		'./styles/index.scss',
 	],
 	devtool: process.env.WEBPACK_DEVTOOL || 'eval-source-map',
 	output: {
@@ -28,7 +28,7 @@ module.exports = {
 		filename: 'bundle.js'
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['.js', '.jsx']
 	},
 	module: {
 		loaders
@@ -47,21 +47,20 @@ module.exports = {
 		host: HOST
 	},
 	plugins: [
-		new webpack.NoErrorsPlugin(),
+		new webpack.NoEmitOnErrorsPlugin(),
 		new webpack.HotModuleReplacementPlugin(),
-	  new ExtractTextPlugin("style.css", {
-		      allChunks: true
-		}),
-		new webpack.ProvidePlugin({
-    Promise: 'es6-promise-promise',
-	}),
+		new ExtractTextPlugin({
+      filename: 'style.css',
+      allChunks: true
+    }),
+		new webpack.ProvidePlugin({Promise: 'es6-promise-promise'}),
 		new DashboardPlugin(),
 		new HtmlWebpackPlugin({
 			template: './src/template.html',
 			files: {
 				css: ['style.css'],
-				js: [ "bundle.js"],
+				js: ["bundle.js"]
 			}
-		}),
+		})
 	]
 };
