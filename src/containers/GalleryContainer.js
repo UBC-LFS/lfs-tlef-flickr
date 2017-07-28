@@ -397,7 +397,6 @@ export default class GalleryContainer extends Component {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     const thumbnails = this.thumbnailSwitcher();
     const imgSize = this.imageSizer();
-    console.log(imgSize)
     this.scrollController();
     return (
       <div>
