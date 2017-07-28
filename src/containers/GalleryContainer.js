@@ -44,6 +44,7 @@ export default class GalleryContainer extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
     this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
+    this.scrollController = this.scrollController.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -260,10 +261,17 @@ export default class GalleryContainer extends Component {
   }
 
   thumbnailSwitcher() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-      return false;
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    if (w >= 1680) {
+      return true;
     }
-    return true;
+    return false;
+  }
+
+  scrollController() {
+    (this.state.lightboxIsOpen === true)
+      ? (document.body.style.overflowY = "hidden")
+      : (document.body.style.overflowY = "visible")
   }
 
   /** ============ */
@@ -363,6 +371,7 @@ export default class GalleryContainer extends Component {
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     const thumbnails = this.thumbnailSwitcher();
+    const documentScroll = this.scrollController();
     return (
       <div>
         <div className="navbar">
