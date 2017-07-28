@@ -656,10 +656,30 @@ body {
 	display: inline-block;
 	overflow: auto;
 	margin: 1rem;
-	height:auto;
-	max-height:5vh;
+	height: auto;
 	overflow-y: scroll; /* has to be scroll, not auto */
   -webkit-overflow-scrolling: touch;
+
+	@media only screen and (max-width : 750px) {
+		max-height: 15vh;
+	}
+
+	@media screen and (min-width:750px) and (max-width:1000px) {
+		max-height: 15vh;
+	}
+
+	@media screen and (min-width:1000px) and (max-width:1440px) {
+		max-height: 1vh;
+	}
+
+	@media screen and (min-width:1440px) and (max-width:1670px) {
+		max-height: 8vh;
+	}
+
+	@media screen and (min-width:1670px) and (max-width:2000px) {
+		max-height: 18vh;
+	}
+
 }
 
 .footerBackground:after {
