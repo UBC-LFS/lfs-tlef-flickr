@@ -183,7 +183,7 @@ export default class GalleryContainer extends Component {
 
   thumbnailSwitcher() {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    if (w > 1800) {
+    if (w >= 1680) {
       return true;
     }
     return false;
