@@ -23,8 +23,18 @@ const AlbumSetCover = (props) => {
         )
     }
 
+    const albumCoverSize = {
+        width: props.albumSize + 'px',
+        height: props.albumSize + 'px'
+    }
+
     return (
-        <div className="albumCover">
+        <div
+            style={albumCoverSize} 
+            className="albumCover">
+            <div>
+                <span>{props.albumInfo.albumName}</span>
+            </div>
             {Array.apply(null, Array(imageCoverCounter())).map((item, index) => {
                 return (
                     <img
