@@ -58,7 +58,8 @@ export default class GalleryContainer extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
-    let browserHeight = document.documentElement.clientHeight;
+    let browserHeight = document.documentElement.clientHeight - 400;
+    console.log(browserHeight)
     this.setState({browserHeight});
   }
 
@@ -404,6 +405,11 @@ export default class GalleryContainer extends Component {
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
         />
+        <div>{this.state.photos.length !== 0 &&
+          <div className="footer">
+            {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+          </div>
+      }</div>
       </div>
     );
   }
