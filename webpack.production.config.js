@@ -5,8 +5,8 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-loaders.push({ 
-	test: /\.scss$/, 
+loaders.push({
+	test: /\.scss$/,
 	loader: ExtractTextPlugin.extract('style', 'css?sourceMap&localIdentName=[local]___[hash:base64:5]!sass?outputStyle=expanded'),
 	exclude: ['node_modules']
 });
@@ -14,15 +14,15 @@ loaders.push({
 module.exports = {
 	entry: [
 		'./src/index.jsx',
-		'./styles/index.scss'
+		'./styles/index.scss',
 	],
 	output: {
-		publicPath: '/',
+		publicPath: './',
 		path: path.join(__dirname, 'public'),
 		filename: '[chunkhash].js'
 	},
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: ['.js', '.jsx']
 	},
 	module: {
 		loaders
@@ -43,10 +43,10 @@ module.exports = {
 			}
 		}),
 		new webpack.optimize.OccurenceOrderPlugin(),
-		new webpack.optimize.DedupePlugin(),
-	    new ExtractTextPlugin("style.css", {
-		      allChunks: true
-		}),
+		new ExtractTextPlugin({
+      filename: 'style.css',
+      allChunks: true
+    }),
 		new HtmlWebpackPlugin({
 			template: './src/template.html',
 			files: {
