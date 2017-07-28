@@ -6,17 +6,20 @@ import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 import Loading from '../components/Loading';
+import AlbumDisplay from '../components/AlbumDisplay';
 
 export default class GalleryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      albumSet: [],
       browserHeight: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
       imagesPerRow: 0,
       selectSearch: '',
       wordSearch: '',
+      displayStage: 'album',
       photos: [],
       visiblePhotos: [],
       allSelectOptions: [],
@@ -386,30 +389,46 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        {this.state.photos.length === 0 ? (
+        {this.state.albumSet.length === 0 ? (
           <Loading
             browserHeight={this.state.browserHeight}
           />
         ) : (
-          <Photos
-            _onClick={this.handleClick}
-            images={this.state.visiblePhotos}
-            imageWidth={this.state.imageWidth}
-            imagesPerRow={this.state.imagesPerRow}
-            imagesContainerWidth={this.state.imagesContainerWidth}
-          />
+          <div>
+            {this.state.displayStage === 'album' ? (
+              <AlbumDisplay
+                albums={this.state.albumSet}
+              />
+            ) : (
+              <div>
+                {this.state.photos.length === 0 ? (
+                  <Loading
+                    browserHeight={this.state.browserHeight}
+                  />
+                ) : (
+                  <Photos
+                    _onClick={this.handleClick}
+                    images={this.state.visiblePhotos}
+                    imageWidth={this.state.imageWidth}
+                    imagesPerRow={this.state.imagesPerRow}
+                    imagesContainerWidth={this.state.imagesContainerWidth}
+                  />
+                )}
+                <Lightbox
+                  currentImage={this.state.currentImage}
+                  images={lightboxPhotos}
+                  isOpen={this.state.lightboxIsOpen}
+                  onClickImage={this.handleClickImage}
+                  onClickPrev={this.gotoPrevious}
+                  onClickThumbnail={this.openThumbnail}
+                  showThumbnails={thumbnails}
+                  onClickNext={this.gotoNext}
+                  onClose={this.closeLightbox}
+                />
+              </div>
+            )}
+          </div>
         )}
-        <Lightbox
-          currentImage={this.state.currentImage}
-          images={lightboxPhotos}
-          isOpen={this.state.lightboxIsOpen}
-          onClickImage={this.handleClickImage}
-          onClickPrev={this.gotoPrevious}
-          onClickThumbnail={this.openThumbnail}
-          showThumbnails={thumbnails}
-          onClickNext={this.gotoNext}
-          onClose={this.closeLightbox}
-        />
       </div>
     );
   }
