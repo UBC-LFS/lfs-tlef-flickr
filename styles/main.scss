@@ -151,6 +151,11 @@ body {
 	left: 0;
 }
 
+.lightbox_image_caption {
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
 .lightbox_image_caption a {
 	word-break: break-word;
 }
@@ -162,11 +167,14 @@ body {
 	background-color: white;
 	width: 100%;
 	padding: 15px;
-	max-height: 10vh;
 	border-radius: 2px;
 	display: inline-block;
 	overflow: auto;
 	margin: 1rem;
+	height:auto;
+	max-height:5vh;
+	overflow-y: scroll; /* has to be scroll, not auto */
+  -webkit-overflow-scrolling: touch;
 }
 
 .footerBackground:after {
