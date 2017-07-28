@@ -430,6 +430,7 @@ export default class GalleryContainer extends Component {
             {this.state.displayStage === 'album' ? (
               <AlbumDisplay
                 albums={this.state.albumSet}
+                coverSize={this.state.imageWidth}
               />
             ) : (
               <div>

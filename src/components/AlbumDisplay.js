@@ -5,11 +5,11 @@ import AlbumSetCover from './AlbumSetCover';
 const AlbumDisplay = (props) => {
     const albumSet = props.albums.map((album, index) => {
         return (
-            <div key={index}>
-                <AlbumSetCover
-                    albumInfo={album}
-                />
-            </div>
+            <AlbumSetCover
+                key={index}
+                albumInfo={album}
+                albumSize={props.coverSize}
+            />
         );
     });
 
