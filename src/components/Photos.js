@@ -4,31 +4,27 @@ import LazyLoad from 'react-lazyload';
 import createURL from '../utils/utils';
 
 const Photos = (props) => {
-  const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-  const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+  const screenWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+  const screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
   const imgDiv = document.getElementById("images");
-  let imgFactor = 8
-  if (w > 1280) {
-    imgFactor = 0
-  }
 
-  const thumbDim = (props.imageWidth - (w / imgFactor))
-  let offSet = 0
+  let resize = props.imageWidth - (props.imageWidth * .4);
+  let offSet = 0;
 
   if (imgDiv !== null) {
-    const width = imgDiv.offsetWidth;
-    const imagesOnScreen = Math.floor((w / thumbDim));
-    const space = width - (imagesOnScreen * thumbDim);
-    offSet = (space / imagesOnScreen)
+    const divWidth = imgDiv.offsetWidth;
+    const imagesOnScreen = Math.floor((divWidth / resize));
+    const space = (divWidth - (imagesOnScreen * resize));
+    offSet = (space / imagesOnScreen);
+  }
+
+  const photoContainerStyle = {
+      width: (resize + offSet) + 'px',
+      height: (resize + offSet) + 'px'
   }
 
   const handleClick = (index) => {
         props._onClick(index);
-    }
-
-    const photoContainerStyle = {
-        width: (thumbDim + offSet) + 'px',
-        height: (thumbDim + offSet) + 'px'
     }
 
     const photos = props.images.map((image, index) => {
@@ -40,7 +36,7 @@ const Photos = (props) => {
             const orientation = image.orientation;
 
             return (
-                <LazyLoad height={200} offset={h * h} once key={index}>
+                <LazyLoad height={200} offset={screenHeight * screenHeight} once key={index}>
                     <div className="photoContainer" style={photoContainerStyle}>
                         <div className="imageTitle">
                             <span>
