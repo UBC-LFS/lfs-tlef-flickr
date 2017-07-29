@@ -7,8 +7,8 @@ body {
 	display: inline-block;
 	position: relative;
 	overflow: hidden;
-	min-width: 25%;
-	min-height: 25%;
+	width: fit-content;
+	height: fit-content;
 }
 
 .photoContainer .image {
