@@ -3,7 +3,7 @@ import ReactLoading from 'react-loading';
 
 const Loading = (props) => {
   const loadStyle = {
-    height: (props.browserHeight + 110) / 2 + 'px',
+    height: (props.browserHeight + 250) / 2 + 'px',
   }
   return (
     <ReactLoading
