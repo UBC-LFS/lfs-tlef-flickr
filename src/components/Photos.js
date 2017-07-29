@@ -8,7 +8,7 @@ const Photos = (props) => {
   const screenHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
   const imgDiv = document.getElementById("images");
 
-  let resize = props.imageWidth - (props.imageWidth * .4);
+  let resize = (props.imageWidth - (props.imageWidth * .4));
   let offSet = 0;
 
   if (imgDiv !== null) {
