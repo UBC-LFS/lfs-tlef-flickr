@@ -278,20 +278,20 @@ export default class GalleryContainer extends Component {
   imageSizer() {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    if (w > 1600) {
+    if ((w > 1600) && (h > 1000)) {
       return 1024
     }
 
-    if ((w > 1300) && (h > 1000)) {
-      return 1024
-    }
-
-    if ((w > 700) && (h > 1000)) {
-      return 720
-    }
-
-    if ((w > 800) && (h < 1000)) {
+    if ((w > 1400) && (h > 500)) {
       return 700
+    }
+
+    if ((w > 500) && (h > 500)) {
+      return 550
+    }
+
+    if (w > 650 && (h < 500)) {
+      return 330
     }
 
     if (w <= 1000) {
