@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const AlbumSetCover = (props) => {
 
@@ -12,17 +13,30 @@ const AlbumSetCover = (props) => {
             /*{Array.apply(null, Array(imageCoverCounter())).map((item, index) => {
                 return (
                     <img
-                        key={index} 
+                        key={index}
                         className="coverImage"
                         src={props.albumInfo.albumDetails.photo[index].imageURL}
                     />
                 )
             })}*/
 
+
+
+
     return (
         <div
-            style={albumCoverSize()} 
+            style={albumCoverSize()}
             className="albumCover">
+            <div>
+                  <Link
+                      to={{
+                        pathname: `/album`,
+                        search: `?albumName=${props.albumInfo.albumName}`
+                      }}>
+                        Click here!
+                      </Link>
+                </div>
+
             <div className="albumCoverName">
                 <span>{props.albumInfo.albumName}</span>
             </div>
@@ -31,11 +45,12 @@ const AlbumSetCover = (props) => {
             </div>
             <div className="albumOuterContainer">
                 <div className="albumInnerContainer">
-                    <img
+                  <img
                         className={"coverImage" + (props.albumInfo.albumDetails.photo[0].orientation ===
                         "landscape" ? " fullHeight" : " fullWIdth")}
                         src={props.albumInfo.albumDetails.photo[0].imageURL}
                     />
+
                 </div>
             </div>
         </div>

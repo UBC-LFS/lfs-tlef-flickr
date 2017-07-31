@@ -3,8 +3,6 @@ import Lightbox from 'react-images';
 import { Link } from 'react-router-dom';
 import R from 'ramda';
 import fetchImages from '../utils/Api';
-import SearchBar from '../components/SearchBar';
-import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 import Loading from '../components/Loading';
 import AlbumDisplay from '../components/AlbumDisplay';
@@ -396,32 +394,8 @@ export default class GalleryContainer extends Component {
 
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-    const thumbnails = this.thumbnailSwitcher();
-    const imgSize = this.imageSizer();
-    this.scrollController();
     return (
       <div>
-        <div className="navbar">
-          <div className="navbar-inner">
-            <div className="container">
-              <div className="row-fluid">
-                <div className="span6">
-                  <SearchBar
-                    className="search-input"
-                    onSearchChange={this.handleSearchChange}
-                  />
-                </div>
-                <div className="span6">
-                  <SelectSearchBar
-                    currentSearch={this.state.selectSearch}
-                    onSelectChange={this.handleSelectChange}
-                    selectOptions={this.state.currentSelectOptions}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         {this.state.albumSet.length === 0 ? (
           <Loading
             browserHeight={this.state.browserHeight}
@@ -448,18 +422,8 @@ export default class GalleryContainer extends Component {
                     imagesContainerWidth={this.state.imagesContainerWidth}
                   />
                 )}
-                <Lightbox
-                  currentImage={this.state.currentImage}
-                  images={lightboxPhotos}
-                  isOpen={this.state.lightboxIsOpen}
-                  onClickImage={this.handleClickImage}
-                  onClickPrev={this.gotoPrevious}
-                  onClickThumbnail={this.openThumbnail}
-                  showThumbnails={thumbnails}
-                  onClickNext={this.gotoNext}
-                  onClose={this.closeLightbox}
-                  width={imgSize}
-                />
+
+
                 <div>{this.state.photos.length !== 0 &&
                     <div className="footer">
                       {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
