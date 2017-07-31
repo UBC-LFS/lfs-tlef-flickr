@@ -782,9 +782,43 @@ body {
 	left: 2px;
 }
 
-#albumsDisplay div.albumCoverName {
+#albumsDisplay div.albumCover div.albumCoverName {
 	position: absolute;
 	top: 0px;
+	height: 50px;
+	width: 100%;
+	opacity: 0;
 	z-index: 1;
+	pointer-events: none;
+	background: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.6) 100%); // Safari 3.1 to 6.0
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: opacity;
+	transition-duration: 0.2s;
+}
+
+#albumsDisplay div.albumCover:hover div.albumCoverName {
+	opacity: 1;
+}
+
+#albumsDisplay div.albumCover div.albumCoverName span {
+	position: absolute;
+	font-size: 16px;
 	color: white;
+	top: 0;
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	// Safari 3.1 to 6.0
+	-webkit-transition-property: top;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: top;
+	transition-duration: 0.2s;
+}
+
+#albumsDisplay div.albumCover:hover div.albumCoverName span {
+	top: 10px;
 }
