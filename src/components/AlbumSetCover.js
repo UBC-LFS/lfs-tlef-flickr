@@ -23,9 +23,16 @@ const AlbumSetCover = (props) => {
     //     )
     // }
 
-    const albumCoverSize = {
-        width: props.albumSize + 'px',
-        height: props.albumSize + 'px'
+    const imageURLLink = () => {
+        console.log(props);
+        return props.albumInfo.albumDetails.photo[0].imageURL
+    }
+
+    const albumCoverSize = () => {
+        return {
+            width: props.albumSize + 'px',
+            height: props.albumSize + 'px'
+        }
     }
             /*{Array.apply(null, Array(imageCoverCounter())).map((item, index) => {
                 return (
@@ -39,15 +46,20 @@ const AlbumSetCover = (props) => {
 
     return (
         <div
-            style={albumCoverSize} 
+            style={albumCoverSize()} 
             className="albumCover">
-            <div>
+            <div className="albumCoverName">
                 <span>{props.albumInfo.albumName}</span>
             </div>
-            <img
-                className="coverImage"
-                src={props.albumInfo.albumDetails.photo[0].imageURL}
-            />
+            <div className="albumOuterContainer">
+                <div className="albumInnerContainer">
+                    <img
+                        className={"coverImage" + (props.albumInfo.albumDetails.photo[0].orientation ===
+                        "landscape" ? " fullHeight" : " fullWIdth")}
+                        src={imageURLLink()}
+                    />
+                </div>
+            </div>
         </div>
     )
 }
