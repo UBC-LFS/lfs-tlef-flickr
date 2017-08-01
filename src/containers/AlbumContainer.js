@@ -36,18 +36,6 @@ export default class GalleryContainer extends Component {
     this.setUniqueTags = this.setUniqueTags.bind(this);
     this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
     this.addLineBreak = this.addLineBreak.bind(this);
-
-    this.getLightboxImages = this.getLightboxImages.bind(this);
-    this.openLightbox = this.openLightbox.bind(this);
-    this.closeLightbox = this.closeLightbox.bind(this);
-    this.gotoNext = this.gotoNext.bind(this);
-    this.gotoPrevious = this.gotoPrevious.bind(this);
-    this.handleClickImage = this.handleClickImage.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.openThumbnail = this.openThumbnail.bind(this);
-    this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
-    this.scrollController = this.scrollController.bind(this);
-    this.imageSizer = this.imageSizer.bind(this);
   }
 
   componentWillMount() {
@@ -207,86 +195,6 @@ export default class GalleryContainer extends Component {
       return tempImage;
     });
     return tempPhotosImages;
-  }
-
-  /**
-   * React-Images Functions
-   * ============
-  */
-
-  getLightboxImages(photoSet) {
-    const visiblePhotos = photoSet.map((photo) => {
-      const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: photo.description });
-    });
-    return visiblePhotos;
-  }
-
-  openLightbox(index, event) {
-    event.preventDefault();
-    this.setState({ currentImage: index, lightboxIsOpen: true });
-  }
-
-  closeLightbox() {
-    this.setState({ currentImage: 0, lightboxIsOpen: false });
-  }
-
-  gotoPrevious() {
-    this.setState({ currentImage: this.state.currentImage - 1 });
-  }
-
-  gotoNext() {
-    this.setState({ currentImage: this.state.currentImage + 1 });
-  }
-
-  handleClick(index) {
-    this.setState({ currentImage: index, lightboxIsOpen: true });
-  }
-
-  handleClickImage() {
-    if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) {
-      return;
-    }
-    this.gotoNext();
-  }
-
-  openThumbnail(index) {
-    this.setState({ currentImage: index });
-  }
-
-  thumbnailSwitcher() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    return w >= 1680 ? true : false
-  }
-
-  scrollController() {
-    (this.state.lightboxIsOpen === true)
-      ? (document.body.style.overflowY = "hidden")
-      : (document.body.style.overflowY = "visible")
-  }
-
-  imageSizer() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    if ((w > 1600) && (h > 1000)) {
-      return 1024
-    }
-
-    if ((w > 1400) && (h > 500)) {
-      return 700
-    }
-
-    if ((w > 500) && (h > 500)) {
-      return 550
-    }
-
-    if (w > 650 && (h < 500)) {
-      return 330
-    }
-
-    if (w <= 1000) {
-      return 250
-    }
   }
 
   /** ============ */
