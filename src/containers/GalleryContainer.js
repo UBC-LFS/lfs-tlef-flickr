@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Lightbox from 'react-images';
 import queryString from 'query-string';
 import R from 'ramda';
+import { Link } from 'react-router-dom';
 import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
@@ -420,6 +421,16 @@ export default class GalleryContainer extends Component {
       <div>
         <div className="navbar">
           <div className="navbar-inner">
+            <div className="container">
+              <Link
+                className="btn"
+                to={{
+                pathname: `/`,
+              }}>
+              {'<'}
+            </Link>
+              <h1 className="photoSetTitle">{this.state.currentAlbum}</h1>
+            </div>
             <div className="container">
               <div className="row-fluid">
                 <div className="span6">
