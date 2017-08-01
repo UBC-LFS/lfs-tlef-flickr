@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-images';
-import { Link } from 'react-router-dom';
 import queryString from 'query-string';
 import R from 'ramda';
 import fetchImages from '../utils/Api';
@@ -8,7 +7,6 @@ import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 import Loading from '../components/Loading';
-import AlbumDisplay from '../components/AlbumDisplay';
 
 export default class GalleryContainer extends Component {
   constructor(props) {
@@ -22,7 +20,6 @@ export default class GalleryContainer extends Component {
       imagesPerRow: 0,
       selectSearch: '',
       wordSearch: '',
-      displayStage: 'album',
       photos: [],
       visiblePhotos: [],
       allSelectOptions: [],
