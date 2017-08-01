@@ -13,6 +13,7 @@ export default class AlbumContainer extends Component {
 			imagesContainerWidth: 0,
 			imageWidth: 0,
 			imagesPerRow: 0,
+			displayStage: "album",
 		};
 		this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -24,13 +25,18 @@ export default class AlbumContainer extends Component {
 	}
 
 	componentWillMount() {
-		window.addEventListener('resize', this.resizeBrowser);
+		window.addEventListener('resize', this.resizeBrowser.bind(this));
 		let browserHeight = document.documentElement.clientHeight - 400;
 		this.setState({browserHeight});
 	}
 
 	componentDidMount() {
 		this.callAPI();
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.resizeBrowser.bind(this));
+		this.state.displayStage = 'photos';
 	}
 
 	resizeBrowser() {
@@ -47,7 +53,9 @@ export default class AlbumContainer extends Component {
 				imagesPerRow = 3;
 		}
 		const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
-		this.setState({imagesContainerWidth, imagesPerRow, imageWidth});
+		if (this.state.displayStage === "album") {
+			this.setState({imagesContainerWidth, imagesPerRow, imageWidth});
+		}
 	}
 
 	callAPI() {

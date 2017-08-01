@@ -61,7 +61,7 @@ export default class GalleryContainer extends Component {
   }
 
   componentWillMount() {
-    window.addEventListener('resize', this.resizeBrowser);
+    window.addEventListener('resize', this.resizeBrowser.bind(this));
     let browserHeight = document.documentElement.clientHeight - 400;
     this.setState({browserHeight});
   }
@@ -69,6 +69,11 @@ export default class GalleryContainer extends Component {
   componentDidMount() {
     this.setState({currentAlbum: queryString.parse(this.props.location.search).albumName}, this.callAPI);
   }
+
+  componentWillUnmount() {
+		window.removeEventListener('resize', this.resizeBrowser.bind(this));
+    this.state.currentAlbum = "";
+	}
 
   /**
   * resizeBrowser
@@ -87,8 +92,10 @@ export default class GalleryContainer extends Component {
         imagesPerRow = 3;
     }
     const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
+    if (this.state.currentAlbum === queryString.parse(this.props.location.search).albumName) {
     this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
   }
+}
 
   /**
   * entry point for Flickr API
