@@ -48,11 +48,6 @@ export default class GalleryContainer extends Component {
     this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
     this.scrollController = this.scrollController.bind(this);
     this.imageSizer = this.imageSizer.bind(this);
-
-    this.handleSelectChange = this.handleSelectChange.bind(this);
-    this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
-    this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
-    this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
   }
 
   componentWillMount() {
@@ -292,70 +287,6 @@ export default class GalleryContainer extends Component {
     if (w <= 1000) {
       return 250
     }
-  }
-
-  /** ============ */
-
-  /**
-   * React-Select Functions
-   * ============
-  */
-  handleSelectChange(searchTerm) {
-    (searchTerm !== '')
-      ? (this.setState({ selectSearch: searchTerm }, this.filterSelectPhotos))
-      : (this.setState({ selectSearch: searchTerm }, this.filterByTerm));
-  }
-
-  filterSelectPhotos() {
-    let matchedImages = this.state.photos.filter(this.isSelectMatchingTag);
-    if (((this.state.wordSearch === '' && this.state.selectSearch === '') || this.state.selectSearch === '')) {
-      matchedImages = this.state.photos;
-    }
-    const updatedSearchOptions = this.updateSearchTagOptions();
-    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
-    this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions }, this.handleMultiSearch);
-  }
-
-  isSelectMatchingTag(image) {
-    const tags = image.tags.split(' ');
-    const selectSearchSplit = this.state.selectSearch.split(',');
-    for (let i = 0; i < selectSearchSplit.length; i += 1) {
-      if (!tags.includes(selectSearchSplit[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  updateSearchTagOptions() {
-    let otherSearchOptions = [];
-    const searchTags = ((this.state.selectSearch === '') ? [] : this.state.selectSearch.split(','));
-    if (searchTags.length === 0) {
-      otherSearchOptions = this.fetchTags(this.state.photos);
-    } else {
-      this.state.photos.map((photo) => {
-        let tagTest = true;
-        const photoTags = photo.tags.split(' ');
-        if (photoTags.length > searchTags.length) {
-          for (let i = 0; i < searchTags.length; i += 1) {
-            if (!photoTags.includes(searchTags[i])) {
-              tagTest = false;
-              break;
-            }
-          }
-          if (tagTest === true) {
-            for (let i = 0; i < photoTags.length; i += 1) {
-              if (!searchTags.includes(photoTags[i]) && !otherSearchOptions.includes(photoTags[i])) {
-                otherSearchOptions.push(photoTags[i]);
-              }
-            }
-          }
-        }
-        return photo;
-      });
-      otherSearchOptions.push(...searchTags);
-    }
-    return otherSearchOptions;
   }
 
   /** ============ */
