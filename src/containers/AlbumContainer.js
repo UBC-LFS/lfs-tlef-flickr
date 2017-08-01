@@ -4,7 +4,7 @@ import fetchImages from '../utils/Api';
 import Loading from '../components/Loading';
 import AlbumDisplay from '../components/AlbumDisplay';
 
-export default class GalleryContainer extends Component {
+export default class AlbumContainer extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
