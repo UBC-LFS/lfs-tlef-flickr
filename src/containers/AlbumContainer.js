@@ -122,11 +122,20 @@ export default class GalleryContainer extends Component {
 	render() {
 		return (
 			<div>
+        <div className="container">
+          <h1>Albums</h1>
+        </div>
 				{this.state.albumSet.length === 0
-					? (<Loading browserHeight={this.state.browserHeight}/>)
-					: (
+					? (
+            <Loading
+            browserHeight={this.state.browserHeight}
+          />
+        ) : (
 						<div>
-							<AlbumDisplay albums={this.state.albumSet} coverSize={this.state.imageWidth}/>
+							<AlbumDisplay
+                albums={this.state.albumSet}
+                coverSize={this.state.imageWidth}
+              />
 						</div>
 					)}
 				<div>
