@@ -10,9 +10,9 @@ export default class GalleryContainer extends Component {
 		this.state = {
 			albumSet: [],
 			browserHeight: 0,
-			imagesContainerWidth: 0,
-			imageWidth: 0,
-			imagesPerRow: 0,
+			albumContainerWidth: 0,
+			imageAlbumWidth: 0,
+			albumImagesPerRow: 0,
 		};
 		this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -34,20 +34,20 @@ export default class GalleryContainer extends Component {
 	}
 
 	resizeBrowser() {
-		const imagesContainerWidth = document.getElementById('app').clientWidth;
-		let imagesPerRow = 0;
+		const albumContainerWidth = document.getElementById('app').clientWidth;
+		let albumImagesPerRow = 0;
 		switch (true) {
-			case imagesContainerWidth < 992:
-				imagesPerRow = 2;
+			case albumContainerWidth < 992:
+				albumImagesPerRow = 2;
 				break;
-			case imagesContainerWidth < 1200:
-				imagesPerRow = 3;
+			case albumContainerWidth < 1200:
+				albumImagesPerRow = 3;
 				break;
 			default:
-				imagesPerRow = 3;
+				albumImagesPerRow = 3;
 		}
-		const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
-		this.setState({imagesContainerWidth, imagesPerRow, imageWidth});
+		const imageAlbumWidth = (albumContainerWidth - (albumImagesPerRow * 5)) / albumImagesPerRow;
+		this.setState({albumContainerWidth, albumImagesPerRow, imageAlbumWidth});
 	}
 
 	callAPI() {
@@ -134,7 +134,7 @@ export default class GalleryContainer extends Component {
 						<div>
 							<AlbumDisplay
                 albums={this.state.albumSet}
-                coverSize={this.state.imageWidth}
+                coverSize={this.state.imageAlbumWidth}
               />
 						</div>
 					)}
