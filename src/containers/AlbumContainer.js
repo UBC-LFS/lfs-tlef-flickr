@@ -14,7 +14,7 @@ export default class GalleryContainer extends Component {
 			imageAlbumWidth: 0,
 			albumImagesPerRow: 0,
 		};
-		this.resizeBrowser = this.resizeBrowser.bind(this);
+		this.albumResizeBrower = this.albumResizeBrower.bind(this);
 
 		this.callAPI = this.callAPI.bind(this);
 
@@ -24,7 +24,7 @@ export default class GalleryContainer extends Component {
 	}
 
 	componentWillMount() {
-		window.addEventListener('resize', this.resizeBrowser);
+		window.addEventListener('resize', this.albumResizeBrower);
 		let browserHeight = document.documentElement.clientHeight - 400;
 		this.setState({browserHeight});
 	}
@@ -33,7 +33,7 @@ export default class GalleryContainer extends Component {
 		this.callAPI();
 	}
 
-	resizeBrowser() {
+	albumResizeBrower() {
 		const albumContainerWidth = document.getElementById('app').clientWidth;
 		let albumImagesPerRow = 0;
 		switch (true) {
@@ -71,7 +71,7 @@ export default class GalleryContainer extends Component {
 			});
 		})).then(albumSet => this.setState({
 			albumSet
-		}, this.resizeBrowser));
+		}, this.albumResizeBrower));
 	}
 
 	addDimensionsToPhotos(photosArray, photoDimensions) {
