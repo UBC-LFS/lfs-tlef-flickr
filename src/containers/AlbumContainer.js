@@ -393,7 +393,6 @@ export default class GalleryContainer extends Component {
   /** ============ */
 
   render() {
-    const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     return (
       <div>
         {this.state.albumSet.length === 0 ? (
@@ -402,38 +401,20 @@ export default class GalleryContainer extends Component {
           />
         ) : (
           <div>
-            {this.state.displayStage === 'album' ? (
               <AlbumDisplay
                 albums={this.state.albumSet}
                 coverSize={this.state.imageWidth}
               />
-            ) : (
-              <div>
-                {this.state.photos.length === 0 ? (
-                  <Loading
-                    browserHeight={this.state.browserHeight}
-                  />
-                ) : (
-                  <Photos
-                    _onClick={this.handleClick}
-                    images={this.state.visiblePhotos}
-                    imageWidth={this.state.imageWidth}
-                    imagesPerRow={this.state.imagesPerRow}
-                    imagesContainerWidth={this.state.imagesContainerWidth}
-                  />
-                )}
-
-
-                <div>{this.state.photos.length !== 0 &&
-                    <div className="footer">
-                      {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
-                    </div>
-                }</div>
+            </div>
+          )}
+          <div>
+            {this.state.albumSet.length !== 0 &&
+              <div className="footer">
+                {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
               </div>
-            )}
+            }
           </div>
-        )}
-      </div>
-    );
+        </div>
+      )
+    }
   }
-}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-images';
 import { Link } from 'react-router-dom';
+import queryString from 'query-string';
 import R from 'ramda';
 import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
@@ -14,6 +15,7 @@ export default class GalleryContainer extends Component {
     super(props);
     this.state = {
       albumSet: [],
+      currentAlbum: "",
       browserHeight: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
@@ -68,7 +70,7 @@ export default class GalleryContainer extends Component {
   }
 
   componentDidMount() {
-    this.callAPI();
+    this.setState({currentAlbum: queryString.parse(this.props.location.search).albumName}, this.callAPI);
   }
 
   /**
@@ -103,7 +105,6 @@ export default class GalleryContainer extends Component {
   * @param {array} photoSet - array of photo objects
   */
   imageController(photoSets) {
-    console.log("controller: ", photoSets)
     Promise.all(
       photoSets.map(photoSet => {
         const uniqueTags = this.fetchTags(photoSet.albumPhotos);
@@ -133,7 +134,19 @@ export default class GalleryContainer extends Component {
         });
       })
     )
-      .then(albumSet => this.setState({albumSet}, this.resizeBrowser));
+      .then(albumSet => this.setState({albumSet}))
+      .then(() => {
+        this.state.albumSet.forEach((album) => {
+          if (album.albumName === this.state.currentAlbum) {
+            this.setState({
+              photos: album.albumDetails.visiblePhotos,
+              allSelectOptions: album.albumDetails.allSelectOptions,
+              currentSelectOptions: album.albumDetails.allSelectOptions,
+              visiblePhotos: album.albumDetails.visiblePhotos
+            }, this.resizeBrowser);
+          }
+        })
+      });
   }
 
   /**
@@ -422,53 +435,36 @@ export default class GalleryContainer extends Component {
             </div>
           </div>
         </div>
-        {this.state.albumSet.length === 0 ? (
+        {this.state.photos.length === 0 ? (
           <Loading
             browserHeight={this.state.browserHeight}
           />
         ) : (
-          <div>
-            {this.state.displayStage === 'album' ? (
-              <AlbumDisplay
-                albums={this.state.albumSet}
-                coverSize={this.state.imageWidth}
-              />
-            ) : (
-              <div>
-                {this.state.photos.length === 0 ? (
-                  <Loading
-                    browserHeight={this.state.browserHeight}
-                  />
-                ) : (
-                  <Photos
-                    _onClick={this.handleClick}
-                    images={this.state.visiblePhotos}
-                    imageWidth={this.state.imageWidth}
-                    imagesPerRow={this.state.imagesPerRow}
-                    imagesContainerWidth={this.state.imagesContainerWidth}
-                  />
-                )}
-                <Lightbox
-                  currentImage={this.state.currentImage}
-                  images={lightboxPhotos}
-                  isOpen={this.state.lightboxIsOpen}
-                  onClickImage={this.handleClickImage}
-                  onClickPrev={this.gotoPrevious}
-                  onClickThumbnail={this.openThumbnail}
-                  showThumbnails={thumbnails}
-                  onClickNext={this.gotoNext}
-                  onClose={this.closeLightbox}
-                  width={imgSize}
-                />
-                <div>{this.state.photos.length !== 0 &&
-                    <div className="footer">
-                      {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
-                    </div>
-                }</div>
-              </div>
-            )}
-          </div>
+          <Photos
+            _onClick={this.handleClick}
+            images={this.state.visiblePhotos}
+            imageWidth={this.state.imageWidth}
+            imagesPerRow={this.state.imagesPerRow}
+            imagesContainerWidth={this.state.imagesContainerWidth}
+          />
         )}
+        <Lightbox
+          currentImage={this.state.currentImage}
+          images={lightboxPhotos}
+          isOpen={this.state.lightboxIsOpen}
+          onClickImage={this.handleClickImage}
+          onClickPrev={this.gotoPrevious}
+          onClickThumbnail={this.openThumbnail}
+          showThumbnails={thumbnails}
+          onClickNext={this.gotoNext}
+          onClose={this.closeLightbox}
+          width={imgSize}
+        />
+        <div>{this.state.photos.length !== 0 &&
+          <div className="footer">
+            {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+          </div>
+      }</div>
       </div>
     );
   }

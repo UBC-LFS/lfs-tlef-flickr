@@ -20,22 +20,10 @@ const AlbumSetCover = (props) => {
                 )
             })}*/
 
-
-
-
     return (
         <div
             style={albumCoverSize()}
             className="albumCover">
-            <div>
-                  <Link
-                      to={{
-                        pathname: `/album`,
-                        search: `?albumName=${props.albumInfo.albumName}`
-                      }}>
-                        Click here!
-                      </Link>
-                </div>
 
             <div className="albumCoverName">
                 <span>{props.albumInfo.albumName}</span>
@@ -44,15 +32,22 @@ const AlbumSetCover = (props) => {
                 <span>Photos</span>
             </div>
             <div className="albumOuterContainer">
+              <Link
+                  to={{
+                    pathname: `/album`,
+                    search: `?albumName=${props.albumInfo.albumName}`
+                  }}>
+
                 <div className="albumInnerContainer">
                   <img
                         className={"coverImage" + (props.albumInfo.albumDetails.photo[0].orientation ===
                         "landscape" ? " fullHeight" : " fullWIdth")}
                         src={props.albumInfo.albumDetails.photo[0].imageURL}
                     />
-
                 </div>
+                </Link>
             </div>
+
         </div>
     )
 }
