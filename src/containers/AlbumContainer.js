@@ -53,10 +53,6 @@ export default class GalleryContainer extends Component {
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
     this.updateSearchTagOptions = this.updateSearchTagOptions.bind(this);
-
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-    this.filterByTerm = this.filterByTerm.bind(this);
-    this.handleMultiSearch = this.handleMultiSearch.bind(this);
   }
 
   componentWillMount() {
@@ -360,34 +356,6 @@ export default class GalleryContainer extends Component {
       otherSearchOptions.push(...searchTags);
     }
     return otherSearchOptions;
-  }
-
-  /** ============ */
-
-  /**
-   * React-Search-Input Functions
-   * ============
-  */
-
-  filterByTerm() {
-    const photoSet = (this.state.selectSearch === '' ? this.state.photos : this.state.visiblePhotos);
-    const searchKey = this.state.wordSearch.toUpperCase();
-    const matchedImages = photoSet.filter(photo => ((photo.title.toUpperCase().includes(searchKey) || photo.description.toUpperCase().includes(searchKey))));
-    const updatedSearchOptions = this.updateSearchTagOptions();
-    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
-    this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
-  }
-
-  handleMultiSearch() {
-    if ((this.state.selectSearch !== '' && this.state.wordSearch !== '')) {
-      this.filterByTerm();
-    }
-  }
-
-  handleSearchChange(searchTerm) {
-    (this.state.selectSearch !== '')
-      ? (this.setState({ wordSearch: searchTerm }, this.filterSelectPhotos))
-      : (this.setState({ wordSearch: searchTerm }, this.filterByTerm));
   }
 
   /** ============ */
