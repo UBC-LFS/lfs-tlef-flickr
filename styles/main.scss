@@ -727,7 +727,7 @@ a {
 }
 
 .footer {
-	position: relative;
+	position: fixed;
 	right: 0;
 	bottom: 0;
 	left: 0;
@@ -846,4 +846,8 @@ a {
 
 #albumsDisplay div.albumCover:hover div.albumCoverName span {
 	top: 10px;
+}
+
+#albumContainer {
+	margin-bottom: 52px;
 }
