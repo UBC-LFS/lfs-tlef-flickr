@@ -129,28 +129,28 @@ export default class AlbumContainer extends Component {
 
 	render() {
 		return (
-			<div>
-        <div className="container">
-          <h1>Albums</h1>
-        </div>
-				{this.state.albumSet.length === 0
-					? (
-            <Loading
-            browserHeight={this.state.browserHeight}
-          />
-        ) : (
-						<div>
-							<AlbumDisplay
-                albums={this.state.albumSet}
-                coverSize={this.state.imageWidth}
-              />
-						</div>
-					)}
-				<div>
-					{this.state.albumSet.length !== 0 && <div className="footer">
-						{"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+			<div id="albumContainer">
+				<div className="container">
+					<h1>Albums</h1>
+				</div>
+				{this.state.albumSet.length === 0 ? (
+					<Loading
+						browserHeight={this.state.browserHeight}
+         			 />
+        		) : (
+					<div>
+						<AlbumDisplay
+							albums={this.state.albumSet}
+							coverSize={this.state.imageWidth}
+            			/>
 					</div>
-        }
+				)}
+				<div>
+					{this.state.albumSet.length !== 0 && 
+						<div className="footer">
+							{"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+						</div>
+        			}
 				</div>
 			</div>
 		)
