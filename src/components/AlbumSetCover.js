@@ -11,10 +11,6 @@ const AlbumSetCover = (props) => {
 		}
 	}
 
-    const photoCount = () => {
-        return "Photos: " + props.albumInfo.albumDetails.photo.length;
-    }
-
 	return (
 		<div style={albumCoverSize()} className="albumCover">
 
@@ -22,7 +18,7 @@ const AlbumSetCover = (props) => {
 				<span>{props.albumInfo.albumName}</span>
 			</div>
 			<div className="albumCoverDescription">
-				<span>{photoCount()}</span>
+				<span>{props.albumInfo.albumDetails.photo.length} photos</span>
 			</div>
 			<div className="albumOuterContainer">
 				<Link to={{
