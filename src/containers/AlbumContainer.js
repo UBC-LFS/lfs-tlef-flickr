@@ -10,9 +10,9 @@ export default class AlbumContainer extends Component {
 		this.state = {
 			albumSet: [],
 			browserHeight: 0,
-			imagesContainerWidth: 0,
-			imageWidth: 0,
-			imagesPerRow: 0,
+			albumContainerWidth: 0,
+			albumWidth: 0,
+			albumsPerRow: 0,
 			displayStage: "album",
 		};
 		this.resizeBrowser = this.resizeBrowser.bind(this);
@@ -40,21 +40,21 @@ export default class AlbumContainer extends Component {
 	}
 
 	resizeBrowser() {
-		const imagesContainerWidth = document.getElementById('app').clientWidth;
-		let imagesPerRow = 0;
+		const albumContainerWidth = document.getElementById('app').clientWidth;
+		let albumsPerRow = 0;
 		switch (true) {
-			case imagesContainerWidth < 992:
-				imagesPerRow = 2;
+			case albumContainerWidth < 992:
+				albumsPerRow = 2;
 				break;
-			case imagesContainerWidth < 1200:
-				imagesPerRow = 3;
+			case albumContainerWidth < 1200:
+				albumsPerRow = 3;
 				break;
 			default:
-				imagesPerRow = 3;
+				albumsPerRow = 3;
 		}
-		const imageWidth = (imagesContainerWidth - ((imagesPerRow-1) * 15)) / imagesPerRow;
+		const albumWidth = (albumContainerWidth - ((albumsPerRow-1) * 15)) / albumsPerRow;
 		if (this.state.displayStage === "album") {
-			this.setState({imagesContainerWidth, imagesPerRow, imageWidth});
+			this.setState({albumContainerWidth, albumsPerRow, albumWidth});
 		}
 	}
 
@@ -141,7 +141,7 @@ export default class AlbumContainer extends Component {
 					<div>
 						<AlbumDisplay
 							albums={this.state.albumSet}
-							coverSize={this.state.imageWidth}
+							coverSize={this.state.albumWidth}
             			/>
 					</div>
 				)}
