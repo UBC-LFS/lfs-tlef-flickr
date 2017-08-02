@@ -12,35 +12,35 @@ const AlbumSetCover = (props) => {
 	}
 
 	return (
-		<div style={albumCoverSize()} className="albumCover">
+		<Link to={{
+			pathname: `/album`,
+			search: `?albumName=${props.albumInfo.albumName}`
+		}}>
+			<div style={albumCoverSize()} className="albumCover">
 
-			<div className="albumCoverName">
-				<span>{props.albumInfo.albumName}</span>
-			</div>
-			<div className="albumCoverDescription">
-				<span>
-                    {props.albumInfo.albumDetails.photo.length > 1 ? (
-                        props.albumInfo.albumDetails.photo.length + " photos"
-                    ) : (
-                        props.albumInfo.albumDetails.photo.length + " photo"
-                    )}
-                </span>
-			</div>
-			<div className="albumOuterContainer">
-				<Link to={{
-					pathname: `/album`,
-					search: `?albumName=${props.albumInfo.albumName}`
-				}}>
+				<div className="albumCoverName">
+					<span>{props.albumInfo.albumName}</span>
+				</div>
+				<div className="albumCoverDescription">
+					<span>
+						{props.albumInfo.albumDetails.photo.length > 1 ? (
+							props.albumInfo.albumDetails.photo.length + " photos"
+						) : (
+							props.albumInfo.albumDetails.photo.length + " photo"
+						)}
+					</span>
+				</div>
+				<div className="albumOuterContainer">
+						<div className="albumInnerContainer">
+							<img className={"coverImage" + (props.albumInfo.albumDetails.photo[0].orientation === "landscape"
+								? " fullHeight"
+								: " fullWIdth")} src={props.albumInfo.albumDetails.photo[0].imageURL}/>
+						</div>
+					
+				</div>
 
-					<div className="albumInnerContainer">
-						<img className={"coverImage" + (props.albumInfo.albumDetails.photo[0].orientation === "landscape"
-							? " fullHeight"
-							: " fullWIdth")} src={props.albumInfo.albumDetails.photo[0].imageURL}/>
-					</div>
-				</Link>
 			</div>
-
-		</div>
+		</Link>
 	)
 }
 
