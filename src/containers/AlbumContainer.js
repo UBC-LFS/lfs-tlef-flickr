@@ -52,7 +52,7 @@ export default class AlbumContainer extends Component {
 			default:
 				imagesPerRow = 3;
 		}
-		const imageWidth = (imagesContainerWidth - (imagesPerRow * 15)) / imagesPerRow;
+		const imageWidth = (imagesContainerWidth - ((imagesPerRow-1) * 15)) / imagesPerRow;
 		if (this.state.displayStage === "album") {
 			this.setState({imagesContainerWidth, imagesPerRow, imageWidth});
 		}
