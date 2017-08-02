@@ -15,6 +15,7 @@ export default class GalleryContainer extends Component {
     this.state = {
       albumSet: [],
       currentAlbum: "",
+      albumTitle: "",
       browserHeight: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
@@ -147,7 +148,8 @@ export default class GalleryContainer extends Component {
               photos: album.albumDetails.visiblePhotos,
               allSelectOptions: album.albumDetails.allSelectOptions,
               currentSelectOptions: album.albumDetails.allSelectOptions,
-              visiblePhotos: album.albumDetails.visiblePhotos
+              visiblePhotos: album.albumDetails.visiblePhotos,
+              albumTitle: album.albumName,
             }, this.resizeBrowser);
           }
         })
@@ -429,7 +431,7 @@ export default class GalleryContainer extends Component {
               }}>
               {'<'}
             </Link>
-              <h1 className="photoSetTitle">{this.state.currentAlbum}</h1>
+              <h1 className="photoSetTitle">{this.state.albumTitle}</h1>
             </div>
             <div className="container">
               <div className="row-fluid">
