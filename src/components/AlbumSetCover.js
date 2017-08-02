@@ -18,7 +18,13 @@ const AlbumSetCover = (props) => {
 				<span>{props.albumInfo.albumName}</span>
 			</div>
 			<div className="albumCoverDescription">
-				<span>{props.albumInfo.albumDetails.photo.length} photos</span>
+				<span>
+                    {props.albumInfo.albumDetails.photo.length > 1 ? (
+                        props.albumInfo.albumDetails.photo.length + " photos"
+                    ) : (
+                        props.albumInfo.albumDetails.photo.length + " photo"
+                    )}
+                </span>
 			</div>
 			<div className="albumOuterContainer">
 				<Link to={{
