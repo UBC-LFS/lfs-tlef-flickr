@@ -830,6 +830,7 @@ a {
 #albumsDisplay div.albumCover div.albumCoverName span {
 	position: absolute;
 	font-size: 16px;
+	margin-left: 10px;
 	color: white;
 	top: 0;
 	width: 100%;
@@ -846,6 +847,53 @@ a {
 
 #albumsDisplay div.albumCover:hover div.albumCoverName span {
 	top: 10px;
+}
+
+#albumsDisplay div.albumCover div.albumCoverDescription {
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 100%;
+	opacity: 0;
+	z-index: 1;
+	pointer-events: none;
+	background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.6) 100%);
+	-moz-transition-property: opacity;
+	-moz-transition-duration: 0.2s;
+	// Safari 3.1 to 6.0
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: opacity;
+	transition-duration: 0.2s;
+}
+
+#albumsDisplay div.albumCover:hover div.albumCoverDescription {
+	opacity: 1;
+}
+
+#albumsDisplay div.albumCover div.albumCoverDescription span {
+	position: absolute;
+	font-size: 16px;
+	margin-left: 10px;
+	color: white;
+	bottom: 0;
+	width: 100%;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	-moz-transition-property: bottom;
+	-moz-transition-duration: 0.2s;
+	// Safari 3.1 to 6.0
+	-webkit-transition-property: bottom;
+	-webkit-transition-duration: 0.2s;
+	// Standard
+	transition-property: bottom;
+	transition-duration: 0.2s;
+}
+
+#albumsDisplay div.albumCover:hover div.albumCoverDescription span {
+	bottom: 10px;
 }
 
 #albumContainer {
