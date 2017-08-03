@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-images';
 import R from 'ramda';
+import definitions from '../../dataset/definition.json';
 import fetchImages from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
@@ -24,6 +25,9 @@ export default class GalleryContainer extends Component {
       currentImage: 0,
       lightboxIsOpen: false,
       thumbnails: true,
+      showModal: false,
+      keyWord: "",
+      definition: "", 
     };
     this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -209,7 +213,15 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: photo.description });
+      let temp = photo.description; 
+      var findMatch = (value, key) => {
+        if (temp.indexOf(key) !== -1) {
+          const html = '<a onClick={this.open(' + key + ', ' + value + ')}>' + key + '</a>';
+          temp = temp.split(key).join(html);
+        }
+      }
+      R.forEachObjIndexed(findMatch, definitions);
+      return ({ src: largeImg, caption: temp });
     });
     return visiblePhotos;
   }
@@ -373,6 +385,24 @@ export default class GalleryContainer extends Component {
       : (this.setState({ wordSearch: searchTerm }, this.filterByTerm));
   }
 
+  /** ============ */
+
+  /**
+   * Modal Functions
+   * ============
+  */
+
+  modalClose() {
+    this.setState({ showModal: false });
+  }
+
+  modalOpen() {
+    this.setState({ showModal: true });
+  }
+
+
+  
+  
   /** ============ */
 
   render() {
