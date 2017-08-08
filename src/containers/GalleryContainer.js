@@ -7,6 +7,7 @@ import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
 import Loading from '../components/Loading';
+import ModalContainer from '../components/Modal';
 
 export default class GalleryContainer extends Component {
   constructor(props) {
@@ -27,7 +28,7 @@ export default class GalleryContainer extends Component {
       thumbnails: true,
       showModal: false,
       keyWord: "",
-      definition: "", 
+      definition: "",
     };
     this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -51,6 +52,10 @@ export default class GalleryContainer extends Component {
     this.scrollController = this.scrollController.bind(this);
     this.imageSizer = this.imageSizer.bind(this);
 
+    this._handleClick = this._handleClick.bind(this);
+    this.modalOpen = this.modalOpen.bind(this);
+    this.modalClose = this.modalClose.bind(this);
+
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
@@ -69,6 +74,11 @@ export default class GalleryContainer extends Component {
 
   componentDidMount() {
     this.callAPI();
+    document.addEventListener("click", this._handleClick);
+  }
+
+  componentWillMount() {
+    document.removeEventListener("click", this._handleClick);
   }
 
   /**
@@ -213,10 +223,10 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      let temp = photo.description; 
+      let temp = photo.description;
       var findMatch = (value, key) => {
         if (temp.indexOf(key) !== -1) {
-          const html = '<a onClick={this.open(' + key + ', ' + value + ')}>' + key + '</a>';
+          const html = '<a id="modalDef" name="' + key + '">' + key + '</a>';
           temp = temp.split(key).join(html);
         }
       }
@@ -396,13 +406,21 @@ export default class GalleryContainer extends Component {
     this.setState({ showModal: false });
   }
 
-  modalOpen() {
-    this.setState({ showModal: true });
+  _handleClick(e) {
+    if(e.target.id == "modalDef"){
+      this.modalOpen(e.target.name);
+  }
+}
+
+modalOpen(key) {
+     this.setState({ showModal: true, keyWord: key });
   }
 
 
-  
-  
+
+
+
+
   /** ============ */
 
   render() {
@@ -410,6 +428,9 @@ export default class GalleryContainer extends Component {
     const thumbnails = this.thumbnailSwitcher();
     const imgSize = this.imageSizer();
     this.scrollController();
+
+
+
     return (
       <div>
         <div className="navbar">
@@ -446,6 +467,12 @@ export default class GalleryContainer extends Component {
             imagesContainerWidth={this.state.imagesContainerWidth}
           />
         )}
+        <ModalContainer
+          showModal={this.state.showModal}
+          close={this.modalClose}
+          keyWord={this.state.keyWord}
+          definition={"hi"}
+        />
         <Lightbox
           currentImage={this.state.currentImage}
           images={lightboxPhotos}
