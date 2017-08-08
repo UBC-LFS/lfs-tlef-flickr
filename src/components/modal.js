@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 
 const ModalContainer = props => (
-  <div>
-      <Modal show={props.showModal} onHide={props.close}>
+  <div className="modalContainer">
+      <Modal
+        show={props.showModal}
+        onHide={props.close}
+        backdrop={false}
+        >
           <Modal.Header closeButton>
             <Modal.Title>{props.keyWord} </Modal.Title>
           </Modal.Header>
