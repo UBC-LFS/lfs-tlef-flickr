@@ -52,10 +52,6 @@ export default class GalleryContainer extends Component {
     this.scrollController = this.scrollController.bind(this);
     this.imageSizer = this.imageSizer.bind(this);
 
-    this._handleClick = this._handleClick.bind(this);
-    this.modalOpen = this.modalOpen.bind(this);
-    this.modalClose = this.modalClose.bind(this);
-
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
     this.isSelectMatchingTag = this.isSelectMatchingTag.bind(this);
@@ -64,6 +60,10 @@ export default class GalleryContainer extends Component {
     this.handleSearchChange = this.handleSearchChange.bind(this);
     this.filterByTerm = this.filterByTerm.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
+
+    this._handleClick = this._handleClick.bind(this);
+    this.modalOpen = this.modalOpen.bind(this);
+    this.modalClose = this.modalClose.bind(this);
   }
 
   componentWillMount() {
@@ -407,19 +407,15 @@ export default class GalleryContainer extends Component {
   }
 
   _handleClick(e) {
-    if(e.target.id == "modalDef"){
-      this.modalOpen(e.target.name);
-  }
-}
-
-modalOpen(key) {
-     this.setState({ showModal: true, keyWord: key });
+    if(e.target.id === "modalDef"){
+      const key = e.target.name;
+      this.modalOpen(key, definitions[key]);
+    }
   }
 
-
-
-
-
+  modalOpen(key, def) {
+    this.setState({ showModal: true, keyWord: key, definition: def });
+  }
 
   /** ============ */
 
@@ -428,9 +424,6 @@ modalOpen(key) {
     const thumbnails = this.thumbnailSwitcher();
     const imgSize = this.imageSizer();
     this.scrollController();
-
-
-
     return (
       <div>
         <div className="navbar">
@@ -471,7 +464,7 @@ modalOpen(key) {
           showModal={this.state.showModal}
           close={this.modalClose}
           keyWord={this.state.keyWord}
-          definition={"hi"}
+          definition={this.state.definition}
         />
         <Lightbox
           currentImage={this.state.currentImage}

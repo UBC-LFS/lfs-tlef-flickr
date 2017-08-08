@@ -59,7 +59,7 @@
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "3.3.0",
-    "webpack-cleanup-plugin": "^.4.2",
+    "webpack-cleanup-plugin": "0.4.2",
     "webpack-dashboard": "0.3.0",
     "webpack-dev-server": "2.4.1"
   }
