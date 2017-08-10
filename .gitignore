@@ -34,3 +34,6 @@ public
 
 # WebStorm IDE files
 .idea
+
+package-lock.json
+package-lock.json
