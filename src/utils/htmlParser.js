@@ -11,7 +11,7 @@ const fetchDefinitions = () => (
 );
 
 const parser = definitions => {
-  definitions.splice(0,1)
+  definitions.splice(0, 1)
   console.log(definitions);
   let formatDef = [];
   definitions.forEach((defobj) => {
@@ -21,7 +21,26 @@ const parser = definitions => {
 
     if (typeof keyTerm !== 'undefined') {
       if (typeof defobj.values[1].textFormatRuns !== 'undefined') {
-        defobj.values[1].textFormatRuns.splice(0,1)
+        defobj.values[1].textFormatRuns.splice(0, 1)
+
+        for (let i = 0; i < defobj.values[1].textFormatRuns.length; i += 2) {
+          let format = Object.keys(defobj.values[1].textFormatRuns[i].format)
+          
+          const first = defobj.values[1].textFormatRuns[i].startIndex
+          const last = defobj.values[1].textFormatRuns[i + 1].startIndex
+
+          String.prototype.replaceBetween = function (start, end, what) {
+            return this.substring(0, start) + what + this.substring(end);
+          };
+          
+
+          if (format[0] == "bold") {
+            
+            keyDef = keyDef.replaceBetween(first, last, '<b>' + keyDef.substring(first, last) + '</b>')
+          }
+          console.log(keyDef)
+        }
+
         console.log(defobj.values[1].textFormatRuns)
       }
 
