@@ -3,6 +3,7 @@ import Lightbox from 'react-images';
 import R from 'ramda';
 import definitions from '../../dataset/definition.json';
 import fetchImages from '../utils/Api';
+import fetchDefinitions from '../utils/htmlParser';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
@@ -33,6 +34,7 @@ export default class GalleryContainer extends Component {
     this.resizeBrowser = this.resizeBrowser.bind(this);
 
     this.callAPI = this.callAPI.bind(this);
+    this.parseHTML = this.parseHTML.bind(this);
 
     this.imageController = this.imageController.bind(this);
     this.fetchTags = this.fetchTags.bind(this);
@@ -74,6 +76,7 @@ export default class GalleryContainer extends Component {
 
   componentDidMount() {
     this.callAPI();
+    this.parseHTML();
     document.addEventListener("click", this._handleClick);
   }
 
@@ -106,6 +109,10 @@ export default class GalleryContainer extends Component {
   */
   callAPI() {
     fetchImages().then(photoset => this.imageController(photoset));
+  }
+
+  parseHTML() {
+    fetchDefinitions()
   }
 
   /**
