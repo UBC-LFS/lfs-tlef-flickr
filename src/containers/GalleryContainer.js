@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Lightbox from 'react-images';
 import R from 'ramda';
-import definitions from '../../dataset/definition.json';
 import fetchImages from '../utils/Api';
 import fetchDefinitions from '../utils/htmlParser';
 import SearchBar from '../components/SearchBar';
@@ -21,6 +20,7 @@ export default class GalleryContainer extends Component {
       selectSearch: '',
       wordSearch: '',
       photos: [],
+      definitions: [],
       visiblePhotos: [],
       allSelectOptions: [],
       currentSelectOptions: [],
@@ -112,7 +112,7 @@ export default class GalleryContainer extends Component {
   }
 
   parseHTML() {
-    fetchDefinitions()
+    fetchDefinitions().then(defs => this.setState({ definitions: defs }))
   }
 
   /**
@@ -232,12 +232,14 @@ export default class GalleryContainer extends Component {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
       let temp = photo.description;
       var findMatch = (value, key) => {
+        //console.log(value, key)
         if (temp.indexOf(key) !== -1) {
           const html = '<a id="modalDef" name="' + key + '">' + key + '</a>';
           temp = temp.split(key).join(html);
         }
       }
-      R.forEachObjIndexed(findMatch, definitions);
+      const jsonArray = this.state.definitions;
+      R.forEachObjIndexed(findMatch, jsonArray);
       return ({ src: largeImg, caption: temp });
     });
     return visiblePhotos;
@@ -416,7 +418,7 @@ export default class GalleryContainer extends Component {
   _handleClick(e) {
     if(e.target.id === "modalDef"){
       const key = e.target.name;
-      this.modalOpen(key, definitions[key]);
+      this.modalOpen(key, this.state.definitions[key]);
     }
   }
 

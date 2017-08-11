@@ -8,8 +8,7 @@ const ModalContainer = props => (
 			<Modal.Header closeButton closeLabel=''>
 				<Modal.Title>{props.keyWord}</Modal.Title>
 			</Modal.Header>
-			<Modal.Body>
-				<p>{props.definition}</p>
+			<Modal.Body dangerouslySetInnerHTML={{ __html: props.definition }}>
 			</Modal.Body>
 			<Modal.Footer>
 				<Button onClick={props.close}>Close</Button>
