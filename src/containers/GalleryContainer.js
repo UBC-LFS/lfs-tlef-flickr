@@ -278,31 +278,31 @@ export default class GalleryContainer extends Component {
 
   scrollController() {
     (this.state.lightboxIsOpen === true)
-      ? (document.body.style.overflowY = "hidden")
-      : (document.body.style.overflowY = "visible")
+      ? (document.body.style.overflowY = 'hidden')
+      : (document.body.style.overflowY = 'visible');
   }
 
   imageSizer() {
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
     const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
     if ((w > 1600) && (h > 1000)) {
-      return 1024
+      return 1024;
     }
 
     if ((w > 1400) && (h > 500)) {
-      return 700
+      return 700;
     }
 
     if ((w > 500) && (h > 500)) {
-      return 550
+      return 550;
     }
 
     if (w > 650 && (h < 500)) {
-      return 330
+      return 330;
     }
 
     if (w <= 1000) {
-      return 250
+      return 250;
     }
   }
 
@@ -324,7 +324,7 @@ export default class GalleryContainer extends Component {
       matchedImages = this.state.photos;
     }
     const updatedSearchOptions = this.updateSearchTagOptions();
-    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
+    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value));
     this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions }, this.handleMultiSearch);
   }
 
@@ -382,7 +382,7 @@ export default class GalleryContainer extends Component {
     const searchKey = this.state.wordSearch.toUpperCase();
     const matchedImages = photoSet.filter(photo => ((photo.title.toUpperCase().includes(searchKey) || photo.description.toUpperCase().includes(searchKey))));
     const updatedSearchOptions = this.updateSearchTagOptions();
-    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value))
+    const updatedCurrentSearchOptions = this.state.allSelectOptions.filter(tag => updatedSearchOptions.includes(tag.value));
     this.setState({ visiblePhotos: matchedImages, currentSelectOptions: updatedCurrentSearchOptions });
   }
 
@@ -410,7 +410,7 @@ export default class GalleryContainer extends Component {
   }
 
   modalClick(e) {
-    if (e.target.id === "modalDef") {
+    if (e.target.id === 'modalDef') {
       const key = e.target.name;
       this.modalOpen(key, this.state.definitions[key]);
     }
@@ -483,7 +483,7 @@ export default class GalleryContainer extends Component {
         />
         <div>{this.state.photos.length !== 0 &&
           <div className="footer">
-            {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+            {'This product uses the Flickr API but is not endorsed or certified by Flickr.'}
           </div>
         }</div>
       </div>
