@@ -232,10 +232,12 @@ export default class GalleryContainer extends Component {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
       let temp = photo.description;
       var findMatch = (value, key) => {
-        //console.log(value, key)
-        if (temp.indexOf(key) !== -1) {
-          const html = '<a id="modalDef" name="' + key + '">' + key + '</a>';
-          temp = temp.split(key).join(html);
+        if (temp.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+          let pattern = new RegExp(key, "gi");
+          const replacer = (match) => {
+            return '<a id="modalDef" name="' + key + '">' + match + '</a>';
+          }
+          temp = temp.replace(pattern, replacer);
         }
       }
       const jsonArray = this.state.definitions;

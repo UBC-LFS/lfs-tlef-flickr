@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 
-const SHEET_ID = "1wmZ7HuTM941dqUFmnsViP3lVkRpxjyjz0U0RasR1rR4";
+const SHEET_ID = "1m0yToSyGqCWOOBVgLFipRyXqfEeUn812_Yk5Gbu7I-U";
 const API_KEY = "AIzaSyBw3Tmv6G69vJF0USujX77ZUjQvFNz7OPw";
 const API_CALL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}?includeGridData=true&key=${API_KEY}`;
 
@@ -42,10 +42,15 @@ const parser = definitions => {
 }
 
 const fetchDefinitions = () => (
-  fetch(API_CALL)
-    .then(response => response.json())
-    .then(json => json.sheets[0].data[0].rowData)
+  fetch(API_CALL).then(response => {
+    console.log(response)
+    if (response.ok) {
+      return response.json()
+    }
+    throw new Error('404 : no response');
+  }).then(json => json.sheets[0].data[0].rowData)
     .then(definitions => parser(definitions))
+    .catch(error => console.log('Error:' + error.message))
 );
 
 export default fetchDefinitions;
