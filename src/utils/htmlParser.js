@@ -43,13 +43,7 @@ const applyFormatting = (formatArray, plainDef) => {
         htmlStyle = `<ins>${formatObj[style]}</ins>`;
         break;
     }
-
-    console.log(formatObj[style])
-
     styleDef = styleDef.replace(formatObj[style], htmlStyle);
-
-
-    
   });
   return styleDef;
 };
