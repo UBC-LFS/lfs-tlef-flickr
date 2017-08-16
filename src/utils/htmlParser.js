@@ -16,7 +16,6 @@ const parseFormatting = (formatCriteria, plainDesc) => {
     formatObj[style] = wordToReplace;
     formattedText.push(formatObj);
   }
-  console.log(formattedText)
   return formattedText;
 };
 
