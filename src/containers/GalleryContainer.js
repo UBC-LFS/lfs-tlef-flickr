@@ -108,7 +108,7 @@ export default class GalleryContainer extends Component {
   }
 
   parseHTML() {
-    fetchDefinitions().then(defs => this.setState({ definitions: defs }))
+    fetchDefinitions().then(defs => this.setState({ definitions: defs }));
   }
 
   /**
@@ -142,11 +142,11 @@ export default class GalleryContainer extends Component {
   fetchTags(photoSet) {
     const uniqueTags = new Set();
     photoSet.forEach((photoObj) => {
-      photoObj.tags.split(' ').forEach(tag => {
+      photoObj.tags.split(' ').forEach((tag) => {
         if (tag !== '') {
           uniqueTags.add(tag);
         }
-      })
+      });
     });
     return [...(uniqueTags)].sort();
   }
@@ -227,13 +227,11 @@ export default class GalleryContainer extends Component {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
       let photoDesc = photo.description;
-      var findMatch = (value, key) => {
-        let pattern = new RegExp(key, "gi");
-        const replacer = (match) => {
-          return `<a id="modalDef" name="${key}">${match}</a>`;
-        }
+      let findMatch = (value, key) => {
+        const pattern = new RegExp(key, 'gi');
+        const replacer = (match) => (`<a id="modalDef" name="${key}">${match}</a>`);
         photoDesc = photoDesc.replace(pattern, replacer);
-      }
+      };
       const jsonArray = this.state.definitions;
       R.forEachObjIndexed(findMatch, jsonArray);
       return ({ src: largeImg, caption: photoDesc });
