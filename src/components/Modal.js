@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Modal, Button} from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 
 const ModalContainer = props => (
 	<div className="modalContainer">
@@ -21,7 +21,7 @@ ModalContainer.propTypes = {
 	showModal: PropTypes.bool.isRequired,
 	close: PropTypes.func.isRequired,
 	keyWord: PropTypes.string.isRequired,
-	definition: PropTypes.string.isRequired
+	definition: PropTypes.string.isRequired,
 };
 
 export default ModalContainer;

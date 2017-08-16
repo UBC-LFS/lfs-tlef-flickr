@@ -28,8 +28,8 @@ export default class GalleryContainer extends Component {
       lightboxIsOpen: false,
       thumbnails: true,
       showModal: false,
-      keyWord: "",
-      definition: "",
+      keyWord: '',
+      definition: '',
     };
     this.resizeBrowser = this.resizeBrowser.bind(this);
 
@@ -63,7 +63,7 @@ export default class GalleryContainer extends Component {
     this.filterByTerm = this.filterByTerm.bind(this);
     this.handleMultiSearch = this.handleMultiSearch.bind(this);
 
-    this._handleClick = this._handleClick.bind(this);
+    this.modalClick = this.modalClick.bind(this);
     this.modalOpen = this.modalOpen.bind(this);
     this.modalClose = this.modalClose.bind(this);
   }
@@ -71,17 +71,17 @@ export default class GalleryContainer extends Component {
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
     let browserHeight = document.documentElement.clientHeight - 400;
-    this.setState({browserHeight});
+    this.setState({ browserHeight });
   }
 
   componentDidMount() {
     this.callAPI();
     this.parseHTML();
-    document.addEventListener("click", this._handleClick);
+    document.addEventListener("click", this.modalClick);
   }
 
   componentWillMount() {
-    document.removeEventListener("click", this._handleClick);
+    document.removeEventListener("click", this.modalClick);
   }
 
   /**
@@ -125,17 +125,17 @@ export default class GalleryContainer extends Component {
     const photosLineBreak = this.addLineBreak(photoSet);
     const photoFinal = this.getPhotoDimensions(photosLineBreak);
     Promise.all(photoFinal)
-    .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
-    .then((photos) => {
-      const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
-      const sortedPhotos = sortImg(photos);
-      this.setState({
-        photos: sortedPhotos,
-        allSelectOptions,
-        currentSelectOptions: allSelectOptions,
-        visiblePhotos: sortedPhotos,
-      }, this.resizeBrowser);
-    });
+      .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
+      .then((photos) => {
+        const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
+        const sortedPhotos = sortImg(photos);
+        this.setState({
+          photos: sortedPhotos,
+          allSelectOptions,
+          currentSelectOptions: allSelectOptions,
+          visiblePhotos: sortedPhotos,
+        }, this.resizeBrowser);
+      });
   }
 
   /**
@@ -147,7 +147,7 @@ export default class GalleryContainer extends Component {
     const uniqueTags = new Set();
     photoSet.forEach((photoObj) => {
       photoObj.tags.split(' ').forEach(tag => {
-        if(tag !== '') {
+        if (tag !== '') {
           uniqueTags.add(tag);
         }
       })
@@ -234,10 +234,10 @@ export default class GalleryContainer extends Component {
       var findMatch = (value, key) => {
         let pattern = new RegExp(key, "gi");
         const replacer = (match) => {
-            return '<a id="modalDef" name="' + key + '">' + match + '</a>';
-          }
-          photoDesc = photoDesc.replace(pattern, replacer);
+          return `<a id="modalDef" name="${key}">${match}</a>`;
         }
+        photoDesc = photoDesc.replace(pattern, replacer);
+      }
       const jsonArray = this.state.definitions;
       R.forEachObjIndexed(findMatch, jsonArray);
       return ({ src: largeImg, caption: photoDesc });
@@ -415,8 +415,8 @@ export default class GalleryContainer extends Component {
     this.setState({ showModal: false });
   }
 
-  _handleClick(e) {
-    if(e.target.id === "modalDef"){
+  modalClick(e) {
+    if (e.target.id === "modalDef") {
       const key = e.target.name;
       this.modalOpen(key, this.state.definitions[key]);
     }
@@ -461,14 +461,14 @@ export default class GalleryContainer extends Component {
             browserHeight={this.state.browserHeight}
           />
         ) : (
-          <Photos
-            _onClick={this.handleClick}
-            images={this.state.visiblePhotos}
-            imageWidth={this.state.imageWidth}
-            imagesPerRow={this.state.imagesPerRow}
-            imagesContainerWidth={this.state.imagesContainerWidth}
-          />
-        )}
+            <Photos
+              _onClick={this.handleClick}
+              images={this.state.visiblePhotos}
+              imageWidth={this.state.imageWidth}
+              imagesPerRow={this.state.imagesPerRow}
+              imagesContainerWidth={this.state.imagesContainerWidth}
+            />
+          )}
         <ModalContainer
           showModal={this.state.showModal}
           close={this.modalClose}
@@ -491,7 +491,7 @@ export default class GalleryContainer extends Component {
           <div className="footer">
             {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
           </div>
-      }</div>
+        }</div>
       </div>
     );
   }
