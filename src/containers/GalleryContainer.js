@@ -230,19 +230,17 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      let temp = photo.description;
+      let photoDesc = photo.description;
       var findMatch = (value, key) => {
-        if (temp.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
-          let pattern = new RegExp(key, "gi");
-          const replacer = (match) => {
+        let pattern = new RegExp(key, "gi");
+        const replacer = (match) => {
             return '<a id="modalDef" name="' + key + '">' + match + '</a>';
           }
-          temp = temp.replace(pattern, replacer);
+          photoDesc = photoDesc.replace(pattern, replacer);
         }
-      }
       const jsonArray = this.state.definitions;
       R.forEachObjIndexed(findMatch, jsonArray);
-      return ({ src: largeImg, caption: temp });
+      return ({ src: largeImg, caption: photoDesc });
     });
     return visiblePhotos;
   }
