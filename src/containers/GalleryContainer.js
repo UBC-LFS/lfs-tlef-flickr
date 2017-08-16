@@ -77,11 +77,7 @@ export default class GalleryContainer extends Component {
   componentDidMount() {
     this.callAPI();
     this.parseHTML();
-    document.addEventListener("click", this.modalClick);
-  }
-
-  componentWillMount() {
-    document.removeEventListener("click", this.modalClick);
+    document.addEventListener('click', this.modalClick);
   }
 
   /**
