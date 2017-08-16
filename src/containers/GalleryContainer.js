@@ -45,7 +45,6 @@ export default class GalleryContainer extends Component {
     this.openThumbnail = this.openThumbnail.bind(this);
     this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
     this.scrollController = this.scrollController.bind(this);
-    this.imageSizer = this.imageSizer.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -60,7 +59,7 @@ export default class GalleryContainer extends Component {
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
     let browserHeight = document.documentElement.clientHeight - 400;
-    this.setState({browserHeight});
+    this.setState({ browserHeight });
   }
 
   componentDidMount() {
@@ -104,17 +103,17 @@ export default class GalleryContainer extends Component {
     const photosLineBreak = this.addLineBreak(photoSet);
     const photoFinal = this.getPhotoDimensions(photosLineBreak);
     Promise.all(photoFinal)
-    .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
-    .then((photos) => {
-      const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
-      const sortedPhotos = sortImg(photos);
-      this.setState({
-        photos: sortedPhotos,
-        allSelectOptions,
-        currentSelectOptions: allSelectOptions,
-        visiblePhotos: sortedPhotos,
-      }, this.resizeBrowser);
-    });
+      .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
+      .then((photos) => {
+        const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
+        const sortedPhotos = sortImg(photos);
+        this.setState({
+          photos: sortedPhotos,
+          allSelectOptions,
+          currentSelectOptions: allSelectOptions,
+          visiblePhotos: sortedPhotos,
+        }, this.resizeBrowser);
+      });
   }
 
   /**
@@ -126,7 +125,7 @@ export default class GalleryContainer extends Component {
     const uniqueTags = new Set();
     photoSet.forEach((photoObj) => {
       photoObj.tags.split(' ').forEach(tag => {
-        if(tag !== '') {
+        if (tag !== '') {
           uniqueTags.add(tag);
         }
       })
@@ -257,30 +256,6 @@ export default class GalleryContainer extends Component {
       : (document.body.style.overflowY = "visible")
   }
 
-  imageSizer() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    if ((w > 1600) && (h > 1000)) {
-      return 1024
-    }
-
-    if ((w > 1400) && (h > 500)) {
-      return 700
-    }
-
-    if ((w > 500) && (h > 500)) {
-      return 550
-    }
-
-    if (w > 650 && (h < 500)) {
-      return 330
-    }
-
-    if (w <= 1000) {
-      return 250
-    }
-  }
-
   /** ============ */
 
   /**
@@ -378,7 +353,6 @@ export default class GalleryContainer extends Component {
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
     const thumbnails = this.thumbnailSwitcher();
-    const imgSize = this.imageSizer();
     this.scrollController();
     return (
       <div>
@@ -408,14 +382,14 @@ export default class GalleryContainer extends Component {
             browserHeight={this.state.browserHeight}
           />
         ) : (
-          <Photos
-            _onClick={this.handleClick}
-            images={this.state.visiblePhotos}
-            imageWidth={this.state.imageWidth}
-            imagesPerRow={this.state.imagesPerRow}
-            imagesContainerWidth={this.state.imagesContainerWidth}
-          />
-        )}
+            <Photos
+              _onClick={this.handleClick}
+              images={this.state.visiblePhotos}
+              imageWidth={this.state.imageWidth}
+              imagesPerRow={this.state.imagesPerRow}
+              imagesContainerWidth={this.state.imagesContainerWidth}
+            />
+          )}
         <Lightbox
           currentImage={this.state.currentImage}
           images={lightboxPhotos}
@@ -426,13 +400,12 @@ export default class GalleryContainer extends Component {
           showThumbnails={thumbnails}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
-          width={imgSize}
         />
         <div>{this.state.photos.length !== 0 &&
           <div className="footer">
-            {"This product uses the Flickr API but is not endorsed or certified by Flickr."}
+            {'This product uses the Flickr API but is not endorsed or certified by Flickr.'}
           </div>
-      }</div>
+        }</div>
       </div>
     );
   }
