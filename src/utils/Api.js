@@ -1,7 +1,8 @@
 import fetch from 'isomorphic-fetch';
 import Promise from 'es6-promise-promise';
 
-const PHOTOSET_ID = '72157678045313813';
+//72157678045313813
+const PHOTOSET_ID = '72157683286006992';
 const API_KEY = '0564471d68ed3cc6268a0abbb76c7d2b';
 const API_CALL = `https://api.flickr.com/services/rest/?method=flickr.photosets.getPhotos&api_key=${API_KEY}&photoset_id=${PHOTOSET_ID}&extras=tags&format=json&nojsoncallback=1`;
 
