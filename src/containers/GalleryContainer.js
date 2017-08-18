@@ -43,7 +43,6 @@ export default class GalleryContainer extends Component {
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
-    this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
     this.scrollController = this.scrollController.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
@@ -245,11 +244,6 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index });
   }
 
-  thumbnailSwitcher() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    return w >= 1680 ? true : false
-  }
-
   scrollController() {
     (this.state.lightboxIsOpen === true)
       ? (document.body.style.overflowY = "hidden")
@@ -352,7 +346,6 @@ export default class GalleryContainer extends Component {
 
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-    const thumbnails = this.thumbnailSwitcher();
     this.scrollController();
     return (
       <div>
@@ -397,7 +390,6 @@ export default class GalleryContainer extends Component {
           onClickImage={this.handleClickImage}
           onClickPrev={this.gotoPrevious}
           onClickThumbnail={this.openThumbnail}
-          showThumbnails={thumbnails}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
         />
