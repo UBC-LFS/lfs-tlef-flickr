@@ -50,9 +50,7 @@ export default class GalleryContainer extends Component {
     this.handleClickImage = this.handleClickImage.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.openThumbnail = this.openThumbnail.bind(this);
-    this.thumbnailSwitcher = this.thumbnailSwitcher.bind(this);
     this.scrollController = this.scrollController.bind(this);
-    this.imageSizer = this.imageSizer.bind(this);
 
     this.handleSelectChange = this.handleSelectChange.bind(this);
     this.filterSelectPhotos = this.filterSelectPhotos.bind(this);
@@ -271,39 +269,10 @@ export default class GalleryContainer extends Component {
     this.setState({ currentImage: index });
   }
 
-  thumbnailSwitcher() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    return w >= 1680 ? true : false
-  }
-
   scrollController() {
     (this.state.lightboxIsOpen === true)
       ? (document.body.style.overflowY = 'hidden')
       : (document.body.style.overflowY = 'visible');
-  }
-
-  imageSizer() {
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    const h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    if ((w > 1600) && (h > 1000)) {
-      return 1024;
-    }
-
-    if ((w > 1400) && (h > 500)) {
-      return 700;
-    }
-
-    if ((w > 500) && (h > 500)) {
-      return 550;
-    }
-
-    if (w > 650 && (h < 500)) {
-      return 330;
-    }
-
-    if (w <= 1000) {
-      return 250;
-    }
   }
 
   /** ============ */
@@ -424,8 +393,6 @@ export default class GalleryContainer extends Component {
 
   render() {
     const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-    const thumbnails = this.thumbnailSwitcher();
-    const imgSize = this.imageSizer();
     this.scrollController();
     return (
       <div>
@@ -476,10 +443,8 @@ export default class GalleryContainer extends Component {
           onClickImage={this.handleClickImage}
           onClickPrev={this.gotoPrevious}
           onClickThumbnail={this.openThumbnail}
-          showThumbnails={thumbnails}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
-          width={imgSize}
         />
         <div>{this.state.photos.length !== 0 &&
           <div className="footer">
