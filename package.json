@@ -26,7 +26,7 @@
     "ramda": "^0.24.1",
     "react": "15.6.1",
     "react-dom": "15.4.2",
-    "react-images": "github:UBC-LFS/react-images",
+    "react-images": "git://github.com/UBC-LFS/react-images.git#feature/swipe-support",
     "react-lazyload": "^2.2.4",
     "react-loading": "^0.1.4",
     "react-router-dom": "^4.1.2",

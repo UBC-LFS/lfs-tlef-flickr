@@ -683,13 +683,15 @@ a {
 	height: auto;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
-	@media only screen and (max-height : 600px) {
+	@media only screen and (max-height:500px) {
+		max-height: 4vh;
+	}
+	@media only screen and (min-height:500px) and (max-height:600px) {
 		max-height: 5vh;
 	}
 	@media screen and (min-height:600px) and (max-height:800px) {
 		max-height: 8vh;
 	}
-	
 }
 
 .footerBackground:after {
@@ -725,7 +727,7 @@ a {
 }
 
 .footer {
-	position: fixed;
+	position: relative;
 	right: 0;
 	bottom: 0;
 	left: 0;
