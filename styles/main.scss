@@ -811,7 +811,7 @@ a {
 #albumsDisplay div.albumCover div.albumCoverName {
 	position: absolute;
 	top: 0;
-	height: 50px;
+	height: 70px;
 	width: 100%;
 	opacity: 0;
 	z-index: 1;
@@ -830,8 +830,11 @@ a {
 
 #albumsDisplay div.albumCover div.albumCoverName span {
 	position: absolute;
-	font-size: 16px;
+	font-size: 25px;
 	margin-left: 10px;
+	margin-top: 3px;
+	height: 100px;
+	text-align: center;
 	color: white;
 	top: 0;
 	width: 100%;
