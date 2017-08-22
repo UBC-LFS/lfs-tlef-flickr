@@ -13,6 +13,7 @@ const App = () => (
         render={() => (
           <div>
             <h1 className="fourZeroFour">404: Page Not Found </h1>
+            <BrowserRouter basename="/flickr-album-demo"/>
             <Link
               className="homeBtn btn-primary btn-large"
               to={{
