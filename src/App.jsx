@@ -3,8 +3,10 @@ import { BrowserRouter, Router, Route, Switch, Link } from 'react-router-dom';
 import AlbumContainer from './containers/AlbumContainer';
 import GalleryContainer from './containers/GalleryContainer';
 
+const baseURL = "/flickr-album-demo"
+
 const App = () => (
-  <BrowserRouter basename="/flickr-album-demo">
+  <BrowserRouter basename={baseURL}>
     <div>
       <Switch>
       <Route exact path="/" component={AlbumContainer} />
