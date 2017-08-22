@@ -1,10 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter, Router, Route, Switch, Link } from 'react-router-dom';
 import AlbumContainer from './containers/AlbumContainer';
 import GalleryContainer from './containers/GalleryContainer';
 
 const App = () => (
-  <Router>
+  <BrowserRouter basename="/flickr-album-demo">
     <div>
       <Switch>
       <Route exact path="/" component={AlbumContainer} />
@@ -13,7 +13,7 @@ const App = () => (
         render={() => (
           <div>
             <h1 className="fourZeroFour">404: Page Not Found </h1>
-            <BrowserRouter basename="/flickr-album-demo"/>
+    
             <Link
               className="homeBtn btn-primary btn-large"
               to={{
@@ -25,7 +25,7 @@ const App = () => (
         )}/>
        </Switch>
     </div>
-  </Router>
+  </BrowserRouter>
 );
 
 export default App;
