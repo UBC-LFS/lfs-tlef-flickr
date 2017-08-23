@@ -32,7 +32,7 @@ const Photos = (props) => {
             const source = image.imageURL;
             const sourceWithSize = createURL('large', source);
             const title = image.title;
-            const description = image.description;
+            const description = image.description.replace(/<\/?[^>]+(>|$)/g, "");
             const orientation = image.orientation;
 
             return (
