@@ -26,23 +26,13 @@ const Photos = (props) => {
 		props._onClick(index);
 	}
 
-<<<<<<< HEAD
 	const photos = props.images.map((image, index) => {
 		if (image.imageURL) {
 			const source = image.imageURL;
 			const sourceWithSize = createURL('large', source);
 			const title = image.title;
-			const description = image.description;
-			const orientation = image.orientation;
-=======
-    const photos = props.images.map((image, index) => {
-        if (image.imageURL) {
-            const source = image.imageURL;
-            const sourceWithSize = createURL('large', source);
-            const title = image.title;
-            const description = image.description.replace(/<\/?[^>]+(>|$)/g, "");
-            const orientation = image.orientation;
->>>>>>> master
+			const description = image.description.replace(/<\/?[^>]+(>|$)/g, "");
+      const orientation = image.orientation;
 
 			return (
 				<LazyLoad height={200} offset={screenHeight * screenHeight} once key={index}>
