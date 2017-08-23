@@ -209,7 +209,7 @@ export default class GalleryContainer extends Component {
   getLightboxImages(photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
       const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: photo.description });
+      return ({ src: largeImg, caption: photo.description, height: photo.height, width: photo.width });
     });
     return visiblePhotos;
   }
