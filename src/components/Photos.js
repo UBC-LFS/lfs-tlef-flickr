@@ -26,6 +26,7 @@ const Photos = (props) => {
 		props._onClick(index);
 	}
 
+<<<<<<< HEAD
 	const photos = props.images.map((image, index) => {
 		if (image.imageURL) {
 			const source = image.imageURL;
@@ -33,6 +34,15 @@ const Photos = (props) => {
 			const title = image.title;
 			const description = image.description;
 			const orientation = image.orientation;
+=======
+    const photos = props.images.map((image, index) => {
+        if (image.imageURL) {
+            const source = image.imageURL;
+            const sourceWithSize = createURL('large', source);
+            const title = image.title;
+            const description = image.description.replace(/<\/?[^>]+(>|$)/g, "");
+            const orientation = image.orientation;
+>>>>>>> master
 
 			return (
 				<LazyLoad height={200} offset={screenHeight * screenHeight} once key={index}>
