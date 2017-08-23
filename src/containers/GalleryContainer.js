@@ -12,6 +12,7 @@ export default class GalleryContainer extends Component {
     super(props);
     this.state = {
       browserHeight: 0,
+      browserWidth: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
       imagesPerRow: 0,
@@ -57,8 +58,9 @@ export default class GalleryContainer extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser);
-    let browserHeight = document.documentElement.clientHeight - 400;
-    this.setState({ browserHeight });
+    let browserHeight = document.documentElement.clientHeight;
+    let borwserWidth = document.documentElement.clientWidth;
+    this.setState({ browserHeight, borwserWidth});
   }
 
   componentDidMount() {
@@ -372,7 +374,7 @@ export default class GalleryContainer extends Component {
         </div>
         {this.state.photos.length === 0 ? (
           <Loading
-            browserHeight={this.state.browserHeight}
+            browserHeight={this.state.browserHeight - 400}
           />
         ) : (
             <Photos
@@ -392,6 +394,8 @@ export default class GalleryContainer extends Component {
           onClickThumbnail={this.openThumbnail}
           onClickNext={this.gotoNext}
           onClose={this.closeLightbox}
+          browserHeight = {this.state.browserHeight}
+          browserWidth = {this.state.browserWidth}
         />
         <div>{this.state.photos.length !== 0 &&
           <div className="footer">
