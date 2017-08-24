@@ -227,7 +227,7 @@ export default class GalleryContainer extends Component {
       let photoDesc = photo.description;
       let findMatch = (value, key) => {
         const pattern = new RegExp(key, 'gi');
-        const replacer = (match) => (`<a id="modalDef" name="${key}">${match}</a>`);
+        const replacer = (match) => (`<a id="modalDef" name="${key}" class="hyperlink">${match}</a>`);
         photoDesc = photoDesc.replace(pattern, replacer);
       };
       const jsonArray = this.state.definitions;
