@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import R from 'ramda';
-import fetchImages from '../utils/Api';
+import { fetchAlbumCover } from '../utils/Api';
 import Loading from '../components/Loading';
 import AlbumDisplay from '../components/AlbumDisplay';
 
@@ -59,7 +59,7 @@ export default class AlbumContainer extends Component {
 	}
 
 	callAPI() {
-		fetchImages().then(photoset => this.imageController(photoset));
+		fetchAlbumCover().then(photoset => this.imageController(photoset));
 	}
 
 	imageController(photoSets) {
@@ -71,6 +71,8 @@ export default class AlbumContainer extends Component {
 				const sortedPhotos = sortImg(photos);
 				return {
 					albumName: photoSet.albumName,
+					albumID: photoSet.albumID,
+					albumSize: photoSet.albumSize,
 					albumDetails: {
 						photo: sortedPhotos,
 						visiblePhotos: sortedPhotos
@@ -97,6 +99,7 @@ export default class AlbumContainer extends Component {
 
 	getPhotoDimensions(photosArray) {
 		const photos = [];
+		const filterArray = photosArray[0];
 		function getDimensions(photoImage) {
 			return new Promise((resolve, reject) => {
 				const img = new Image();
@@ -110,9 +113,7 @@ export default class AlbumContainer extends Component {
 				img.src = photoImage.imageURL;
 			});
 		}
-		photosArray.forEach((photo) => {
-			photos.push(getDimensions(photo));
-		});
+		photos.push(getDimensions(filterArray));
 		return photos;
 	}
 

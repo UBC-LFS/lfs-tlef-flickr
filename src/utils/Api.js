@@ -18,7 +18,7 @@ const setAlbum = albumInfo => {
   return albumInfo.map(album => {
     return getPhotos(album.id)
       .then(photos => {
-        return {albumName: album.title._content, photos}
+        return {albumName: album.title._content, photos, albumID: album.id, albumSize: album.photos}
       });
     })
 };
@@ -28,6 +28,28 @@ const getPhotosDescription = photoInfoURL => (
     .then(response => response.json())
     .then(json => json.photo.description._content)
 )
+
+const setAlbumDescription = albumSet => {
+  const filterAlbumSet = albumSet;
+  filterAlbumSet.photos.splice(1); 
+  return filterAlbumSet.photos.map(photo => {
+    const descriptionURL = `https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=${API_KEY}&photo_id=${photo.id}&format=json&nojsoncallback=1`;
+    const tempPhoto = Object.assign({}, photo);
+    tempPhoto.imageURL = `https://farm${photo.farm}.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}.jpg`;
+    delete tempPhoto.isfamily;
+    delete tempPhoto.isfriend;
+    delete tempPhoto.isprimary;
+    delete tempPhoto.server;
+    delete tempPhoto.farm;
+    delete tempPhoto.ispublic;
+    delete tempPhoto.secret;
+    return getPhotosDescription(descriptionURL)
+      .then(description => {
+        tempPhoto.description = description;
+        return tempPhoto;
+      })
+  })
+}
 
 const setPhotosDescription = albumSet => (
   albumSet.photos.map(photo => {
@@ -48,9 +70,11 @@ const setPhotosDescription = albumSet => (
       })
   })
 )
+
 // https://stackoverflow.com/questions/36094865/how-to-do-promise-all-for-array-of-array-of-promises
-const fetchImages = () => (
-  fetch(API_CALL_PHOTOSETS_GETLIST)
+const fetchImages = (albumID) => {
+  //use albumID to get photoset instead of every album
+  return fetch(API_CALL_PHOTOSETS_GETLIST)
     .then(response => response.json())
     .then(json => setAlbum(json.photosets.photoset))
     .then(photoSet => (
@@ -69,6 +93,28 @@ const fetchImages = () => (
           return albumFinal
         })
     ))
+  }
+
+const fetchAlbumCover = () => (
+  fetch(API_CALL_PHOTOSETS_GETLIST)
+  .then(response => response.json())
+  .then(json => setAlbum(json.photosets.photoset))
+  .then(photoSet => (
+    Promise.all(photoSet)
+      .then(photoSetNoDescription => photoSetNoDescription)
+  ))
+  .then(albumsPhotosNoDescription => (
+    albumsPhotosNoDescription.map(albumPhotos => (
+      Promise.all(setAlbumDescription(albumPhotos))
+        .then(albumOfPhotosPromise => ({albumName: albumPhotos.albumName, albumPhotos: albumOfPhotosPromise, albumID: albumPhotos.albumID, albumSize: albumPhotos.albumSize}))
+    ))
+  ))
+  .then(albumsPhotosWithDescription => (
+    Promise.all(albumsPhotosWithDescription)
+      .then(albumFinal => {
+        return albumFinal
+      })
+  ))
 );
 
-export default fetchImages;
+export {fetchImages, fetchAlbumCover};

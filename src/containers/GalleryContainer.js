@@ -3,7 +3,7 @@ import Lightbox from 'react-images';
 import queryString from 'query-string';
 import R from 'ramda';
 import { Link } from 'react-router-dom';
-import fetchImages from '../utils/Api';
+import { fetchImages } from '../utils/Api';
 import SearchBar from '../components/SearchBar';
 import SelectSearchBar from '../components/SelectSearchBar';
 import Photos from '../components/Photos';
@@ -67,7 +67,7 @@ export default class GalleryContainer extends Component {
   }
 
   componentDidMount() {
-    this.setState({ currentAlbum: queryString.parse(this.props.location.search).albumName }, this.callAPI);
+    this.setState({ currentAlbum: queryString.parse(this.props.location.search).albumID }, this.callAPI);
   }
 
   componentWillUnmount() {
@@ -101,7 +101,7 @@ export default class GalleryContainer extends Component {
   * entry point for Flickr API
   */
   callAPI() {
-    fetchImages().then(photoset => this.imageController(photoset));
+    fetchImages(this.state.currentAlbum).then(photoset => this.imageController(photoset));
   }
 
   /**
