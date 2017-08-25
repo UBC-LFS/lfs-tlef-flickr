@@ -23,11 +23,11 @@ const setAlbum = albumInfo => {
     })
 };
 
-const getPhotosDescription = photoInfoURL => (
-  fetch(photoInfoURL)
-    .then(response => response.json())
-    .then(json => json.photo.description._content)
-)
+// const getPhotosDescription = photoInfoURL => (
+//   fetch(photoInfoURL)
+//     .then(response => response.json())
+//     .then(json => json.photo.description._content)
+// )
 
 const setAlbumDescription = albumSet => {
   const filterAlbumSet = albumSet;
@@ -43,11 +43,12 @@ const setAlbumDescription = albumSet => {
     delete tempPhoto.farm;
     delete tempPhoto.ispublic;
     delete tempPhoto.secret;
-    return getPhotosDescription(descriptionURL)
-      .then(description => {
-        tempPhoto.description = description;
-        return tempPhoto;
-      })
+    return tempPhoto;
+    // return getPhotosDescription(descriptionURL)
+    //   .then(description => {
+    //     tempPhoto.description = description;
+    //     return tempPhoto;
+    //   })
   })
 }
 

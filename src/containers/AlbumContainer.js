@@ -120,7 +120,8 @@ export default class AlbumContainer extends Component {
 	addLineBreak(photosImages) {
 		const tempPhotosImages = photosImages.map((image) => {
 			const tempImage = image;
-			tempImage.description = tempImage.description.replace(/\n/g, '<br>');
+			// Check if Patrick if this is needed
+			// tempImage.description = tempImage.description.replace(/\n/g, '<br>');
 			return tempImage;
 		});
 		return tempPhotosImages;
