@@ -13,10 +13,10 @@ export default class GalleryContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      albumSet: [],
       currentAlbum: "",
       albumTitle: "",
       browserHeight: 0,
+      browserWidth: 0,
       imagesContainerWidth: 0,
       imageWidth: 0,
       imagesPerRow: 0,
@@ -62,12 +62,15 @@ export default class GalleryContainer extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.resizeBrowser.bind(this));
-    let browserHeight = document.documentElement.clientHeight - 400;
+    let browserHeight = document.documentElement.clientHeight;
+    let browserWidth = document.documentElement.clientWidth;
+    this.setState({ browserHeight, browserWidth });
     this.setState({ browserHeight });
   }
 
   componentDidMount() {
-    this.setState({ currentAlbum: queryString.parse(this.props.location.search).albumID }, this.callAPI);
+    this.setState({ currentAlbum: queryString.parse(this.props.location.search).albumID, 
+      albumTitle: queryString.parse(this.props.location.search).albumName} , this.callAPI);
   }
 
   componentWillUnmount() {
@@ -79,7 +82,7 @@ export default class GalleryContainer extends Component {
   * resizeBrowser
   */
   resizeBrowser() {
-    const imagesContainerWidth = document.getElementById('app').clientWidth;
+    const imagesContainerWidth = document.getElementById('images').clientWidth;
     let imagesPerRow = 0;
     switch (true) {
       case imagesContainerWidth < 992:
@@ -92,9 +95,7 @@ export default class GalleryContainer extends Component {
         imagesPerRow = 3;
     }
     const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
-    if (this.state.currentAlbum === queryString.parse(this.props.location.search).albumName) {
-      this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
-    }
+    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
   }
 
   /**
@@ -108,49 +109,22 @@ export default class GalleryContainer extends Component {
   * fetches the necessary data to set the state of the application
   * @param {array} photoSet - array of photo objects
   */
-  imageController(photoSets) {
-    Promise.all(
-      photoSets.map(photoSet => {
-        const uniqueTags = this.fetchTags(photoSet.albumPhotos);
-        const allSelectOptions = this.setUniqueTags(photoSet.albumPhotos, uniqueTags);
-        const photosLineBreak = this.addLineBreak(photoSet.albumPhotos);
-        const photoFinal = this.getPhotoDimensions(photosLineBreak);
-        return Promise.all(photoFinal)
-          .then(photoDimensions => this.addDimensionsToPhotos(photoSet.albumPhotos, photoDimensions))
-          .then((photos) => {
-            const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
-            const sortedPhotos = sortImg(photos);
-            return {
-              albumName: photoSet.albumName,
-              albumDetails: {
-                photo: sortedPhotos,
-                allSelectOptions,
-                currentSelectOptions: allSelectOptions,
-                visiblePhotos: sortedPhotos,
-              }
-            }
-            // this.setState({
-            //   photos: sortedPhotos,
-            //   allSelectOptions,
-            //   currentSelectOptions: allSelectOptions,
-            //   visiblePhotos: sortedPhotos,
-            // }, this.resizeBrowser);
-          });
-      })
-    )
-      .then(albumSet => this.setState({ albumSet }))
-      .then(() => {
-        this.state.albumSet.forEach((album) => {
-          if (album.albumName === this.state.currentAlbum) {
-            this.setState({
-              photos: album.albumDetails.visiblePhotos,
-              allSelectOptions: album.albumDetails.allSelectOptions,
-              currentSelectOptions: album.albumDetails.allSelectOptions,
-              visiblePhotos: album.albumDetails.visiblePhotos,
-              albumTitle: album.albumName,
-            }, this.resizeBrowser);
-          }
-        })
+  imageController(photoSet) {
+    const uniqueTags = this.fetchTags(photoSet);
+    const allSelectOptions = this.setUniqueTags(photoSet, uniqueTags);
+    const photosLineBreak = this.addLineBreak(photoSet);
+    const photoFinal = this.getPhotoDimensions(photosLineBreak);
+    Promise.all(photoFinal)
+      .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
+      .then((photos) => {
+        const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
+        const sortedPhotos = sortImg(photos);
+        this.setState({
+          photos: sortedPhotos,
+          allSelectOptions,
+          currentSelectOptions: allSelectOptions,
+          visiblePhotos: sortedPhotos,
+        }, this.resizeBrowser);
       });
   }
 
@@ -421,7 +395,7 @@ export default class GalleryContainer extends Component {
         </div>
         {this.state.photos.length === 0 ? (
           <Loading
-            browserHeight={this.state.browserHeight}
+            browserHeight={this.state.browserHeight - 400}
           />
         ) : (
             <Photos

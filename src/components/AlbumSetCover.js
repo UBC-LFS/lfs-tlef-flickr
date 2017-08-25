@@ -14,7 +14,7 @@ const AlbumSetCover = (props) => {
 	return (
 		<Link to={{
 			pathname: `/album`,
-			search: `?albumID=${props.albumInfo.albumID}`
+			search: `?albumID=${props.albumInfo.albumID}&albumName=${props.albumInfo.albumName}`
 		}}>
 			<div style={albumCoverSize()} className="albumCover">
 
