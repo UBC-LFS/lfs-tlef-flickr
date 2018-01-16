@@ -1,43 +1,43 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Select from 'react-select';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Select from 'react-select'
 
 const SelectSearchBar = (props) => {
   const logChange = (val) => {
-    let selectString = '';
-    let returnString = '';
+    let selectString = ''
+    let returnString = ''
     if (val.length === 0) {
-      props.onSelectChange('');
+      props.onSelectChange('')
     } else {
       for (const key in val) {
-        selectString += val[key]["value"] + ',';
+        selectString += val[key]['value'] + ','
       }
-      returnString = selectString.substring(0, selectString.length - 1);
-      props.onSelectChange(returnString);
+      returnString = selectString.substring(0, selectString.length - 1)
+      props.onSelectChange(returnString)
     }
-  };
+  }
 
   return (
     <div>
       <Select
-        className="select-search"
-        name="form-field-name"
+        className='select-search'
+        name='form-field-name'
         options={props.selectOptions}
         onChange={logChange}
-        multi={true}
+        multi
         joinValues={false}
-        clearable={true}
-        deleteRemoves={true}
+        clearable
+        deleteRemoves
         value={props.currentSearch}
       />
     </div>
-  );
-};
+  )
+}
 
 SelectSearchBar.propTypes = {
   currentSearch: PropTypes.string.isRequired,
   onSelectChange: PropTypes.func.isRequired,
-  selectOptions: PropTypes.array.isRequired,
-};
+  selectOptions: PropTypes.array.isRequired
+}
 
-export default SelectSearchBar;
+export default SelectSearchBar
