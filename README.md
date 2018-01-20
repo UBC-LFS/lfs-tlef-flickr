@@ -8,7 +8,7 @@
 * Fork and clone the project:
 
 ```
-git clone https://github.com/justin0022/lfs-tlef-flickr.git
+git clone https://github.com/UBC-LFS/lfs-tlef-flickr.git
 ```
 
 * Then install the dependencies:
