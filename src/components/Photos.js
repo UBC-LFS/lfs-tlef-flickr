@@ -50,7 +50,7 @@ const Photos = (props) => {
                 src={source}
                 onClick={handleClick.bind(null, index)}
                 className={'image' + (orientation === 'landscape' ? ' fullHeight' : ' fullWidth')}
-                            />
+              />
             </div>
           </div>
         </LazyLoad>
