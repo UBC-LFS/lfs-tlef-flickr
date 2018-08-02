@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import Lightbox from 'react-images';
-import R from 'ramda';
-import fetchImages from '../utils/Api';
-import Photos from '../components/Photos';
-import Loading from '../components/Loading';
+import React, { Component } from 'react'
+import Lightbox from 'react-images'
+import R from 'ramda'
+import fetchImages from '../utils/Api'
+import Photos from '../components/Photos'
+import Loading from '../components/Loading'
 
 export default class GalleryContainer extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
       browserHeight: 0,
       imagesContainerWidth: 0,
@@ -17,122 +17,122 @@ export default class GalleryContainer extends Component {
       visiblePhotos: [],
       currentImage: 0,
       lightboxIsOpen: false,
-      thumbnails: true,
-    };
-    this.resizeBrowser = this.resizeBrowser.bind(this);
+      thumbnails: true
+    }
+    this.resizeBrowser = this.resizeBrowser.bind(this)
 
-    this.callAPI = this.callAPI.bind(this);
+    this.callAPI = this.callAPI.bind(this)
 
-    this.imageController = this.imageController.bind(this);
-    this.getPhotoDimensions = this.getPhotoDimensions.bind(this);
-    this.addLineBreak = this.addLineBreak.bind(this);
+    this.imageController = this.imageController.bind(this)
+    this.getPhotoDimensions = this.getPhotoDimensions.bind(this)
+    this.addLineBreak = this.addLineBreak.bind(this)
 
-    this.getLightboxImages = this.getLightboxImages.bind(this);
-    this.openLightbox = this.openLightbox.bind(this);
-    this.closeLightbox = this.closeLightbox.bind(this);
-    this.gotoNext = this.gotoNext.bind(this);
-    this.gotoPrevious = this.gotoPrevious.bind(this);
-    this.handleClickImage = this.handleClickImage.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.openThumbnail = this.openThumbnail.bind(this);
-    this.scrollController = this.scrollController.bind(this);
+    this.getLightboxImages = this.getLightboxImages.bind(this)
+    this.openLightbox = this.openLightbox.bind(this)
+    this.closeLightbox = this.closeLightbox.bind(this)
+    this.gotoNext = this.gotoNext.bind(this)
+    this.gotoPrevious = this.gotoPrevious.bind(this)
+    this.handleClickImage = this.handleClickImage.bind(this)
+    this.handleClick = this.handleClick.bind(this)
+    this.openThumbnail = this.openThumbnail.bind(this)
+    this.scrollController = this.scrollController.bind(this)
   }
 
-  componentWillMount() {
-    window.addEventListener('resize', this.resizeBrowser);
-    let browserHeight = document.documentElement.clientHeight - 400;
-    this.setState({ browserHeight });
+  componentWillMount () {
+    window.addEventListener('resize', this.resizeBrowser)
+    let browserHeight = document.documentElement.clientHeight - 400
+    this.setState({ browserHeight })
   }
 
-  componentDidMount() {
-    this.callAPI();
+  componentDidMount () {
+    this.callAPI()
   }
 
   /**
   * resizeBrowser
   */
-  resizeBrowser() {
-    const imagesContainerWidth = document.getElementById('images').clientWidth;
-    let imagesPerRow = 0;
+  resizeBrowser () {
+    const imagesContainerWidth = document.getElementById('images').clientWidth
+    let imagesPerRow = 0
     switch (true) {
       case imagesContainerWidth < 992:
-        imagesPerRow = 2;
-        break;
+        imagesPerRow = 2
+        break
       case imagesContainerWidth < 1200:
-        imagesPerRow = 3;
-        break;
+        imagesPerRow = 3
+        break
       default:
-        imagesPerRow = 3;
+        imagesPerRow = 3
     }
-    const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow;
-    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth });
+    const imageWidth = (imagesContainerWidth - (imagesPerRow * 5)) / imagesPerRow
+    this.setState({ imagesContainerWidth, imagesPerRow, imageWidth })
   }
 
   /**
   * entry point for Flickr API
   */
-  callAPI() {
-    fetchImages().then(photoset => this.imageController(photoset));
+  callAPI () {
+    fetchImages().then(photoset => this.imageController(photoset))
   }
 
   /**
   * fetches the necessary data to set the state of the application
   * @param {array} photoSet - array of photo objects
   */
-  imageController(photoSet) {
-    const photosLineBreak = this.addLineBreak(photoSet);
-    const photoFinal = this.getPhotoDimensions(photosLineBreak);
+  imageController (photoSet) {
+    const photosLineBreak = this.addLineBreak(photoSet)
+    const photoFinal = this.getPhotoDimensions(photosLineBreak)
     Promise.all(photoFinal)
-    .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
-    .then((photos) => {
-      const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))]);
-      const sortedPhotos = sortImg(photos);
-      this.setState({
-        photos: sortedPhotos,
-        visiblePhotos: sortedPhotos,
-      }, this.resizeBrowser);
-    });
+      .then(photoDimensions => this.addDimensionsToPhotos(photoSet, photoDimensions))
+      .then((photos) => {
+        const sortImg = R.sortWith([R.ascend(R.compose(R.toUpper, R.prop('title')))])
+        const sortedPhotos = sortImg(photos)
+        this.setState({
+          photos: sortedPhotos,
+          visiblePhotos: sortedPhotos
+        }, this.resizeBrowser)
+      })
   }
 
-  addDimensionsToPhotos(photosArray, photoDimensions) {
-    const tempPhotosArray = photosArray;
+  addDimensionsToPhotos (photosArray, photoDimensions) {
+    const tempPhotosArray = photosArray
     for (let i = 0; i < photoDimensions.length; i += 1) {
-      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait');
-      tempPhotosArray[i].width = photoDimensions[i][0];
-      tempPhotosArray[i].height = photoDimensions[i][1];
-      tempPhotosArray[i].orientation = imageOrientation;
+      const imageOrientation = (photoDimensions[i][0] > photoDimensions[i][1] ? 'landscape' : 'portrait')
+      tempPhotosArray[i].width = photoDimensions[i][0]
+      tempPhotosArray[i].height = photoDimensions[i][1]
+      tempPhotosArray[i].orientation = imageOrientation
     }
-    return tempPhotosArray;
+    return tempPhotosArray
   }
 
-  getPhotoDimensions(photosArray) {
-    const photos = [];
-    function getDimensions(photoImage) {
+  getPhotoDimensions (photosArray) {
+    const photos = []
+    function getDimensions (photoImage) {
       return new Promise((resolve, reject) => {
-        const img = new Image();
+        const img = new Image()
         img.onload = () => {
-          resolve([img.width, img.height]);
-        };
+          resolve([img.width, img.height])
+        }
         img.onerror = () => {
-          const message = 'Could not get image dimension';
-          reject(new Error(message));
-        };
-        img.src = photoImage.imageURL;
-      });
+          const message = 'Could not get image dimension'
+          reject(new Error(message))
+        }
+        img.src = photoImage.imageURL
+      })
     }
     photosArray.forEach((photo) => {
-      photos.push(getDimensions(photo));
-    });
-    return photos;
+      photos.push(getDimensions(photo))
+    })
+    return photos
   }
 
-  addLineBreak(photosImages) {
+  addLineBreak (photosImages) {
     const tempPhotosImages = photosImages.map((image) => {
-      const tempImage = image;
-      tempImage.description = tempImage.description.replace(/\n/g, '<br>');
-      return tempImage;
-    });
-    return tempPhotosImages;
+      const tempImage = image
+      tempImage.description = tempImage.description.replace(/\n/g, '<br>')
+      return tempImage
+    })
+    return tempPhotosImages
   }
 
   /**
@@ -140,57 +140,57 @@ export default class GalleryContainer extends Component {
    * ============
   */
 
-  getLightboxImages(photoSet) {
+  getLightboxImages (photoSet) {
     const visiblePhotos = photoSet.map((photo) => {
-      const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg');
-      return ({ src: largeImg, caption: photo.description });
-    });
-    return visiblePhotos;
+      const largeImg = photo.imageURL.split('.jpg')[0].concat('_b.jpg')
+      return ({ src: largeImg, caption: photo.description })
+    })
+    return visiblePhotos
   }
 
-  openLightbox(index, event) {
-    event.preventDefault();
-    this.setState({ currentImage: index, lightboxIsOpen: true });
+  openLightbox (index, event) {
+    event.preventDefault()
+    this.setState({ currentImage: index, lightboxIsOpen: true })
   }
 
-  closeLightbox() {
-    this.setState({ currentImage: 0, lightboxIsOpen: false });
+  closeLightbox () {
+    this.setState({ currentImage: 0, lightboxIsOpen: false })
   }
 
-  gotoPrevious() {
-    this.setState({ currentImage: this.state.currentImage - 1 });
+  gotoPrevious () {
+    this.setState({ currentImage: this.state.currentImage - 1 })
   }
 
-  gotoNext() {
-    this.setState({ currentImage: this.state.currentImage + 1 });
+  gotoNext () {
+    this.setState({ currentImage: this.state.currentImage + 1 })
   }
 
-  handleClick(index) {
-    this.setState({ currentImage: index, lightboxIsOpen: true });
+  handleClick (index) {
+    this.setState({ currentImage: index, lightboxIsOpen: true })
   }
 
-  handleClickImage() {
+  handleClickImage () {
     if (this.state.currentImage === this.getLightboxImages(this.state.visiblePhotos).length - 1) {
-      return;
+      return
     }
-    this.gotoNext();
+    this.gotoNext()
   }
 
-  openThumbnail(index) {
-    this.setState({ currentImage: index });
+  openThumbnail (index) {
+    this.setState({ currentImage: index })
   }
 
-  scrollController() {
+  scrollController () {
     (this.state.lightboxIsOpen === true)
-      ? (document.body.style.overflowY = "hidden")
-      : (document.body.style.overflowY = "visible")
+      ? (document.body.style.overflowY = 'hidden')
+      : (document.body.style.overflowY = 'visible')
   }
 
   /** ============ */
 
-  render() {
-    const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos);
-    this.scrollController();
+  render () {
+    const lightboxPhotos = this.getLightboxImages(this.state.visiblePhotos)
+    this.scrollController()
     return (
       <div>
 
@@ -199,14 +199,14 @@ export default class GalleryContainer extends Component {
             browserHeight={this.state.browserHeight}
           />
         ) : (
-            <Photos
-              _onClick={this.handleClick}
-              images={this.state.visiblePhotos}
-              imageWidth={this.state.imageWidth}
-              imagesPerRow={this.state.imagesPerRow}
-              imagesContainerWidth={this.state.imagesContainerWidth}
-            />
-          )}
+          <Photos
+            _onClick={this.handleClick}
+            images={this.state.visiblePhotos}
+            imageWidth={this.state.imageWidth}
+            imagesPerRow={this.state.imagesPerRow}
+            imagesContainerWidth={this.state.imagesContainerWidth}
+          />
+        )}
         <Lightbox
           currentImage={this.state.currentImage}
           images={lightboxPhotos}
@@ -218,11 +218,11 @@ export default class GalleryContainer extends Component {
           onClose={this.closeLightbox}
         />
         <div>{this.state.photos.length !== 0 &&
-          <div className="footer">
+          <div className='footer'>
             {'This product uses the Flickr API but is not endorsed or certified by Flickr.'}
           </div>
         }</div>
       </div>
-    );
+    )
   }
 }

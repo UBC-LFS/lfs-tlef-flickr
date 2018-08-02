@@ -1,10 +1,10 @@
-import React from 'react';
-import GalleryContainer from './containers/GalleryContainer';
+import React from 'react'
+import GalleryContainer from './containers/GalleryContainer'
 
 const App = () => (
   <div>
     <GalleryContainer />
   </div>
-);
+)
 
-export default App;
+export default App
